@@ -1,0 +1,70 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="color_swatch_large">64dip</dimen>
+    <dimen name="color_swatch_small">48dip</dimen>
+    <dimen name="color_swatch_margins_large">8dip</dimen>
+    <dimen name="color_swatch_margins_small">4dip</dimen>
+
+    <dimen name="activity_horizontal_margin">3dp</dimen>
+    <dimen name="activity_vertical_margin">3dp</dimen>
+    <dimen name="padding_small">4.0dp</dimen>
+    <dimen name="padding_medium">8.0dp</dimen>
+    <dimen name="padding_large">12.0dp</dimen>
+
+
+    <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="app_icon_top_text_size">70sp</dimen>
+    <dimen name="app_icon_bottom_text_size">25sp</dimen>
+    <dimen name="app_title_top_margin_in_about">25dp</dimen>
+    <dimen name="btn_scientific_text_size">27sp</dimen>
+
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="list_item_translation_z">2dp</dimen>
+    <dimen name="title_text_size">42.0sp</dimen>
+    <dimen name="all_text_size">25.0sp</dimen>
+    <dimen name="lbl_Stack_text_size">72.0sp</dimen>
+    <dimen name="width_about">500.0dp</dimen>
+    <dimen name="padding_text">16.0dp</dimen>
+    <dimen name="btn_height_about">70.0dp</dimen>
+    <dimen name="margin_scroller_stack">13.0dp</dimen>
+    <dimen name="tool_bar_side_margin">25dp</dimen>
+    <dimen name="translation_text_size">25sp</dimen>
+
+    <dimen name="btn_text_size">30.0sp</dimen>
+    <dimen name="scientific_button_text_size">40sp</dimen>
+    <dimen name="icon_button_size">21sp</dimen>
+    <dimen name="spinner_text_size">21sp</dimen>
+    <dimen name="normal_land_btn_text_size">30sp</dimen>
+    <dimen name="language_menu_text_size">10sp</dimen>
+
+    <dimen name="log_title_txt_size">38sp</dimen>
+    <dimen name="log_detail_txt_size">27sp</dimen>
+    <dimen name="result_text_size">65sp</dimen>
+    <dimen name="digital_lcd_text_size">70sp</dimen>
+    <dimen
+        name="retro_scientific_text_size">18sp</dimen>
+    <dimen name="retro_backspace_text_size">25sp</dimen>
+    <dimen name="retro_m_variable_text_size">12sp</dimen>
+
+
+    <color name="abc_search_url_text_normal">#ff7fa87f</color>
+
+    <color name="arkaplan">#fffbfbfb</color>
+    <color name="yesil">#ff15e6b0</color>
+    <color name="beyaz">#ffffffff</color>
+    <color name="sonuc_renk">#ffb5b5b5</color>
+    <color name="btn1_1">#ff3a3a3a</color>
+    <color name="btn1_2">#803a3a3a</color>
+    <color name="btn2_1">#ff4a4a4a</color>
+    <color name="btn2_2">#804a4a4a</color>
+    <color name="btn3_1">#ff15e6b0</color>
+    <color name="btn3_2">#8015e6b0</color>
+    <color name="hata">#fff30050</color>
+    <color name="sonuc_dogru">#ff00bbd3</color>
+
+
+</resources>

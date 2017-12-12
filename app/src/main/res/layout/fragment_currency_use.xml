@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00ACC1"
+        android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/last_updated_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="آخرین بروزرسانی "
+                android:layout_gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:paddingTop="@dimen/padding_small"
+                />
+
+        <TextView
+            android:id="@+id/update_time_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="( بروزرسانی از ساعت ۱۱ الی ۶ بعد از ظهر)"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="9sp"
+            android:padding="1dp"
+            />
+
+        <TextView
+            android:id="@+id/updated_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="نرخ ها منطبق با وب سایت اقتصادی"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:paddingBottom="@dimen/padding_medium"
+            />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        />
+
+    <ListView android:id="@+id/listview_currency"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        >
+    </ListView>
+
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/empty_list"
+        style="@style/CustomButton"
+        android:textSize="@dimen/log_detail_txt_size"
+        android:textColor="@android:color/darker_gray"
+        android:gravity="center"
+        android:text="@string/loading_message"
+        android:layout_margin="@dimen/padding_large"
+        />
+
+
+</LinearLayout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#00838F"
+    >
+
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/header_section"
+        android:elevation="4dp"
+        android:layout_alignParentTop="true"
+        android:background="#00ACC1"
+
+        >
+
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_arrow_left_white_24dp"
+            android:background="@android:color/transparent"
+            />
+
+        <TextView
+            android:id="@+id/help_page_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="راهنما"
+            android:gravity="center"
+            android:textSize="@dimen/btn_text_size"
+            android:textColor="@android:color/white"
+            android:padding="40dp"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"
+
+            />
+
+
+
+
+        </RelativeLayout>
+    
+
+    <ExpandableListView
+        android:id="@+id/list"
+        android:layout_height="wrap_content"
+        android:layout_weight="80"
+        android:layout_width="match_parent"
+        android:groupIndicator="@null"
+        android:layout_below="@id/header_section"
+        android:layoutDirection="rtl"
+        android:textDirection="rtl"
+        />
+
+</RelativeLayout>

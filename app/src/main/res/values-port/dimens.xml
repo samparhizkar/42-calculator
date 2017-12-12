@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">3dp</dimen>
+    <dimen name="activity_vertical_margin">3dp</dimen>
+
+    <dimen name="title_text_size">42.0sp</dimen>
+    <dimen name="all_text_size">25.0sp</dimen>
+    <dimen name="lbl_Stack_text_size">72.0sp</dimen>
+    <dimen name="padding_text">16.0dp</dimen>
+    <dimen name="btn_height_about">70.0dip</dimen>
+    <dimen name="margin_scroller_stack">13.0dp</dimen>
+    <dimen name="viewpager_margin_sideways">15dp</dimen>
+    <dimen name="translation_text_size">33sp</dimen>
+
+    <dimen name="color_pallette_right_padding">0dp</dimen>
+    <dimen name="color_pallette_left_padding">0dp</dimen>
+    <dimen name="tool_bar_side_margin">0dp</dimen>
+
+    <dimen name="scientific_button_text_size">43sp</dimen>
+    <dimen name="btn_text_size">45.0sp</dimen>
+    <dimen name="btn_clear_text_size">38.0sp</dimen>
+    <dimen name="result_text_size">99sp</dimen>
+    <dimen name="digital_lcd_text_size">70sp</dimen>
+    <dimen name="digital_lcd_translation_textsize">27sp</dimen>
+
+    <dimen name="log_title_txt_size">36sp</dimen>
+    <dimen name="log_detail_txt_size">16sp</dimen>
+
+    <dimen name="icon_button_size">19sp</dimen>
+
+    <dimen name="spinner_text_size">20sp</dimen>
+
+
+    <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="app_icon_top_text_size">70sp</dimen>
+    <dimen name="app_icon_bottom_text_size">25sp</dimen>
+    <dimen name="retro_backspace_text_size">23sp</dimen>
+    <dimen name="list_item_margin_medium" >8dp</dimen>
+
+</resources>

@@ -1,0 +1,302 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_normal"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    android:id="@+id/activity_body"
+    >
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30"
+        >
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/MotherTop">
+
+
+
+
+        <LinearLayout
+            android:id="@+id/Top"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/display_normal"
+            android:orientation="vertical" >
+
+
+
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="35"
+
+                >
+
+                <TextView
+                    android:id="@+id/scientific_mode_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@android:color/black"
+                    android:paddingLeft="@dimen/padding_large"
+                    android:text="RAD"
+                    android:textSize="@dimen/retro_m_variable_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/m_vaiable_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/scientific_mode_textview"
+                    android:background="@android:color/transparent"
+                    android:textColor="@android:color/black"
+                    android:paddingLeft="@dimen/padding_small"
+                    android:text=" M = 0"
+                    android:inputType="textMultiLine|textNoSuggestions"
+                    android:textSize="@dimen/retro_m_variable_text_size"
+
+                    />
+
+            <com.sepidsa.fortytwocalculator.AutoResizeTextView
+                android:id="@+id/translationEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textColor="@android:color/black"
+                android:gravity="right|bottom"
+                android:paddingBottom="@dimen/padding_small"
+                android:textSize="@dimen/digital_lcd_translation_textsize"
+                android:paddingRight="@dimen/padding_large"
+                android:scrollbars = "vertical"
+                android:background="@android:color/transparent"
+                android:layout_toRightOf="@id/btn_add_star"
+
+                />
+
+                <Button
+                    android:id="@+id/add_label"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:textColor="@android:color/black"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:background="@android:color/transparent"
+                    android:text="@string/add_label"
+                    android:textSize="21sp"
+                    android:visibility="gone"
+                    android:layout_above="@id/btn_add_star"
+                    />
+
+                <Button
+                    android:id="@+id/btn_add_star"
+                    android:layout_width="42dp"
+                    android:layout_height="24dp"
+                    android:textColor="@android:color/black"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone"
+                    android:text="@string/star_icon"
+                    android:textSize="21sp"
+
+                    />
+
+            </RelativeLayout>
+
+            <View android:layout_height="1dp"
+                android:layout_width="match_parent"
+
+                android:background="?android:attr/listDivider"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="40"
+
+                >
+
+                <TextSwitcher
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/text_switcher"
+                    android:layout_toRightOf="@id/currency_list"
+                    android:layout_marginBottom="@dimen/padding_small">
+
+                    <com.sepidsa.fortytwocalculator.AutoResizeTextView
+                        android:id="@+id/result"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:textIsSelectable="false"
+                        android:background="@android:color/transparent"
+                        android:focusable="false"
+                        style="@style/text_switcher"
+                        android:textSize="@dimen/digital_lcd_text_size"
+                        android:text="0"
+                        android:gravity="center_vertical|right"
+                        android:paddingRight="@dimen/padding_large"
+                        android:textColor="@android:color/black"
+                        android:scrollbars = "vertical"
+
+
+                        />
+
+
+                </TextSwitcher>
+
+                <Button
+                    android:id="@+id/currency_list"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:textColor="@android:color/black"
+                    android:layout_centerVertical="true"
+                    android:background="@android:color/transparent"
+                    android:layout_toRightOf="@id/favorites_list"
+                    android:text="@string/dollar_icon_string"
+                    android:textSize="27sp"
+
+                    />
+
+                <Button
+                    android:id="@+id/favorites_list"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:textColor="@android:color/black"
+                    android:background="@android:color/transparent"
+                    android:layout_centerVertical="true"
+                    android:textSize="27sp"
+
+                    />
+
+
+            </RelativeLayout>
+
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/MotherTop"
+        android:layout_weight="70"
+        android:orientation="vertical">
+
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/view_pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:layout_gravity="center"
+            android:paddingTop="2dp"
+
+
+            />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            android:layout_weight="92"
+            style="@style/viewpager"
+            android:tag="portrait_phone"
+
+            >
+        </android.support.v4.view.ViewPager>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:background="@android:color/transparent"
+            android:layout_weight="7"
+            >
+
+            <Button
+                android:id="@+id/buttonSettings"
+                style="@style/icon_button.portrait"
+                android:layout_weight="1"
+                android:text="@string/settings"
+                android:tag="feedback"
+                android:gravity="center"
+
+
+                android:textColor="#fff"
+
+                />
+
+
+
+
+
+            <Button
+                android:id="@+id/buttonMute"
+                style="@style/icon_button.portrait"
+                android:layout_weight="1"
+                android:text="@string/volume_high"
+                android:tag="@string/volume_high"
+                android:gravity="center"
+                android:textColor="#fff"
+
+
+                />
+
+            <Button
+                android:id="@+id/buttonColors"
+                style="@style/icon_button.portrait"
+                android:layout_weight="1"
+                android:text="@string/theme"
+                android:textColor="#DADFE1"
+                android:tag="@string/theme"
+                android:gravity="center"
+
+                />
+
+
+
+            <Button
+                android:id="@+id/buttonHamburgerMenu"
+                style="@style/icon_button.portrait"
+                android:layout_weight="1"
+                android:text="@string/hamburger_menu"
+                android:textColor="#fff"
+                android:tag="p"
+                android:gravity="center"
+
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

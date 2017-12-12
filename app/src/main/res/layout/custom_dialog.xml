@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@android:color/white"
+    style="@android:style/TextAppearance.DeviceDefault.Widget.EditText"
+    android:clickable="true"
+    >
+
+    <LinearLayout
+        android:id="@+id/MotherTop"
+        android:orientation="vertical"
+        android:layout_weight="50"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#1abc9c"
+
+        android:elevation="5dp"
+        >
+
+
+        <TextView
+            android:id="@+id/scientific_mode_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:textColor="@android:color/white"
+            android:paddingLeft="@dimen/padding_small"
+            android:text="ver 2.11"
+            />
+
+
+
+        <com.sepidsa.fortytwocalculator.AutoResizeTextView
+            android:id="@+id/fortyTwoSample"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="42"
+            android:textSize="80sp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="0.5dp"
+            android:layout_marginRight="0.5dp"
+            android:layout_above="@+id/fortyTwoSampleTranslation"
+            android:layout_below="@+id/scientific_mode_textview" />
+
+        <TextView
+            android:id="@+id/fortyTwoSampleTranslation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="چهل و دو"
+            android:gravity="center"
+            android:singleLine="true"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@android:color/white"
+            android:layout_alignParentBottom="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+           />
+
+
+    </LinearLayout>
+
+
+
+
+
+
+    <Button
+        android:id="@+id/give_stars"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="23.5"
+        android:text="\u2605 \u2605 \u2605 \u2605 \u2605 \n چطور بود ؟؟"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-light"
+        android:background="#336E7B"
+        android:textColor="#f1c40f"
+        android:gravity="center"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+
+    android:visibility="visible"
+        android:elevation="3dp"
+
+        />
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="28"
+        android:orientation="horizontal"
+        android:elevation="2dp"
+
+        >
+
+        <Button
+            android:id="@+id/btn_CHANGE_TRANSLATION_FONT"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:text="نسخه طلایی"
+            android:background="#8b9dc3"
+            android:textSize="22sp"
+            android:textColor="@android:color/white"
+            android:gravity="center"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="60"
+            android:text="ضخامت دکمه ها"
+            android:textSize="22sp"
+            android:background="#8b9dc3"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:elevation="1dp"
+
+            android:id="@+id/dialpad_text_size"
+
+            />
+
+
+
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/language_selection"
+            android:layout_weight="40"
+            android:text="زبان"
+            android:background="#8b9dc3"
+            android:textSize="22sp"
+            android:textColor="@android:color/white"
+
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>
+
+
+

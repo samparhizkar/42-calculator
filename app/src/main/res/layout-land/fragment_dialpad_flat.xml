@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:baselineAligned="false"
+    >
+
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonConstant"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/constant"
+            android:tag="@string/constant"
+            android:textStyle="bold"
+            />
+
+        <Button
+            android:id="@+id/buttonrad"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/sqrt"
+            android:tag="@string/sqrt"
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonpower"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:tag="@string/power"
+            android:text="@string/power"
+            />
+
+        <Button
+            android:id="@+id/buttonPow2"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/powertwo"
+            android:tag="@string/powertwoTag"
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonPow3"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/powerthree"
+            android:tag="@string/powerthreeTag"
+
+            />
+
+
+
+        <Button
+         android:id="@+id/buttonClear"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            android:layout_weight="1"
+            android:tag="@string/clear"
+            android:text="@string/clear"
+            android:textColor="@color/red_buttons_text_color"
+            android:background="@drawable/selector_for_btn_clear"
+
+            />
+
+        <Button
+            android:id="@+id/button7"
+
+            android:layout_weight="1"
+            android:text="@string/seven"
+            android:tag="@string/seven"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            />
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_weight="1"
+            android:text="@string/eight"
+            android:tag="@string/eight"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            />
+
+
+        <Button
+            android:id="@+id/button9"
+            android:layout_weight="1"
+            android:text="@string/nine"
+            android:tag="@string/nine"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            />
+
+
+        <Button
+            android:id="@+id/buttonDevide"
+            style="@style/DIALPADBUTTON.LAND_NORMAL."
+            android:layout_weight="1"
+            android:tag="@string/devide"
+            android:text="@string/devide"
+            android:textColor="#4CD964"
+            />
+
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+
+        <ToggleButton
+            android:id="@+id/buttonInverse"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/inverse"
+            android:text="@string/inverse"
+            android:tag="@string/inverse"
+            android:textOn="INV"
+            android:textOff="INV"
+            android:background="@android:color/transparent"
+            android:textStyle="bold"
+            />
+
+
+
+
+
+
+
+
+
+        <Button
+            style="@style/CustomButton.SCIENTIFIC"
+            android:id="@+id/buttonfact"
+
+            android:layout_weight="1"
+            android:text="@string/factoriel"
+            android:tag="@string/factoriel"
+            />
+
+
+
+
+        <Button
+            android:id="@+id/buttonpie"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:tag="@string/Pi"
+            android:text="@string/Pi"
+
+            />
+
+
+
+
+        <Button
+            android:id="@+id/buttonln"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/ln"
+            android:tag="@string/ln_tag"
+
+            />
+
+        <Button
+            android:id="@+id/buttonlog"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/log"
+            android:tag="@string/log_tag"
+            />
+
+
+        <Button
+            android:id="@+id/openParen"
+            android:layout_weight="1"
+            android:text="@string/parenthesis_open"
+            android:tag="@string/parenthesis_open"
+            android:textColor="#4CD964"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT" />
+
+
+
+
+
+
+
+
+
+
+
+
+        <Button
+            android:id="@+id/button4"
+
+            android:layout_weight="1"
+            android:text="@string/four"
+            android:tag="@string/four"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+
+            />
+
+
+
+
+
+
+
+
+
+
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_weight="1"
+            android:text="@string/five"
+            android:tag="@string/five"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            />
+
+
+
+
+
+
+
+
+
+
+        <Button
+            android:id="@+id/button6"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            android:layout_weight="1"
+            android:text="@string/six"
+            android:tag="@string/six"
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonTimes"
+            style="@style/DIALPADBUTTON.LAND_NORMAL."
+            android:layout_weight="1"
+            android:tag="@string/multiplyValue"
+            android:text="@string/multiply"
+            android:textColor="#4CD964"
+            />
+
+
+
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+
+
+
+        <ToggleButton
+            android:id="@+id/buttonARC"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/ARC"
+            android:textOff="@string/ARC"
+            android:textOn="@string/ARC"
+            android:tag="@string/ARC"
+            android:background="@android:color/transparent"
+            android:textStyle="bold"
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonSinus"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:hint="@string/sin"
+            android:text="@string/sin"
+            android:tag="@string/trigonomic"
+            />
+
+
+        <Button
+            android:id="@+id/buttonCosinus"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/cos"
+            android:tag="@string/trigonomic"
+            />
+
+        <Button
+            android:id="@+id/buttonTan"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/tan"
+            android:tag="@string/trigonomic"
+            />
+
+        <Button
+            android:id="@+id/buttonEXP"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/EXP"
+            android:tag="@string/EXPTag"
+            />
+
+
+        <Button
+            android:id="@+id/closeParen"
+            android:layout_weight="1"
+            android:text="@string/parenthesis_closed"
+            android:tag="@string/parenthesis_closed"
+            android:textColor="#4CD964"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT" />
+
+
+
+        <Button
+            android:id="@+id/button1"
+
+            android:layout_weight="1"
+            android:text="@string/one"
+            android:tag="@string/one"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            />
+
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_weight="1"
+            android:text="@string/two"
+            android:tag="@string/two"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            />
+
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_weight="1"
+            android:text="@string/three"
+            android:tag="@string/three"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+
+            />
+
+        <Button
+            android:id="@+id/buttonMinus"
+            style="@style/DIALPADBUTTON.LAND_NORMAL."
+            android:layout_weight="1"
+            android:text="@string/subtract"
+            android:tag="@string/subtract"
+            android:textColor="#4CD964"
+            />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+
+        <ToggleButton
+
+
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/switch_deg_rad"
+            android:layout_centerInParent="true"
+            android:textOff="Rad"
+            android:textOn="DEG"
+            android:checked="true"
+            android:background="@android:color/transparent"
+            android:textStyle="bold" />
+
+
+        <Button
+            android:id="@+id/buttonSinusH"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:hint="@string/sinh"
+            android:text="@string/sinh"
+            android:tag="@string/trigonomic"
+            />
+
+
+        <Button
+            android:id="@+id/buttonCosinusH"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/cosh"
+            android:tag="@string/trigonomic"
+            />
+
+        <Button
+            android:id="@+id/buttonTanH"
+            style="@style/CustomButton.SCIENTIFIC"
+            android:layout_weight="1"
+            android:text="@string/tanh"
+            android:tag="@string/trigonomic"
+            />
+
+
+
+
+        <Button
+            style="@style/CustomButton.SCIENTIFIC"
+            android:id="@+id/buttonRandom"
+
+            android:layout_weight="1"
+            android:text="@string/random"
+            android:tag="@string/random"
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonPercent"
+            android:layout_weight="1"
+            android:text="%"
+            android:tag="%"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            android:textColor="#4CD964"
+
+            />
+
+        <Button
+            android:id="@+id/buttonPoint"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/point"
+            android:tag="@string/point"
+            android:layout_weight="1" />
+
+
+        <Button
+            android:id="@+id/button0"
+            android:layout_weight="1"
+            android:text="@string/zero"
+            android:tag="@string/zero"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            />
+
+
+        <Button
+            android:id="@+id/buttonEquals"
+            style="@style/DIALPADBUTTON.LAND_NORMAL.DIGIT"
+            android:layout_weight="1"
+            android:text="@string/equals"
+            android:tag="@string/equals"
+            android:textColor="@color/orange_buttons_text_color"
+            android:background="@drawable/selector_for_btn_equal"
+            android:gravity="center"
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonPlus"
+            style="@style/DIALPADBUTTON.LAND_NORMAL."
+            android:text="@string/add"
+            android:tag="@string/add"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#4CD964"
+            />
+
+
+
+
+
+
+
+
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,324 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="horizontal"
+    tools:context=".MainActivity"
+    android:id="@+id/activity_body"
+    android:elevation="0.2dp"
+android:tag="tablet"
+    >
+
+
+
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+
+        >
+
+        <fragment
+            android:id="@+id/log_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.sepidsa.fortytwocalculator.AnimatedLogFragment"
+            android:tag="fragment_log_tablet_land"
+            tools:layout="@layout/fragment_log"
+
+            />
+
+        </FrameLayout>
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="7"
+            >
+
+            <LinearLayout
+
+                android:id="@+id/MotherTop"
+                style="@style/TopSection"
+                android:orientation="vertical"
+                android:layout_weight="21"
+
+                >
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    >
+
+                    <TextSwitcher
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/text_switcher">
+
+                    <com.sepidsa.fortytwocalculator.AutoResizeTextView
+                        android:id="@+id/result"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        style="@style/text_switcher"
+                        android:text="0"
+                        android:gravity="center_vertical|right"
+                        android:maxLines="1"
+                        android:paddingRight="@dimen/padding_medium"
+                        android:background="#1abc9c"
+                        android:layout_toRightOf="@id/btn_add_star"
+                        android:includeFontPadding="false"
+                        />
+                    </TextSwitcher>
+
+                    <TextView
+                        android:id="@+id/scientific_mode_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:background="@android:color/transparent"
+                        android:textColor="@android:color/white"
+                        android:paddingLeft="@dimen/padding_small"
+                        android:text="RAD"
+                        />
+
+                    <TextView
+                        android:id="@+id/m_vaiable_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@id/scientific_mode_textview"
+                        android:background="@android:color/transparent"
+                        android:textColor="@android:color/white"
+                        android:paddingLeft="@dimen/padding_small"
+                        android:text=" M = 0"
+                        android:inputType="textMultiLine|textNoSuggestions"
+
+                        />
+
+                    <Button
+                        android:id="@+id/btn_add_star"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:textColor="@android:color/white"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentBottom="true"
+                        android:background="@android:color/transparent"
+                        android:visibility="gone"
+                        android:text="@string/star_icon"
+                        android:textSize="24sp"
+                        />
+                    <Button
+                        android:id="@+id/add_label"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:textColor="@android:color/white"
+                        android:layout_centerVertical="true"
+                        android:layout_above="@id/btn_add_star"
+                        android:layout_alignParentLeft="true"
+                        android:background="@android:color/transparent"
+                        android:visibility="gone"
+                        android:text="@string/add_label"
+                        android:textSize="23sp"
+
+                        />
+
+
+
+
+                </RelativeLayout>
+
+
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="12"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal"
+                >
+
+
+                <Button
+                    android:id="@+id/favorites_list"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:background="@android:color/transparent"
+                    android:layout_centerVertical="true"
+                    android:visibility="visible"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/list"
+                    android:textSize="27sp"
+                    />
+                <Button
+                    android:id="@+id/currency_list"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:background="@android:color/transparent"
+                    android:layout_centerVertical="true"
+                    android:visibility="visible"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/dollar_icon_string"
+                    android:textSize="27sp"
+
+                    />
+
+                <com.sepidsa.fortytwocalculator.AutoResizeTextView
+                    android:id="@+id/translationEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="92"
+                    style="@style/translation_box"
+                    android:includeFontPadding="false"
+
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="66"
+                android:orientation="horizontal"
+                android:baselineAligned="true">
+
+                <LinearLayout
+                    android:id="@+id/FourthRowScientific"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".25"
+                    android:orientation="vertical"
+                    android:gravity="center" >
+
+
+                    <Button
+                        android:id="@+id/buttonHamburgerMenu"
+                        style="@style/CustomButton.icon_button."
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:text="@string/hamburger_menu"
+                        android:tag="p"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="#DADFE1"
+                        android:textSize="@dimen/retro_scientific_text_size"
+
+                        />
+
+                    <Button
+                        android:id="@+id/buttonColors"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        style="@style/CustomButton.icon_button."
+                        android:text="@string/theme"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:tag="@string/theme"
+                        android:textColor="#DADFE1"
+                        android:textSize="@dimen/retro_scientific_text_size"
+
+                        />
+
+
+
+                    <Button
+                        android:id="@+id/buttonMute"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        style="@style/CustomButton.icon_button."
+                        android:tag="@string/volume_high"
+                        android:text="@string/volume_high"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="#DADFE1"
+                        android:textSize="@dimen/retro_scientific_text_size"
+
+                        />
+
+
+
+
+
+                    <Button
+                        android:id="@+id/buttonSettings"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:text="@string/settings"
+                        android:tag="feedBack"
+                        style="@style/CustomButton.icon_button."
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="#DADFE1"
+                        android:textSize="@dimen/retro_scientific_text_size"
+
+                        />
+
+
+                    <ImageView
+                        android:id="@+id/buttonempty"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:tag="feedBack"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:background="@android:color/transparent"
+                        android:textSize="@dimen/retro_scientific_text_size"
+
+                        />
+
+
+                </LinearLayout>
+
+
+                <fragment
+                    android:id="@+id/scientific_frame"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:name="com.sepidsa.fortytwocalculator.ScientificFragment"
+                    tools:layout="@layout/fragment_scientific_flat"
+                    />
+
+
+                <fragment
+                    android:id="@+id/dialpad_frame"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:name="com.sepidsa.fortytwocalculator.DialpadFragment"
+                    android:tag="dialpad_fragment_tag"
+                    tools:layout="@layout/fragment_dialpad_flat"
+                    />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+
+
+
+</LinearLayout>

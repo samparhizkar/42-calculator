@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/transparent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/buttonBarStyle"
+        android:orientation="horizontal">
+
+        <SearchView
+            android:layout_width="0dp"
+            android:layout_weight="6"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="true"
+            android:id="@+id/log_search_view"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:searchIcon="@drawable/ic_search_gray"
+            android:closeIcon="@drawable/ic_cancel_gray"
+            />
+
+        <Button
+            android:id="@+id/button_clear_log"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            style="?android:attr/borderlessButtonStyle"
+            android:textSize="19sp"
+            android:textColor="#9E9E9E"
+
+            android:text="@string/delete_item"/>
+
+        <Button
+            android:id="@+id/button_export_log"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            style="?android:attr/borderlessButtonStyle"
+            android:textSize="19sp"
+            android:textColor="#9E9E9E"
+
+            android:text="@string/share_item"/>
+
+
+
+
+
+    </LinearLayout>
+
+    <ListView android:id="@+id/listview_log"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:paddingRight="@dimen/padding_large"
+        >
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+
+        <ImageView
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_weight="20"
+            android:src="@drawable/smiley_baloon"
+            android:layout_above="@id/empty_list"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+           />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="80"
+            android:id="@+id/empty_list"
+            style="@style/CustomButton"
+            android:textSize="@dimen/log_detail_txt_size"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center"
+            android:text="@string/log_empty_string"
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomButton.DIGIT" parent="CustomButton">
+
+
+        <item name="android:background">@drawable/selector_for_btn_dialpad</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+
+    </style>
+</resources>

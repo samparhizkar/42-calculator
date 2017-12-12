@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:drakeet="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
+
+
+
+
+
+
+
+
+
+    <LinearLayout
+        android:id="@+id/SecondRow"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+
+        <Button
+            android:id="@+id/buttonClear"
+            style="@style/CustomButton"
+
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:tag="@string/clear"
+            android:text= "@string/clear"
+
+            android:textColor="@color/red_buttons_text_color"
+            android:background="@drawable/selector_for_btn_clear"
+
+            />
+
+
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+
+            android:layout_weight="1"
+            android:text="@string/seven"
+            android:tag="@string/seven"
+            style="@style/CustomButton.DIGIT"
+            />
+
+
+
+
+        <Button
+            android:id="@+id/button4"
+
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            style="@style/CustomButton.DIGIT"
+
+            android:layout_weight="1"
+            android:text="@string/four"
+            android:tag="@string/four"
+
+            />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+
+            android:layout_weight="1"
+            android:text="@string/one"
+            android:tag="@string/one"
+
+            style="@style/CustomButton.DIGIT"
+            />
+
+
+        <Button
+            android:id="@+id/buttonPoint"
+            style="@style/CustomButton.DIGIT"
+
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+
+
+            android:text="@string/point"
+            android:tag="@string/point"
+
+            android:layout_weight="1" />
+
+
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center"
+        >
+
+        <Button
+            android:id="@+id/openParen"
+            android:layout_weight="1"
+            android:text="@string/parenthesis_open"
+            android:tag="@string/parenthesis_open"
+            style="@style/CustomButton.DIGIT"
+
+            />
+
+
+        <!-- <Button
+             android:id="@+id/button8"
+             android:layout_weight="1"
+             android:text="@string/eight"
+             android:tag="@string/eight"
+
+             style="@style/CustomButton.DIGIT"
+             />
+ -->
+
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_weight="1"
+            android:text="@string/eight"
+            android:tag="@string/eight"
+            style="@style/CustomButton.DIGIT"
+            />
+
+
+
+
+
+
+
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_weight="1"
+            android:text="@string/five"
+            android:tag="@string/five"
+            style="@style/CustomButton.DIGIT"
+            />
+
+
+
+
+
+
+
+
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_weight="1"
+            android:text="@string/two"
+            android:tag="@string/two"
+            style="@style/CustomButton.DIGIT"
+            />
+
+        <Button
+            android:id="@+id/button0"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:paddingRight="0dp"
+            android:text="@string/zero"
+            android:tag="@string/zero"
+            style="@style/CustomButton.DIGIT"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center"
+        >
+
+
+        <Button
+            android:id="@+id/closeParen"
+            android:layout_weight="1"
+            android:text="@string/parenthesis_closed"
+            android:tag="@string/parenthesis_closed"
+            style="@style/CustomButton.DIGIT"
+
+
+            />
+
+
+        <Button
+            android:id="@+id/button9"
+            android:layout_weight="1"
+            android:text="@string/nine"
+            android:tag="@string/nine"
+            style="@style/CustomButton.DIGIT"
+
+            />
+
+        <Button
+            android:id="@+id/button6"
+            style="@style/CustomButton.DIGIT"
+            android:layout_weight="1"
+            android:text="@string/six"
+            android:tag="@string/six"
+            />
+
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_weight="1"
+            android:text="@string/three"
+            android:tag="@string/three"
+            style="@style/CustomButton.DIGIT"
+            />
+
+
+        <Button
+            android:id="@+id/buttonPercent"
+            android:layout_weight="1"
+            android:text="@string/percentage"
+            android:tag="@string/percentage"
+            style="@style/CustomButton.DIGIT"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center"
+        >
+
+
+
+
+
+        <Button
+            android:id="@+id/buttonDevide"
+            android:layout_weight="1"
+            android:tag="@string/devide"
+            android:text="@string/devide"
+            style="@style/CustomButton.DIGIT"
+
+            />
+
+        <Button
+            android:id="@+id/buttonTimes"
+            style="@style/CustomButton.DIGIT"
+            android:layout_weight="1"
+            android:tag="@string/multiply"
+            android:text="@string/multiply"
+            />
+
+
+        <Button
+            android:id="@+id/buttonMinus"
+            style="@style/CustomButton.DIGIT"
+            android:layout_weight="1"
+            android:text="@string/subtract"
+            android:tag="@string/subtract"
+            />
+
+        <Button
+            android:id="@+id/buttonPlus"
+            style="@style/CustomButton.DIGIT"
+            android:text="@string/add"
+            android:tag="@string/add"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/buttonEquals"
+            style="@style/CustomButton.DIGIT"
+            android:layout_weight="1"
+            android:text="@string/equals"
+            android:tag="@string/equals"
+            android:textColor="@color/orange_buttons_text_color"
+            android:background="@drawable/selector_for_btn_equal"
+            />
+
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

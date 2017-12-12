@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_normal"
+    android:orientation="vertical"
+    android:baselineAligned="false"
+    >
+
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonConstant"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            android:background="@drawable/selector_for_btn_blue"
+
+            android:layout_weight="1"
+            android:text="@string/constant"
+            android:tag="@string/constant"
+            android:textSize="@dimen/retro_scientific_text_size"
+            />
+
+        <Button
+            android:id="@+id/buttonrad"
+            style="@style/CustomButton.RETRO.black.scientific"
+
+            android:layout_weight="1"
+            android:text="@string/sqrt"
+            android:tag="@string/sqrt"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonpower"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:tag="@string/power"
+            android:text="@string/power"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+        <Button
+            android:id="@+id/buttonPow2"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/powertwo"
+            android:tag="@string/powertwoTag"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonPow3"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/powerthree"
+            android:tag="@string/powerthreeTag"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonClear"
+            android:layout_weight="1"
+            android:tag="@string/clear"
+            android:text="@string/clear"
+            style="@style/CustomButton.RETRO.clear.land"
+
+            />
+
+        <Button
+            android:id="@+id/button7"
+
+            android:layout_weight="1"
+            android:text="@string/seven"
+            android:tag="@string/seven"
+            style="@style/CustomButton.RETRO.black.scientific"
+            />
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_weight="1"
+            android:text="@string/eight"
+            android:tag="@string/eight"
+            style="@style/CustomButton.RETRO.black.scientific"
+            />
+
+
+        <Button
+            android:id="@+id/button9"
+            android:layout_weight="1"
+            android:text="@string/nine"
+            android:tag="@string/nine"
+            style="@style/CustomButton.RETRO.black.scientific"
+            />
+
+
+        <Button
+            android:id="@+id/buttonDevide"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            android:layout_weight="1"
+            android:tag="@string/devide"
+            android:text="@string/devide"
+            />
+
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+
+        <ToggleButton
+            android:id="@+id/buttonInverse"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/inverse"
+            android:text="@string/inverse"
+            android:tag="@string/inverse"
+            android:textOn="INV"
+            android:textOff="INV"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/selector_for_btn_blue"
+
+            />
+
+
+
+
+
+
+
+
+        <Button
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:id="@+id/buttonfact"
+            android:layout_weight="1"
+            android:text="@string/factoriel"
+            android:tag="@string/factoriel"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+
+
+
+        <Button
+            android:id="@+id/buttonpie"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:tag="@string/Pi"
+            android:text="@string/Pi"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonln"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/ln"
+            android:tag="@string/ln_tag"
+            android:textSize="@dimen/retro_scientific_text_size"
+            />
+
+        <Button
+            android:id="@+id/buttonlog"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/log"
+            android:tag="@string/log_tag"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+
+        <Button
+            android:id="@+id/openParen"
+            android:layout_weight="1"
+            android:text="@string/parenthesis_open"
+            android:tag="@string/parenthesis_open"
+            style="@style/CustomButton.RETRO.grey.scientific"
+
+            />
+
+
+
+
+
+
+
+
+
+
+
+
+        <Button
+            android:id="@+id/button4"
+
+            android:layout_weight="1"
+            android:text="@string/four"
+            android:tag="@string/four"
+            style="@style/CustomButton.RETRO.black.scientific"
+
+            />
+
+
+
+
+
+
+
+
+
+
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_weight="1"
+            android:text="@string/five"
+            android:tag="@string/five"
+            style="@style/CustomButton.RETRO.black.scientific"
+            />
+
+
+
+
+
+
+
+
+
+
+        <Button
+            android:id="@+id/button6"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/six"
+            android:tag="@string/six"
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonTimes"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            android:layout_weight="1"
+            android:tag="@string/multiplyValue"
+            android:text="@string/multiply"
+            />
+
+
+
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+
+
+
+        <ToggleButton
+            android:id="@+id/buttonARC"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/ARC"
+            android:textOff="@string/ARC"
+            android:textOn="@string/ARC"
+            android:tag="@string/ARC"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/selector_for_btn_blue"
+
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonSinus"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:hint="@string/sin"
+            android:text="@string/sin"
+            android:tag="@string/trigonomic"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonCosinus"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/cos"
+            android:tag="@string/trigonomic"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+        <Button
+            android:id="@+id/buttonTan"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/tan"
+            android:tag="@string/trigonomic"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+
+
+        <Button
+            android:id="@+id/buttonEXP"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/EXP"
+            android:tag="@string/EXPTag"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+
+
+
+        <Button
+            android:id="@+id/closeParen"
+            android:layout_weight="1"
+            android:text="@string/parenthesis_closed"
+            android:tag="@string/parenthesis_closed"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            />
+
+
+
+        <Button
+            android:id="@+id/button1"
+
+            android:layout_weight="1"
+            android:text="@string/one"
+            android:tag="@string/one"
+            style="@style/CustomButton.RETRO.black.scientific"
+            />
+
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_weight="1"
+            android:text="@string/two"
+            android:tag="@string/two"
+            style="@style/CustomButton.RETRO.black.scientific"
+            />
+
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_weight="1"
+            android:text="@string/three"
+            android:tag="@string/three"
+            style="@style/CustomButton.RETRO.black.scientific"
+
+            />
+
+        <Button
+            android:id="@+id/buttonMinus"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            android:layout_weight="1"
+            android:text="@string/subtract"
+            android:tag="@string/subtract"
+            />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+
+        <ToggleButton
+
+
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/switch_deg_rad"
+            android:layout_centerInParent="true"
+            android:textOff="Rad"
+            android:textOn="DEG"
+            android:checked="true"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/selector_for_btn_blue"
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonSinusH"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:hint="@string/sinh"
+            android:text="@string/sinh"
+            android:tag="@string/trigonomic"
+            android:textSize="@dimen/retro_scientific_text_size"
+            />
+
+
+        <Button
+            android:id="@+id/buttonCosinusH"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:layout_weight="1"
+            android:text="@string/cosh"
+            android:tag="@string/trigonomic"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+        <Button
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:id="@+id/buttonTanH"
+            android:layout_weight="1"
+            android:text="@string/tanh"
+            android:tag="@string/trigonomic"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+
+
+
+
+
+        <Button
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:id="@+id/buttonRandom"
+            android:layout_weight="1"
+            android:text="@string/random"
+            android:tag="@string/random"
+            android:textSize="@dimen/retro_scientific_text_size"
+
+            />
+        <Button
+            android:id="@+id/buttonPercent"
+            android:layout_weight="1"
+            android:text="%"
+            android:tag="%"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            />
+
+        <Button
+            android:id="@+id/buttonPoint"
+            style="@style/CustomButton.RETRO.black.scientific"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/point"
+            android:tag="@string/point"
+            android:layout_weight="1"
+            />
+
+
+        <Button
+            android:id="@+id/button0"
+            android:layout_weight="1"
+            android:text="@string/zero"
+            android:tag="@string/zero"
+            style="@style/CustomButton.RETRO.black.scientific"
+            />
+
+
+        <Button
+            android:id="@+id/buttonEquals"
+            style="@style/CustomButton.RETRO.equally.land"
+            android:layout_weight="1"
+            android:text="@string/equals"
+            android:tag="@string/equals"
+            android:gravity="center"
+
+            />
+
+
+        <Button
+            android:id="@+id/buttonPlus"
+            style="@style/CustomButton.RETRO.grey.scientific"
+            android:text="@string/add"
+            android:tag="@string/add"
+            android:layout_weight="1"
+            android:gravity="center"
+            />
+
+
+
+
+
+
+
+
+
+
+    </LinearLayout>
+</LinearLayout>

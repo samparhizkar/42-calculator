@@ -1,0 +1,219 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/color_activity_body"
+    android:clipChildren="true"
+    android:clipToPadding="false"
+    android:background="@android:color/transparent"
+    tools:context="com.sepidsa.fortytwocalculator.ColorPickerActivity"
+    >
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="90"
+        android:fillViewport = "true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+
+            <RelativeLayout
+                android:id="@+id/layout_color_picker_accent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="50"
+                android:background="@android:color/holo_green_light"
+                android:focusable="false"
+                android:orientation="horizontal"
+                android:elevation="5dp"
+
+                >
+
+                <ImageButton
+                    android:id="@+id/button_back"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_arrow_left_white_24dp"
+                    android:background="@android:color/transparent"
+                    />
+
+                <TextView
+                    android:id="@+id/textview_accent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:background="@android:color/transparent"
+                    android:text=" صفحه نمایش"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="25sp"
+                    android:textColor="@android:color/white"
+                    android:layout_margin="20dp"
+                    android:textStyle="bold"
+
+                    />
+
+                <com.sepidsa.fortytwocalculator.ColorPickerPalette
+                    android:id="@+id/color_picker_accent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/padding_large"
+                    android:scrollbars = "vertical"
+                    android:focusable="false"
+                    android:tag="keypad_color"
+                    android:layout_below="@+id/textview_accent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
+
+                    />
+
+
+
+            </RelativeLayout>
+
+
+
+            <RelativeLayout
+                android:id="@+id/layout_color_picker_keypad"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="50"
+                android:background="@android:color/holo_blue_light"
+                android:focusable="false"
+                android:orientation="horizontal"
+                android:elevation="3dp"
+
+                >
+
+
+                <TextView
+                    android:id="@+id/textView_keypad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:background="@android:color/transparent"
+                    android:text="صفحه کلید"
+
+                    android:layout_centerHorizontal="true"
+                    android:textSize="25sp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:id="@+id/gold_version_star_keypad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="*"
+                    android:textSize="20sp"
+                    android:textColor="#FFC107"
+                    android:textStyle="bold"
+                    android:gravity="top"
+                    android:layout_marginRight="5dp"
+                    android:layout_alignTop="@+id/textView_keypad"
+                    android:layout_toLeftOf="@+id/textView_keypad"
+                    android:layout_toStartOf="@+id/textView_keypad" />
+
+                <com.sepidsa.fortytwocalculator.ColorPickerPalette
+                    android:id="@+id/color_picker_keypad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/padding_large"
+                    android:scrollbars = "vertical"
+                    android:focusable="false"
+                    android:tag="keypad_color"
+                    android:layout_below="@+id/textView_keypad"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+
+                    />
+
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:background="@android:color/white"
+        android:focusable="false"
+        android:orientation="horizontal"
+        >
+
+
+        <TextView
+            android:id="@+id/textview_use_classic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="تم کلاسیک"
+            android:textSize="25sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            />
+
+        <TextView
+            android:id="@+id/textview_go_gold_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_use_classic"
+            android:background="@android:color/transparent"
+            android:text="موارد ستاره دار فقط در نسخه طلایی"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            />
+
+        <TextView
+            android:id="@+id/gold_version_star_classic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/textview_use_classic"
+            android:background="@android:color/transparent"
+            android:text="*"
+            android:textSize="20sp"
+            android:textColor="#FFC107"
+            android:textStyle="bold"
+            android:layout_alignTop="@+id/textview_use_classic"
+            android:layout_marginRight="6dp"
+            android:gravity="top"
+            />
+        <Switch
+            android:id="@+id/switch_classic_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textview_go_gold_tip"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
+/>
+    </RelativeLayout>
+
+
+</LinearLayout>
+
+
+

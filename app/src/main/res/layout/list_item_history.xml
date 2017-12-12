@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+       Copyright (C) 2015 Haruki Hasegawa
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+           http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!-- NOTE: should use FrameLayout or RelativeLayout for parent of the "@id/container" view (for Android 2.3 compatibility) -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/commonListItemStyle"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="3dp"
+    android:background="@android:color/transparent"
+    >
+
+
+    <LinearLayout
+        android:id="@+id/logFrame"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <RelativeLayout
+            android:id="@+id/log_fragment"
+            android:animateLayoutChanges="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants">
+
+
+            <CheckBox
+                android:id="@+id/log_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/custom_star"
+                android:gravity="center_horizontal|top"
+                android:focusable="false"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="false"
+                android:layout_marginTop="@dimen/padding_large"
+                />
+
+            <TextView
+                android:id="@+id/arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chevron"
+                android:gravity="center"
+                android:textColor="#EEEEEE"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignStart="@id/log_checkbox"
+                android:layout_alignLeft="@id/log_checkbox"
+                android:layout_below="@id/log_checkbox"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="@dimen/padding_small"
+                android:textSize="15sp"
+                />
+
+
+
+
+            <TextView
+                android:id="@+id/operation"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/CustomButton"
+                android:textSize="@dimen/log_detail_txt_size"
+                android:textColor="@android:color/darker_gray"
+                android:gravity="left"
+                android:layout_toLeftOf="@id/log_checkbox"
+                android:focusable="false"
+                android:includeFontPadding="false"
+                android:paddingTop="@dimen/padding_small"
+                android:paddingLeft="@dimen/padding_medium"
+
+                />
+
+            <TextView
+                android:id="@+id/result"
+                android:layout_below="@id/operation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/CustomButton"
+                android:textSize="@dimen/log_title_txt_size"
+                android:textColor="#616161"
+                android:gravity="left"
+                android:layout_toLeftOf="@id/log_checkbox"
+                android:clickable="false"
+                android:focusable="false"
+                android:includeFontPadding="false"
+                android:paddingLeft="@dimen/padding_medium"
+
+                />
+
+            <FrameLayout
+                android:id="@+id/tag_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/result"
+                android:layout_toLeftOf="@id/log_checkbox"
+                android:layout_alignParentLeft="true"
+
+                >
+                <TextView
+                    android:id="@+id/LOG_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomButton"
+                    android:textSize="@dimen/log_detail_txt_size"
+                    android:textColor="@android:color/white"
+                    android:gravity="left"
+                    android:focusable="false"
+
+                    />
+            </FrameLayout>
+        </RelativeLayout>
+
+        <LinearLayout android:id="@+id/toolbar"
+            android:layout_height="50dip"
+            android:animateLayoutChanges="true"
+            android:layout_marginBottom="-50dip"
+            android:visibility="gone"
+            android:gravity="center"
+            android:descendantFocusability="blocksDescendants"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="fill_parent">
+
+            <Button android:id="@+id/deleteButton"
+                android:layout_height="50dip"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:layout_width="wrap_content"
+                style="?android:attr/borderlessButtonStyle"
+                android:textColor="#9E9E9E"
+
+                android:text="@string/delete_item"/>
+
+            <Button android:id="@+id/labelButton"
+                android:layout_height="50dip"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:layout_width="wrap_content"
+                style="?android:attr/borderlessButtonStyle"
+                android:textColor="#9E9E9E"
+                android:text="@string/add_label"/>
+
+            <Button android:id="@+id/shareButton"
+                android:layout_height="50dip"
+                android:layout_width="wrap_content"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                style="?android:attr/borderlessButtonStyle"
+                android:textColor="#9E9E9E"
+                android:text="@string/share_item"/>
+
+            <Button android:id="@+id/useButton"
+                android:layout_height="50dip"
+                android:layout_width="wrap_content"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:visibility="visible"
+                style="?android:attr/borderlessButtonStyle"
+                android:textColor="#9E9E9E"
+                android:text="@string/use_item"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/background"
+    android:background="#3F51B5"
+    android:orientation="vertical"
+    >
+
+    <Button
+        android:id="@+id/btn_buy_premium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/become_premium"
+        android:background="@drawable/button_border"
+        android:padding="@dimen/padding_large"
+        android:layout_marginTop="@dimen/abc_control_padding_material"
+        android:textColor="@android:color/white"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/padding_large"
+
+        android:layout_below="@id/btn_buy_premium"
+
+        >
+
+        <ImageView
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:id="@+id/tour_descriptive_icon"
+            android:src="@drawable/premium_list"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/padding_large"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible"
+            android:id="@+id/tour_title"
+            android:text="تاریخچه پایا"
+            android:gravity="center"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_orange_light"
+            android:layout_below= "@+id/tour_descriptive_icon"
+
+            />
+        <TextView
+
+            android:id="@+id/tour_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:text="تاریخچه محاسبات شما هیچ وقت پاک نخواهد شد"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+
+            android:layout_below="@+id/tour_title"
+            android:padding="@dimen/padding_large"
+            android:layout_centerHorizontal="true"             />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

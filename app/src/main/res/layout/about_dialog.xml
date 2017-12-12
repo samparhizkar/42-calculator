@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="#00ACC1"
+    style="@android:style/TextAppearance.DeviceDefault.Widget.EditText"
+    android:clickable="true"
+    >
+
+    <RelativeLayout
+        android:id="@+id/MotherTop"
+        android:orientation="vertical"
+        android:layout_weight="30"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#fff"
+        >
+
+
+        <ImageButton
+            android:id="@+id/button_back_about"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="3dp"
+            android:src="@drawable/arrow_left"
+            android:background="@android:color/transparent"
+            />
+
+
+
+        <ImageView
+            android:id="@+id/sepidsa_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:singleLine="true"
+            android:fontFamily="sans-serif-thin"
+            android:textColor="@android:color/white"
+            android:layout_margin="2dp"
+            android:layout_above="@+id/sepidsa_web_page_button"
+            android:src="@drawable/sepidsa_icon_1440"
+            android:layout_centerInParent="true"
+
+            />
+
+
+
+        <RelativeLayout
+            android:id="@+id/packet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            >
+
+
+
+            <ImageButton
+                android:id="@+id/sepidsa_webpage_icon_button"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_web_grey600_24dp"
+                android:background="@android:color/transparent"
+                android:layout_alignParentLeft="true"
+                />
+
+
+            <ImageButton
+                android:id="@+id/email_info_sepidsa"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_email_outline_grey600_24dp"
+                android:background="@android:color/transparent"
+                android:layout_toRightOf="@id/sepidsa_webpage_icon_button"
+               />
+
+
+            <ImageButton
+                android:id="@+id/facebook_sepidsa"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_facebook_box_grey600_24dp"
+                android:background="@android:color/transparent"
+                android:layout_toRightOf="@id/email_info_sepidsa"
+               />
+
+
+            <ImageButton
+                android:id="@+id/instagram_sepidsa"
+
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_instagram_grey600_24dp"
+                android:background="@android:color/transparent"
+                android:layout_toRightOf="@+id/facebook_sepidsa"
+/>
+
+        </RelativeLayout>
+        <Button
+
+            android:id="@+id/sepidsa_web_page_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/packet"
+            android:text="سپیدسا"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/darker_gray"
+            android:layout_centerHorizontal="true"
+            android:textSize="19sp"
+            />
+
+    </RelativeLayout>
+
+
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="19"
+        >
+        <View
+            android:id="@+id/centerShim"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true"/>
+
+        <RelativeLayout
+            android:id="@+id/left_pane"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_medium"
+            android:layout_toLeftOf="@id/centerShim"
+            android:layout_centerInParent="true"
+            >
+
+
+            <ImageView
+                android:id="@+id/avatar_farshid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/farshid_avatar"
+                android:layout_margin="@dimen/padding_large"
+                android:layout_centerHorizontal="true"
+
+                />
+
+            <TextView
+                android:id="@+id/farshid_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/avatar_farshid"
+                android:text="فرشید"
+                android:textColor="@android:color/white"
+                android:layout_centerHorizontal="true"
+                />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/farshid_name"
+                android:layout_margin="@dimen/padding_small"
+                android:layout_centerHorizontal="true"
+                >
+
+
+                <ImageButton
+                    android:id="@+id/mail_to_farshid"
+                    android:layout_centerInParent="true"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/mail_to_farshid"
+                    android:src="@drawable/ic_email_white_24dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/padding_medium"
+
+                    />
+
+                <ImageButton
+                    android:id="@+id/linked_in_farshid"
+                    android:layout_toLeftOf="@id/mail_to_farshid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_linkedin_white_24dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/padding_medium"
+
+                    />
+
+
+
+
+
+                <ImageButton
+                    android:id="@+id/instagram_farshid"
+                    android:layout_toRightOf="@id/mail_to_farshid"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_instagram_white_24dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/padding_medium"
+
+                    />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/right_pane"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_medium"
+            android:layout_toRightOf="@id/centerShim"
+            android:layout_centerInParent="true"
+            >
+
+
+            <ImageView
+                android:id="@+id/avatar_ehsan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ehsan_avatar"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/padding_large"
+                />
+            <TextView
+                android:id="@+id/ehsan_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/avatar_ehsan"
+                android:text="احسان"
+                android:layout_centerHorizontal="true"
+                android:textColor="@android:color/white"
+
+                />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/ehsan_name"
+                android:layout_margin="@dimen/padding_small"
+                android:layout_centerHorizontal="true"
+
+                >
+
+                <ImageButton
+                    android:id="@+id/mail_to_ehsan"
+                    android:layout_centerInParent="true"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_email_white_24dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/padding_medium"
+
+                    />
+
+                <ImageButton
+                    android:id="@+id/linked_in_ehsan"
+                    android:layout_toLeftOf="@id/mail_to_ehsan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_linkedin_white_24dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/padding_medium"
+
+                    />
+
+
+                <ImageButton
+                    android:id="@+id/instagram_ehsan"
+                    android:layout_toRightOf="@id/mail_to_ehsan"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_instagram_white_24dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/padding_medium"
+
+                    />
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>
+
+
+

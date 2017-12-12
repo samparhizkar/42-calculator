@@ -1,0 +1,301 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    android:id="@+id/activity_body"
+    android:elevation="0.2dp"
+
+    >
+
+
+
+    <LinearLayout
+        android:id="@+id/MotherTop"
+        android:orientation="vertical"
+        android:layout_weight="19"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+
+
+            <TextSwitcher
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/text_switcher"
+                android:layout_toRightOf="@id/add_label"
+                >
+
+            <com.sepidsa.fortytwocalculator.AutoResizeTextView
+                android:id="@+id/result"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#1abc9c"
+                style="@style/text_switcher"
+                android:fontFamily="sans-serif-thin"
+                android:text="0"
+                android:gravity="center_vertical|right"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:paddingRight="@dimen/padding_medium"
+                android:includeFontPadding="false"
+                />
+            </TextSwitcher>
+            <TextView
+                android:id="@+id/scientific_mode_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/transparent"
+                android:textColor="@android:color/white"
+                android:paddingLeft="@dimen/padding_small"
+                android:text="RAD"
+                android:textSize="@dimen/retro_m_variable_text_size"
+
+                />
+
+            <TextView
+                android:id="@+id/m_vaiable_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@id/scientific_mode_textview"
+                android:background="@android:color/transparent"
+                android:textColor="@android:color/white"
+                android:paddingLeft="@dimen/padding_small"
+                android:text=" M = 0"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:textSize="@dimen/retro_m_variable_text_size"
+                />
+
+            <Button
+                android:id="@+id/btn_add_star"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:textColor="@android:color/black"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/transparent"
+                android:visibility="gone"
+                android:text="@string/star_icon"
+                android:textSize="22sp"
+                />
+            <Button
+                android:id="@+id/add_label"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:textColor="@android:color/white"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/btn_add_star"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/transparent"
+                android:visibility="gone"
+                android:text="@string/add_label"
+                android:textSize="19sp"
+
+                />
+
+
+        </RelativeLayout>
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+    <!--Dialpad Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="12.54"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/favorites_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:background="@android:color/transparent"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/list"
+
+            />
+        <Button
+            android:id="@+id/currency_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:background="@android:color/transparent"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/dollar_icon_string"
+            android:textSize="27sp"
+
+
+            />
+
+        <com.sepidsa.fortytwocalculator.AutoResizeTextView
+            android:id="@+id/translationEditText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="90"
+            style="@style/translation_box"
+            android:includeFontPadding="false"
+
+            />
+
+    </LinearLayout>
+
+
+
+
+
+    <LinearLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="65"
+        android:orientation="horizontal"
+        android:background="@android:color/transparent">
+
+        <!--<Button-->
+        <!--android:layout_width="0dp"-->
+        <!--android:id="@+id/west_cost"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="10"-->
+        <!--android:background="@android:color/white"-->
+        <!--android:text="left"-->
+        <!--android:textColor="@android:color/darker_gray"-->
+        <!--android:gravity="center"-->
+        <!--/>-->
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:orientation="vertical"
+            >
+
+
+            <Button
+                android:id="@+id/buttonHamburgerMenu"
+                style="@style/DIALPADBUTTON.LAND_NORMAL."
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/hamburger_menu"
+                android:textColor="#DADFE1"
+                android:tag="p"
+                android:textSize="18sp"
+
+                />
+
+            <Button
+                android:id="@+id/buttonColors"
+                style="@style/DIALPADBUTTON.LAND_NORMAL."
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/theme"
+                android:textColor="#DADFE1"
+                android:tag="q"
+                android:textSize="18sp"
+                />
+
+
+            <Button
+                android:id="@+id/buttonMute"
+                style="@style/DIALPADBUTTON.LAND_NORMAL."
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/volume_high"
+                android:textColor="#DADFE1"
+                android:tag="@string/volume_high"
+                android:textSize="18sp"
+                android:gravity="center"
+
+                />
+
+
+
+
+            <Button
+                android:id="@+id/buttonSettings"
+                style="@style/DIALPADBUTTON.LAND_NORMAL."
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/settings"
+                android:tag="feedback"
+                android:gravity="center"
+                android:textColor="#DADFE1"
+                android:textSize="18sp"
+                />
+
+
+
+
+
+        </LinearLayout>
+
+
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="85"
+            style="@style/viewpager"
+            android:tag="landscape_phone"
+            android:layout_gravity="left"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/view_pager_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_gravity="center_vertical"
+        android:paddingTop="0.5dp"
+
+
+        />
+
+
+</LinearLayout>
