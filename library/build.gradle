@@ -21,7 +21,7 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
-    implementation('com.mikepenz:iconics:1.0.2@aar') {
+    api('com.mikepenz:iconics:1.0.2@aar') {
         transitive = true
     }
 }
