@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'com.sepidsa.fortytwocalculator'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId 'com.sepidsa.fortytwocalculator'
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 23
         versionName '2.11'
     }
