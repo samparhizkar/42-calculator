@@ -12,8 +12,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        flatDir {
-            dirs "${rootProject.projectDir}/library/libs"
-        }
+        maven { url "${rootProject.projectDir}/local-maven" }
     }
 }

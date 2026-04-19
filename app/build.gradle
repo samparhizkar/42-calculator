@@ -30,19 +30,13 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 configurations.all {
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 }
 
 dependencies {
-    implementation(name: 'library-2.4.1', ext: 'aar')
+    implementation files('libs/library-2.4.1.aar')
     implementation project(':library')
 
     implementation 'androidx.appcompat:appcompat:1.7.0'
