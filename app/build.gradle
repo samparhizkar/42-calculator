@@ -36,9 +36,13 @@ repositories {
     }
 }
 
+configurations.all {
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+}
+
 dependencies {
     implementation(name: 'library-2.4.1', ext: 'aar')
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':library')
 
     implementation 'androidx.appcompat:appcompat:1.7.0'
