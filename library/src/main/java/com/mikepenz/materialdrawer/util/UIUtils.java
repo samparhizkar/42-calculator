@@ -77,7 +77,7 @@ public class UIUtils {
             // If we're running on Honeycomb or newer, then we can use the Theme's
             // selectableItemBackground to ensure that the View has a pressed state
             TypedValue outValue = new TypedValue();
-            ctx.getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
+            ctx.getTheme().resolveAttribute(androidx.appcompat.R.attr.selectableItemBackground, outValue, true);
             return outValue.resourceId;
         } else {
             TypedValue outValue = new TypedValue();
@@ -222,7 +222,7 @@ public class UIUtils {
     public static int getActionBarHeight(Context context) {
         int actionBarHeight = UIUtils.getThemeAttributeDimensionSize(context, android.R.attr.actionBarSize);
         if (actionBarHeight == 0) {
-            actionBarHeight = context.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material);
+            actionBarHeight = context.getResources().getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material);
         }
         return actionBarHeight;
     }

@@ -1077,7 +1077,7 @@ public class DrawerBuilder {
             if (mStatusBarColor == 0 && mStatusBarColorRes != -1) {
                 mStatusBarColor = mActivity.getResources().getColor(mStatusBarColorRes);
             } else if (mStatusBarColor == 0) {
-                mStatusBarColor = UIUtils.getThemeColorFromAttrOrRes(mActivity, R.attr.colorPrimaryDark, R.color.material_drawer_primary_dark);
+                mStatusBarColor = UIUtils.getThemeColorFromAttrOrRes(mActivity, androidx.appcompat.R.attr.colorPrimaryDark, R.color.material_drawer_primary_dark);
             }
             mDrawerContentRoot.setInsetForeground(mStatusBarColor);
         }
