@@ -12,7 +12,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +22,14 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
-//import android.support.annotation.Nullable;
+//import androidx.annotation.Nullable;
 
 
 /**
  * @author Ehsan
  *
  */
-public class DialpadFragment extends android.support.v4.app.Fragment implements OnClickListener,  CompoundButton.OnCheckedChangeListener {
+public class DialpadFragment extends androidx.fragment.app.Fragment implements OnClickListener,  CompoundButton.OnCheckedChangeListener {
 
     private boolean arcIsOn = false;
     String TAG = "recreate";

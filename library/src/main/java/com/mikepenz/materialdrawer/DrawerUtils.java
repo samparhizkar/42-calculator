@@ -2,7 +2,7 @@ package com.mikepenz.materialdrawer;
 
 import android.app.Activity;
 import android.os.Build;
-import android.support.v4.widget.DrawerLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;

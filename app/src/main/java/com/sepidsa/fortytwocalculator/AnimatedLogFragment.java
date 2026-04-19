@@ -7,12 +7,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -105,7 +105,7 @@ public class AnimatedLogFragment extends Fragment implements LoaderManager.Loade
         View empty =  rootView.findViewById(R.id.empty_view);
         mListView.setEmptyView(empty);
         mListView.setAdapter(mLogAdapter);
-        getLoaderManager().restartLoader(0, null, (android.support.v4.app.LoaderManager.LoaderCallbacks) mLogFragment);
+        getLoaderManager().restartLoader(0, null, (androidx.loader.app.LoaderManager.LoaderCallbacks) mLogFragment);
 
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -118,11 +118,11 @@ public class AnimatedLogFragment extends Fragment implements LoaderManager.Loade
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)) {
-                    getLoaderManager().restartLoader(0, null, (android.support.v4.app.LoaderManager.LoaderCallbacks) mLogFragment);
+                    getLoaderManager().restartLoader(0, null, (androidx.loader.app.LoaderManager.LoaderCallbacks) mLogFragment);
                 } else {
                     Bundle filter = new Bundle();
                     filter.putString("filter", newText);
-                    getLoaderManager().restartLoader(0, filter, (android.support.v4.app.LoaderManager.LoaderCallbacks) mLogFragment);
+                    getLoaderManager().restartLoader(0, filter, (androidx.loader.app.LoaderManager.LoaderCallbacks) mLogFragment);
 
 
                 }

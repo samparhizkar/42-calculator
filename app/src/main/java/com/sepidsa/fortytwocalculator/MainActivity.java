@@ -27,12 +27,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -2175,7 +2175,7 @@ public void goGoldNotif() {
                 Cursor cursor = getContentResolver().query(LogContract.LogEntry.CONTENT_URI, null, selection, new String[]{Long.toString(mLatestInsertedId)}, null);
                 if (cursor.moveToFirst()) {
                     String currentLabel = cursor.getString(cursor.getColumnIndex(LogContract.LogEntry.COLUMN_TAG));
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
                     builder.setTitle(getString(R.string.farsi_label));
 
                     // Set up the input
@@ -2219,7 +2219,7 @@ public void goGoldNotif() {
 
                         }
                     });
-                    final android.support.v7.app.AlertDialog dialog = builder.create();
+                    final androidx.appcompat.app.AlertDialog dialog = builder.create();
                     dialog.show();
                     EditText.OnKeyListener keyListener = new EditText.OnKeyListener() {
                         public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -2227,7 +2227,7 @@ public void goGoldNotif() {
                                 switch (keyCode) {
                                     case KeyEvent.KEYCODE_DPAD_CENTER:
                                     case KeyEvent.KEYCODE_ENTER:
-                                        dialog.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).performClick();
+                                        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).performClick();
                                         return true;
                                     default:
                                         break;

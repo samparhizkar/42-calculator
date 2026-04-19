@@ -1,28 +1,27 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    namespace 'com.mikepenz.materialdrawer'
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 23
-        versionCode 305
-        versionName '3.0.5'
+        minSdk 21
     }
 
-    productFlavors {
-    }
-    lintOptions {
+    lint {
         abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
-
 dependencies {
-    compile "com.android.support:appcompat-v7:23.1.1"
-
-    compile('com.mikepenz:iconics:1.0.2@aar') {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+    implementation('com.mikepenz:iconics:1.0.2@aar') {
         transitive = true
     }
 }

@@ -1,58 +1,48 @@
-buildscript {
-    repositories {
-        mavenCentral() // or jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
-    }
-}
-
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    namespace 'com.sepidsa.fortytwocalculator'
+    compileSdk 34
+
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 23
+        applicationId 'com.sepidsa.fortytwocalculator'
+        minSdk 21
+        targetSdk 34
+        versionCode 23
+        versionName '2.11'
     }
+
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt') , 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
         }
-    }
-    productFlavors {
     }
 
     compileOptions {
-        encoding "UTF-8"
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        encoding 'UTF-8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+
 repositories {
-    mavenCentral()
     flatDir {
         dirs 'libs'
-
-
     }
 }
 
-
-
 dependencies {
+    implementation(name: 'library-2.4.1', ext: 'aar')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':library')
 
-    compile(name: 'library-2.4.1', ext: 'aar')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':library')
-    compile('com.mikepenz:aboutlibraries:5.0.1@aar') {
-        transitive = true
-    }
-
-    compile 'com.android.support:support-v4:23.1.0'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile files('libs/jsoup-1.8.2.jar')
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'androidx.fragment:fragment:1.8.1'
+    implementation 'androidx.loader:loader:1.1.0'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+    implementation 'org.jsoup:jsoup:1.17.2'
 }

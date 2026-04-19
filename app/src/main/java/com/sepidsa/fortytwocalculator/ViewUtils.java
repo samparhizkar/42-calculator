@@ -16,7 +16,7 @@
 
 package com.sepidsa.fortytwocalculator;
 
-import android.support.v4.view.ViewCompat;
+import androidx.core.view.ViewCompat;
 import android.view.View;
 
 public class ViewUtils {
