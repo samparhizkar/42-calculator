@@ -422,7 +422,7 @@ class DrawerUtils {
 
             if (drawer.mTranslucentActionBarCompatibility) {
                 TypedValue tv = new TypedValue();
-                if (drawer.mActivity.getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
+                if (drawer.mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
                     int topMargin = TypedValue.complexToDimensionPixelSize(tv.data, drawer.mActivity.getResources().getDisplayMetrics());
                     if (drawer.mTranslucentStatusBar) {
                         topMargin = topMargin + UIUtils.getStatusBarHeight(drawer.mActivity);
