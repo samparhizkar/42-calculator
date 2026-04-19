@@ -105,53 +105,41 @@ public class AboutActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Uri uri;
         Intent intent;
-        switch (v.getId()){
-            case R.id.mail_to_ehsan:
-                sendEmail(this,"ehsan@sepidsa.com","","",null);
-                break;
-            case R.id.email_info_sepidsa:
-                sendEmail(this,"info@sepidsa.com","","",null);
-                break;
-            case R.id.linked_in_ehsan:
-                uri = Uri.parse("https://www.linkedin.com/pub/ehsan-parhizkar/97/843/b79");
-                intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
-            case R.id.instagram_ehsan:
-                uri = Uri.parse("http://instagram.com/EHS4NPAR");
-                intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
-            case R.id.mail_to_farshid:
-                sendEmail(this,"farshid@sepidsa.com","","",null);
-                break;
-            case R.id.linked_in_farshid:
-                uri = Uri.parse("https://ir.linkedin.com/pub/farshid-imanipour/97/74a/a93");
-                intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
-            case R.id.instagram_farshid:
-                uri = Uri.parse("http://instagram.com/f4rsh");
-                intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
-            case R.id.button_back_about:
-                this.finish();
-                break;
-            case R.id.sepidsa_web_page_button:
-            case R.id.sepidsa_webpage_icon_button:
-                goToURL("http://blog.sepidsa.com");
-                break;
-            case R.id.instagram_sepidsa:
-                uri = Uri.parse("http://instagram.com/teamsepidsa");
-                intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
-            case R.id.facebook_sepidsa:
-                uri = Uri.parse("http://facebook.com/teamsepidsa");
-                intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                break;
+        int id = v.getId();
+        if (id == R.id.mail_to_ehsan) {
+            sendEmail(this,"ehsan@sepidsa.com","","",null);
+        } else if (id == R.id.email_info_sepidsa) {
+            sendEmail(this,"info@sepidsa.com","","",null);
+        } else if (id == R.id.linked_in_ehsan) {
+            uri = Uri.parse("https://www.linkedin.com/pub/ehsan-parhizkar/97/843/b79");
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else if (id == R.id.instagram_ehsan) {
+            uri = Uri.parse("http://instagram.com/EHS4NPAR");
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else if (id == R.id.mail_to_farshid) {
+            sendEmail(this,"farshid@sepidsa.com","","",null);
+        } else if (id == R.id.linked_in_farshid) {
+            uri = Uri.parse("https://ir.linkedin.com/pub/farshid-imanipour/97/74a/a93");
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else if (id == R.id.instagram_farshid) {
+            uri = Uri.parse("http://instagram.com/f4rsh");
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else if (id == R.id.button_back_about) {
+            this.finish();
+        } else if (id == R.id.sepidsa_web_page_button || id == R.id.sepidsa_webpage_icon_button) {
+            goToURL("http://blog.sepidsa.com");
+        } else if (id == R.id.instagram_sepidsa) {
+            uri = Uri.parse("http://instagram.com/teamsepidsa");
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else if (id == R.id.facebook_sepidsa) {
+            uri = Uri.parse("http://facebook.com/teamsepidsa");
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         }
 
     }

@@ -87,9 +87,9 @@ public class HelpActivity extends Activity implements ExpandableListView.OnChild
     }
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.button_back:
-                this.finish();
+        int id = v.getId();
+        if (id == R.id.button_back) {
+            this.finish();
         }
     }
 }

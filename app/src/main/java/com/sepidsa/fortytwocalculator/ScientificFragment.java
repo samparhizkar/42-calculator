@@ -142,11 +142,11 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
     }
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        int id = view.getId();
 
             //TODO
 
-            case R.id.buttonInverse:
+        if (id == R.id.buttonInverse) {
                 if(   ((ToggleButton)view).isChecked() == true){
                     applyInverse(true);
                 }else {
@@ -154,8 +154,7 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
 
                 }
 
-                break;
-            case R.id.buttonARC:
+        } else if (id == R.id.buttonARC) {
                 if(   ((ToggleButton)view).isChecked() == true){
                     arcIsOn = true;
                     applyArc(true);
@@ -164,9 +163,7 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
                     applyArc(false);
 
                 }
-                break;
-
-            case R.id.switch_deg_rad:
+        } else if (id == R.id.switch_deg_rad) {
 
                 boolean on = ((ToggleButton) view).isChecked();
 
@@ -178,18 +175,13 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
                     ((MainActivity)getActivity()). setAngleMode(false);
 
                 }
-                break;
-
-            case R.id.buttonConstant: {
+        } else if (id == R.id.buttonConstant) {
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 ConstantUseFragment constantUseDialog = new ConstantUseFragment();
                 constantUseDialog.show(fm, "fragment_constant_use");
 
-            }
-                break;
-
-            default:
+        } else {
                 if(view.getTag().toString().equals( "trigonomic")){
                     ((MainActivity) getActivity()).aButtonIsPressed(((Button)view).getText().toString()+"(");
 

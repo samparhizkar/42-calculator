@@ -2118,10 +2118,9 @@ public void goGoldNotif() {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        int id = v.getId();
 
-
-            case R.id.switch_deg_rad:
+        if (id == R.id.switch_deg_rad) {
 
                 boolean on = ((Switch) v).isChecked();
 
@@ -2133,16 +2132,14 @@ public void goGoldNotif() {
                     setAngleMode(false);
 
                 }
-                break;
 
-            case R.id.favorites_list:
+        } else if (id == R.id.favorites_list) {
 
                 FragmentManager fm = getSupportFragmentManager();
                 FavoritesFragment favoritesDialog = new FavoritesFragment();
                 favoritesDialog.show(fm, "fragment_favorites");
-                break;
 
-            case R.id.btn_add_star: {
+        } else if (id == R.id.btn_add_star) {
 
                 String selection = LogContract.LogEntry._ID + "=?";
                 Cursor cursor = getContentResolver().query(LogContract.LogEntry.CONTENT_URI, null, selection, new String[]{Long.toString(mLatestInsertedId)}, null);
@@ -2166,11 +2163,8 @@ public void goGoldNotif() {
                         .alpha(0)
                         .rotation(180)
                         .setDuration(1000);
-            }
 
-            break;
-
-            case R.id.add_label: {
+        } else if (id == R.id.add_label) {
                 final String  selection = LogContract.LogEntry._ID + "=?";
                 Cursor cursor = getContentResolver().query(LogContract.LogEntry.CONTENT_URI, null, selection, new String[]{Long.toString(mLatestInsertedId)}, null);
                 if (cursor.moveToFirst()) {
@@ -2244,39 +2238,26 @@ public void goGoldNotif() {
 
 
 
-            }
-
-            break;
-
-
-            case R.id.currency_list:
+        } else if (id == R.id.currency_list) {
                 CurrencyUseFragment currencyDialog = new CurrencyUseFragment();
                 currencyDialog.show(getSupportFragmentManager() , "fragment_currency_use");
-                break;
 
-
-            case R.id.buttonSettings:
+        } else if (id == R.id.buttonSettings) {
                 CustomDialogClass cdc = new CustomDialogClass(this , android.R.style.Theme_Holo_Light_Dialog_MinWidth);
                 cdc.show();
-                break;
 
-            case R.id.buttonHamburgerMenu:
+        } else if (id == R.id.buttonHamburgerMenu) {
                 mDrawer.openDrawer();
-                break;
 
-            case R.id.buttonMute:
+        } else if (id == R.id.buttonMute) {
                 reverseVolume();
                 if (getVolumeFromPreference() == true) {
                     ((Button)v).setText(getResources().getText(R.string.volume_high));
                 }else {
                     ((Button)v).setText(getResources().getText(R.string.volume_off));
                 }
-                break;
 
-
-
-
-            case R.id.buttonColors:
+        } else if (id == R.id.buttonColors) {
 
                 Intent myIntent = new Intent(MainActivity.this, ColorPickerActivity.class);
                 myIntent.putExtra("isPremium",getPremiumPreference());

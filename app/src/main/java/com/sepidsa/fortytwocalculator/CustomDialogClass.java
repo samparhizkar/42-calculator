@@ -159,24 +159,21 @@ public class CustomDialogClass extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        int id = v.getId();
 
-            case R.id.fortyTwoSample:
-            case R.id.give_stars:
+        if (id == R.id.fortyTwoSample || id == R.id.give_stars) {
 
                 Intent giveStarsIntent = new Intent(
                         Intent.ACTION_EDIT,
                         Uri.parse("http://cafebazaar.ir/app/com.sepidsa.fortytwocalculator/?l=fa"));
                 mContext.startActivity(giveStarsIntent);
                 dismiss();
-                break;
 
-            case R.id.language_selection:
+        } else if (id == R.id.language_selection) {
 
                 showSpinner();
-                break;
 
-            case R.id.dialpad_text_size:
+        } else if (id == R.id.dialpad_text_size) {
                 SharedPreferences fontSizePreference = mContext.getSharedPreferences("typography", Context.MODE_PRIVATE);
                 SharedPreferences.Editor fontSizeeditor = fontSizePreference.edit();
                 switch (fontSizePreference.getInt("DIALPAD_FONT", DIALPAD_FONT_ROBOTO_THIN)) {
@@ -204,10 +201,8 @@ public class CustomDialogClass extends Dialog implements View.OnClickListener {
                 }
                 set_dialpad_textSize_Button_typeface();
                 ((MainActivity) mContext).sendChangeFontThicknessMessage();
-                break;
 
-
-            case R.id.btn_CHANGE_TRANSLATION_FONT:
+        } else if (id == R.id.btn_CHANGE_TRANSLATION_FONT) {
 
                 try{
                     Intent myIntent = new Intent(mContext, PremiumShowcasePagerActivity.class);
@@ -219,7 +214,6 @@ public class CustomDialogClass extends Dialog implements View.OnClickListener {
                 }
 
                 dismiss();
-                break;
 
         }
     }
