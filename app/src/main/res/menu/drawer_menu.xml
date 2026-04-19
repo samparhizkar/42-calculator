@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/drawer_help"
+        android:icon="@drawable/ic_lightbulb_outline_grey600_24dp"
+        android:title="راهنما" />
+    <item
+        android:id="@+id/drawer_rate"
+        android:icon="@drawable/ic_thumb_up_outline_grey600_24dp"
+        android:title="امتیاز و نظر" />
+    <item
+        android:id="@+id/drawer_about"
+        android:icon="@drawable/about_us"
+        android:title="درباره" />
+    <item
+        android:id="@+id/drawer_contact"
+        android:icon="@drawable/ic_email_outline_grey600_24dp"
+        android:title="پیام به ما" />
+    <item
+        android:id="@+id/drawer_premium"
+        android:icon="@drawable/badge"
+        android:title="نسخه طلایی" />
+</menu>
