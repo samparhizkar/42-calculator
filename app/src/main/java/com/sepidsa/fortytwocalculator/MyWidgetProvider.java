@@ -49,11 +49,11 @@ public class MyWidgetProvider extends AppWidgetProvider {
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             remoteViews.setOnClickPendingIntent(R.id.update, pendingIntent);
 
             for (int index = 0 ; index < getButtonsID().length ;index ++){
-                 pendingIntent = PendingIntent.getBroadcast(context,0, makeIntent(context,mTokens[index],appWidgetIds), PendingIntent.FLAG_UPDATE_CURRENT);
+                 pendingIntent = PendingIntent.getBroadcast(context,0, makeIntent(context,mTokens[index],appWidgetIds), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
                 remoteViews.setOnClickPendingIntent(getButtonsID()[index], pendingIntent);
             }
 
