@@ -12,6 +12,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
+        flatDir {
+            dirs "${rootProject.projectDir}/library/libs"
+        }
     }
 }
