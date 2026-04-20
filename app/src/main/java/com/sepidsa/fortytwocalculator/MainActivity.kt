@@ -81,8 +81,6 @@ class MainActivity : FragmentActivity() {
 
         settingsRepository = SettingsRepository(this)
 
-        showSplashAndTour()
-
         setContentView(ComposeView(this).apply {
             setContent {
                 val calculatorState by calculatorViewModel.uiState.collectAsStateWithLifecycle()
@@ -268,14 +266,6 @@ class MainActivity : FragmentActivity() {
         val newVolumeState = !settingsRepository.hasVolume
         settingsRepository.hasVolume = newVolumeState
         return newVolumeState
-    }
-
-    private fun showSplashAndTour() {
-        if (!settingsRepository.hasViewedTour) {
-            settingsRepository.hasViewedTour = true
-            val intent = Intent(this, ParallaxPagerActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun populateConstantDatabaseFirstRun() {

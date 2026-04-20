@@ -40,10 +40,6 @@ class SettingsRepository(private val context: Context) {
         get() = typographyPrefs.getInt("DIALPAD_FONT", 0)
         set(value) = typographyPrefs.edit().putInt("DIALPAD_FONT", value).apply()
 
-    var hasViewedTour: Boolean
-        get() = appPrefs.getBoolean("hasViewedTour", false)
-        set(value) = appPrefs.edit().putBoolean("hasViewedTour", value).apply()
-
     var hasPopulatedConstantDatabase: Boolean
         get() = appPrefs.getBoolean("hasPopulatedConstantDatabase", false)
         set(value) = appPrefs.edit().putBoolean("hasPopulatedConstantDatabase", value).apply()

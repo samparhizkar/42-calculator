@@ -27,11 +27,6 @@
 
 
         <activity
-            android:name=".ParallaxPagerActivity"
-            android:label="@string/parallax_activity_name"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-        <activity
             android:name=".ColorPickerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_color_picker"
