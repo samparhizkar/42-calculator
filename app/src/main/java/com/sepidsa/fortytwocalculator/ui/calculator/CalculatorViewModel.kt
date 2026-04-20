@@ -79,8 +79,8 @@ class CalculatorViewModel(
     private val _uiEvents = MutableSharedFlow<CalculatorUiEvent>()
     val uiEvents: SharedFlow<CalculatorUiEvent> = _uiEvents.asSharedFlow()
 
-    private val _newLogEntry = MutableSharedFlow<Pair<String, String>>()
-    val newLogEntry: SharedFlow<Pair<String, String>> = _newLogEntry.asSharedFlow()
+    private val _newLogEntry = MutableSharedFlow<Triple<String, String, String>>()
+    val newLogEntry: SharedFlow<Triple<String, String, String>> = _newLogEntry.asSharedFlow()
 
     private val expressionBuffer = StringBuilder()
     private val buttonsStack = Stack<String>()
@@ -233,7 +233,8 @@ class CalculatorViewModel(
             _uiState.value = _uiState.value.copy(isCalculationPerformed = true, activeOperator = null)
             updateTranslation()
             viewModelScope.launch {
-                _newLogEntry.emit(_uiState.value.expression to _uiState.value.result)
+                val state = _uiState.value
+                _newLogEntry.emit(Triple(state.expression, state.result, state.translatedResult))
                 _uiEvents.emit(CalculatorUiEvent.CalculationPerformed)
                 _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Execute))
             }

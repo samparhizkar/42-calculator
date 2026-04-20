@@ -33,12 +33,8 @@ import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorUiState
 import com.sepidsa.fortytwocalculator.ui.history.HistoryScreen
 import com.sepidsa.fortytwocalculator.ui.history.HistoryUiState
 import com.sepidsa.fortytwocalculator.ui.scientific.ScientificScreen
-import com.sepidsa.fortytwocalculator.ui.favorites.FavoritesScreen
-import com.sepidsa.fortytwocalculator.ui.favorites.FavoritesUiState
 import com.sepidsa.fortytwocalculator.ui.constants.ConstantsScreen
 import com.sepidsa.fortytwocalculator.ui.constants.ConstantsUiState
-import com.sepidsa.fortytwocalculator.ui.currency.CurrencyScreen
-import com.sepidsa.fortytwocalculator.ui.currency.CurrencyUiState
 import com.sepidsa.fortytwocalculator.ui.dialogs.ColorPickerDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.SettingsDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.AboutDialog
@@ -59,6 +55,8 @@ fun MainScreen(
     onUpdateHistoryTag: (Long, String) -> Unit,
     onClearHistory: (Boolean) -> Unit,
     onShareHistoryItem: (LogEntity) -> Unit,
+    onUseHistoryEntry: (String) -> Unit,
+    onHistoryFilterChange: (com.sepidsa.fortytwocalculator.ui.history.HistoryFilter) -> Unit,
     onScientificKeyPress: (String) -> Unit,
     onInverseToggle: (Boolean) -> Unit,
     onArcToggle: (Boolean) -> Unit,
@@ -122,9 +120,13 @@ fun MainScreen(
                             onDelete = onDeleteHistoryItem,
                             onStarToggle = onStarHistoryItem,
                             onUpdateTag = onUpdateHistoryTag,
-                            onUseResult = { result -> onCalculatorKeyPress(result) },
+                            onUseEntry = { result ->
+                                onUseHistoryEntry(result)
+                                scope.launch { pagerState.animateScrollToPage(1) }
+                            },
                             onClearAll = onClearHistory,
-                            onShare = onShareHistoryItem
+                            onShare = onShareHistoryItem,
+                            onFilterChange = onHistoryFilterChange,
                         )
                         1 -> CalculatorScreen(
                             state = calculatorState,

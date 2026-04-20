@@ -9,8 +9,17 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LogDao {
-    @Query("SELECT * FROM log ORDER BY _id DESC")
+    @Query("SELECT * FROM log ORDER BY created_at DESC, _id DESC")
     fun getAllLogs(): Flow<List<LogEntity>>
+
+    @Query("SELECT * FROM log WHERE starred = 1 ORDER BY created_at DESC, _id DESC")
+    fun getStarredLogs(): Flow<List<LogEntity>>
+
+    @Query("SELECT * FROM log WHERE tag != '' ORDER BY created_at DESC, _id DESC")
+    fun getLabeledLogs(): Flow<List<LogEntity>>
+
+    @Query("SELECT * FROM log WHERE operation LIKE :query OR result_no_comma LIKE :query OR tag LIKE :query ORDER BY created_at DESC, _id DESC")
+    fun searchLogs(query: String): Flow<List<LogEntity>>
 
     @Query("SELECT * FROM log WHERE _id = :id")
     suspend fun getLogById(id: Long): LogEntity?

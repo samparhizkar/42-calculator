@@ -25,4 +25,10 @@ data class LogEntity(
 
     @ColumnInfo(name = LogContract.LogEntry.COLUMN_STARRED)
     val starred: Int = 0,
+
+    @ColumnInfo(name = "created_at")
+    val createdAt: Long = System.currentTimeMillis(),
+
+    @ColumnInfo(name = "words")
+    val words: String = "",
 )
