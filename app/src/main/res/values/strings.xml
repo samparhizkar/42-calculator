@@ -211,6 +211,21 @@
     <string name="app_tour_agree">عالیه</string>
   <string name="tenpowerx_tag">E</string>
 
+  <!-- Theme Editor -->
+  <string name="theme_editor_title">Appearance</string>
+  <string name="theme_color">Theme color</string>
+  <string name="appearance">Appearance</string>
+  <string name="appearance_light">Light</string>
+  <string name="appearance_dark">Dark</string>
+  <string name="appearance_system">System</string>
+  <string name="dynamic_color">Dynamic color</string>
+  <string name="dynamic_color_subtitle">Match your wallpaper</string>
+  <string name="key_color">Key color</string>
+  <string name="key_color_subtitle">Override operator and digit key colors</string>
+  <string name="paid_feature_label">Premium</string>
+  <string name="reset_to_defaults">Reset to defaults</string>
+  <string name="apply_changes">Apply</string>
+  <string name="default_label">Default</string>
 
 
 </resources>

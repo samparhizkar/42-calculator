@@ -30,7 +30,6 @@ import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorUiState
 import com.sepidsa.fortytwocalculator.ui.history.HistoryScreen
 import com.sepidsa.fortytwocalculator.ui.history.HistoryUiState
 import com.sepidsa.fortytwocalculator.ui.scientific.ScientificScreen
-import com.sepidsa.fortytwocalculator.ui.dialogs.ColorPickerDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.SettingsDialog
 import com.sepidsa.fortytwocalculator.ui.theme.DmMono
 import com.sepidsa.fortytwocalculator.ui.theme.VoidDarkBackground

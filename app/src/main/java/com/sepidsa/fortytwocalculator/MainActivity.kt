@@ -42,7 +42,8 @@ import com.sepidsa.fortytwocalculator.ui.constants.ConstantViewModel
 import com.sepidsa.fortytwocalculator.ui.history.HistoryViewModel
 import com.sepidsa.fortytwocalculator.ui.main.MainScreen
 import com.sepidsa.fortytwocalculator.ui.theme.AppTheme
-import com.sepidsa.fortytwocalculator.ui.dialogs.ColorPickerDialog
+import com.sepidsa.fortytwocalculator.ui.theme.ThemePreferences
+import com.sepidsa.fortytwocalculator.ui.theme.editor.ThemeEditorScreen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
@@ -86,7 +87,7 @@ class MainActivity : FragmentActivity() {
                 val calculatorState by calculatorViewModel.uiState.collectAsStateWithLifecycle()
                 val historyState by historyViewModel.uiState.collectAsStateWithLifecycle()
 
-                var showColorPicker by remember { mutableStateOf(false) }
+                var showThemeEditor by remember { mutableStateOf(false) }
 
                 AppTheme {
                     MainScreen(
@@ -124,7 +125,7 @@ class MainActivity : FragmentActivity() {
                         onSettingsLanguageChanged = { langCode ->
                             calculatorViewModel.setLanguage(langCode)
                         },
-                        onColorsClick = { showColorPicker = true },
+                        onColorsClick = { showThemeEditor = true },
                         onAddStarClick = {
                             lifecycleScope.launch {
                                 historyViewModel.starLogEntry(mLatestInsertedId, true)
@@ -135,17 +136,16 @@ class MainActivity : FragmentActivity() {
                         }
                     )
 
-                    if (showColorPicker) {
-                        ColorPickerDialog(
-                            initialAccentColor = settingsRepository.accentColor,
-                            initialKeypadColor = settingsRepository.keypadBackgroundColor,
-                            onAcceptColors = { accentColor, keypadColor ->
-                                settingsRepository.accentColor = accentColor
-                                settingsRepository.keypadBackgroundColor = keypadColor
-                                // Recreate activity to apply new theme colors
+                    if (showThemeEditor) {
+                        val themePreferences = remember { ThemePreferences(this@MainActivity) }
+                        ThemeEditorScreen(
+                            themePreferences = themePreferences,
+                            onDismiss = { showThemeEditor = false },
+                            onApply = {
+                                // Recreate activity to apply new theme
                                 recreate()
                             },
-                            onDismiss = { showColorPicker = false }
+                            isPremium = false, // TODO: Wire to actual billing
                         )
                     }
                 }

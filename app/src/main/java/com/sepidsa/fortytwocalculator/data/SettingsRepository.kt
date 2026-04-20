@@ -7,7 +7,6 @@ class SettingsRepository(private val context: Context) {
 
     private val anglePrefs: SharedPreferences = context.getSharedPreferences("angleMode", Context.MODE_PRIVATE)
     private val langPrefs: SharedPreferences = context.getSharedPreferences("LanguagePreference", Context.MODE_PRIVATE)
-    private val themePrefs: SharedPreferences = context.getSharedPreferences("THEME", Context.MODE_PRIVATE)
     private val volumePrefs: SharedPreferences = context.getSharedPreferences("volumeState", Context.MODE_PRIVATE)
     private val typographyPrefs: SharedPreferences = context.getSharedPreferences("typography", Context.MODE_PRIVATE)
     private val appPrefs: SharedPreferences = context.getSharedPreferences("APP", Context.MODE_PRIVATE)
@@ -19,16 +18,6 @@ class SettingsRepository(private val context: Context) {
     var language: Int
         get() = langPrefs.getInt("LANGUAGE", 0)
         set(value) = langPrefs.edit().putInt("LANGUAGE", value).apply()
-
-    var accentColor: Int
-        get() = themePrefs.getInt("ACCENT_COLOR_CODE", android.graphics.Color.parseColor("#009688"))
-        set(value) = themePrefs.edit().putInt("ACCENT_COLOR_CODE", value).apply()
-
-    var keypadBackgroundColor: Int
-        get() = themePrefs.getInt("KEYPAD_BACKGROUND_COLOR_CODE", android.graphics.Color.WHITE)
-        set(value) = themePrefs.edit().putInt("KEYPAD_BACKGROUND_COLOR_CODE", value).apply()
-
-
 
     var hasPopulatedConstantDatabase: Boolean
         get() = appPrefs.getBoolean("hasPopulatedConstantDatabase", false)
