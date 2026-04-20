@@ -39,6 +39,7 @@ data class CalculatorUiState(
     val arcMode: Boolean = false,
     val isCalculationPerformed: Boolean = false,
     val language: Int = 0,
+    val activeOperator: String? = null,
 )
 
 enum class ClearButtonMode {
@@ -133,6 +134,7 @@ class CalculatorViewModel(
             isError = false,
             clearMode = ClearButtonMode.Clear,
             isCalculationPerformed = false,
+            activeOperator = null,
         )
         viewModelScope.launch {
             _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Clear))
@@ -192,6 +194,8 @@ class CalculatorViewModel(
             return
         }
 
+        _uiState.value = _uiState.value.copy(activeOperator = null)
+
         val lastButton = buttonsStack.pop()
         val newLength = (expressionBuffer.length - lastButton.length).coerceAtLeast(0)
         expressionBuffer.setLength(newLength)
@@ -226,7 +230,7 @@ class CalculatorViewModel(
 
         if (calculateResult(null) == RESULT_SUCCESS) {
             justPressedExecuteButton = true
-            _uiState.value = _uiState.value.copy(isCalculationPerformed = true)
+            _uiState.value = _uiState.value.copy(isCalculationPerformed = true, activeOperator = null)
             updateTranslation()
             viewModelScope.launch {
                 _newLogEntry.emit(_uiState.value.expression to _uiState.value.result)
@@ -257,6 +261,8 @@ class CalculatorViewModel(
             appendToExpression(buttonValue)
             buttonsStack.push(buttonValue)
             updateExpressionDisplay()
+            val newActiveOp = if (buttonValue in listOf("+", "−", "×", "÷")) buttonValue else null
+            _uiState.value = _uiState.value.copy(activeOperator = newActiveOp)
             viewModelScope.launch {
                 _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Operator))
             }
@@ -264,12 +270,11 @@ class CalculatorViewModel(
             val result = calculateResult(buttonValue)
             if (result != RESULT_FATAL) {
                 updateResultDisplay()
+                _uiState.value = _uiState.value.copy(activeOperator = null)
                 viewModelScope.launch {
                     _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Numeric))
                 }
             } else {
-                // If it's not a digit but failed evaluation (like a custom constant or something), 
-                // we might still want to append it.
                 appendToExpression(buttonValue)
                 buttonsStack.push(buttonValue)
                 updateExpressionDisplay()

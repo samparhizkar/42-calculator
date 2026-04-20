@@ -23,8 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorScreen
 import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorUiState
 import com.sepidsa.fortytwocalculator.ui.history.HistoryScreen
@@ -40,6 +43,8 @@ import com.sepidsa.fortytwocalculator.ui.dialogs.ColorPickerDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.SettingsDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.AboutDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.HelpDialog
+import com.sepidsa.fortytwocalculator.ui.theme.DmMono
+import com.sepidsa.fortytwocalculator.ui.theme.VoidDarkBackground
 import com.sepidsa.fortytwocalculator.data.LogEntity
 import kotlinx.coroutines.launch
 
@@ -91,24 +96,22 @@ fun MainScreen(
         },
         gesturesEnabled = true
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Top section with Display
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(VoidDarkBackground)
+        ) {
+            // Display area: expression + result + words
             CalculatorDisplay(
                 state = calculatorState,
                 onAddStarClick = onAddStarClick,
                 onAddLabelClick = onAddLabelClick,
-                modifier = Modifier.weight(0.3f)
+                onAngleModeChanged = onAngleModeToggle,
+                modifier = Modifier.weight(0.38f)
             )
 
-            // Middle section with Translation and Favorites
-            TranslationBar(
-                state = calculatorState,
-                onFavoritesClick = { /* Show favorites dialog */ },
-                modifier = Modifier.weight(0.15f)
-            )
-
-            // Bottom section with Pager and Controls
-            Column(modifier = Modifier.weight(0.55f)) {
+            // Pager: History | Calculator | Scientific
+            Column(modifier = Modifier.weight(0.62f)) {
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier.weight(1f)
@@ -119,9 +122,7 @@ fun MainScreen(
                             onDelete = onDeleteHistoryItem,
                             onStarToggle = onStarHistoryItem,
                             onUpdateTag = onUpdateHistoryTag,
-                            onUseResult = { result ->
-                                onCalculatorKeyPress(result)
-                            },
+                            onUseResult = { result -> onCalculatorKeyPress(result) },
                             onClearAll = onClearHistory,
                             onShare = onShareHistoryItem
                         )
@@ -141,13 +142,13 @@ fun MainScreen(
                     }
                 }
 
-                // Pager Indicator
                 PageIndicator(
                     pagerState = pagerState,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 8.dp)
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 6.dp)
                 )
 
-                // Bottom Buttons
                 BottomActionBar(
                     onSettingsClick = { showSettings = true },
                     onMuteClick = onMuteClick,
@@ -161,7 +162,6 @@ fun MainScreen(
         }
     }
 
-    // Dialogs
     if (showAbout) {
         AboutDialog(onDismiss = { showAbout = false })
     }
@@ -178,80 +178,128 @@ fun MainScreen(
     }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Display area
+// ─────────────────────────────────────────────────────────────────────────────
+
 @Composable
 fun CalculatorDisplay(
     state: CalculatorUiState,
     onAddStarClick: () -> Unit,
     onAddLabelClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onAngleModeChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+    // Dynamic result font size based on character count
+    val resultFontSize = when {
+        state.result.length <= 4 -> 72.sp
+        state.result.length <= 6 -> 56.sp
+        state.result.length <= 8 -> 44.sp
+        state.result.length <= 10 -> 36.sp
+        else -> 28.sp
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(VoidDarkBackground)
+            .padding(top = 44.dp, start = 20.dp, end = 20.dp, bottom = 14.dp)
     ) {
+        // DEG/RAD — top right, tappable to toggle angle mode
+        Text(
+            text = if (state.angleMode) "DEG" else "RAD",
+            fontFamily = DmMono,
+            fontWeight = FontWeight.Normal,
+            fontSize = 11.sp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .clickable { onAngleModeChanged(!state.angleMode) }
+                .padding(4.dp),
+        )
+
+        // History / star icon — top left
+        Row(
+            modifier = Modifier.align(Alignment.TopStart),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.List,
+                contentDescription = "History",
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.28f),
+                modifier = Modifier
+                    .size(20.dp)
+                    .clickable { onAddStarClick() },
+            )
+        }
+
+        // Expression + result + words — bottom-aligned, right-aligned
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.End
+                .padding(top = 32.dp),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.End,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            // Expression line
+            if (state.expression.isNotEmpty()) {
                 Text(
-                    text = if (state.angleMode) "DEG" else "RAD",
-                    style = MaterialTheme.typography.labelSmall
+                    text = state.expression,
+                    fontFamily = DmMono,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
+                    maxLines = 1,
+                    textAlign = TextAlign.End,
                 )
-                Text(
-                    text = "M = ${state.memory}",
-                    style = MaterialTheme.typography.labelSmall
-                )
+                Spacer(modifier = Modifier.height(4.dp))
             }
-            Spacer(modifier = Modifier.weight(1f))
+
+            // Result
             Text(
                 text = state.result,
-                style = MaterialTheme.typography.displayMedium,
-                maxLines = 2
+                fontFamily = DmMono,
+                fontWeight = FontWeight.Light,
+                fontSize = resultFontSize,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                textAlign = TextAlign.End,
             )
+
+            // Words — typewriter revealed after = press
+            if (state.isCalculationPerformed && state.translatedResult.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = state.translatedResult,
+                    fontFamily = DmMono,
+                    fontWeight = FontWeight.Light,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f),
+                    maxLines = 1,
+                    textAlign = TextAlign.End,
+                )
+            }
         }
     }
 }
 
-@Composable
-fun TranslationBar(
-    state: CalculatorUiState,
-    onFavoritesClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onFavoritesClick) {
-            Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Favorites")
-        }
-        Text(
-            text = state.translatedResult,
-            modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.End
-        )
-    }
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// Page indicator + bottom bar
+// ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
 fun PageIndicator(pagerState: androidx.compose.foundation.pager.PagerState, modifier: Modifier = Modifier) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         repeat(pagerState.pageCount) { iteration ->
-            val color = if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+            val color = if (pagerState.currentPage == iteration) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.18f)
+            }
             Box(
                 modifier = Modifier
-                    .size(8.dp)
+                    .size(6.dp)
                     .background(color, CircleShape)
             )
         }
@@ -271,29 +319,50 @@ fun BottomActionBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         IconButton(onClick = onHelpClick) {
-            Icon(Icons.Default.HelpOutline, contentDescription = "Help")
+            Icon(
+                Icons.Default.HelpOutline,
+                contentDescription = "Help",
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
+            )
         }
         IconButton(onClick = onSettingsClick) {
-            Icon(Icons.Default.Settings, contentDescription = "Settings")
+            Icon(
+                Icons.Default.Settings,
+                contentDescription = "Settings",
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
+            )
         }
         IconButton(onClick = onMuteClick) {
             Icon(
                 if (isMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
-                contentDescription = "Mute"
+                contentDescription = "Mute",
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
             )
         }
         IconButton(onClick = onColorsClick) {
-            Icon(Icons.Default.Palette, contentDescription = "Theme")
+            Icon(
+                Icons.Default.Palette,
+                contentDescription = "Theme",
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
+            )
         }
         IconButton(onClick = onAboutClick) {
-            Icon(Icons.Default.Info, contentDescription = "About")
+            Icon(
+                Icons.Default.Info,
+                contentDescription = "About",
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
+            )
         }
         IconButton(onClick = onMenuClick) {
-            Icon(Icons.Default.Menu, contentDescription = "Menu")
+            Icon(
+                Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
+            )
         }
     }
 }
@@ -318,7 +387,6 @@ private fun AppDrawer(
     ModalDrawerSheet(
         drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
-        // Drawer header
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -339,28 +407,11 @@ private fun AppDrawer(
 
         HorizontalDivider()
 
-        // Drawer items — matches original drawer_menu.xml
         val items = listOf(
-            DrawerItem(
-                label = "راهنما", // Help
-                icon = Icons.Default.HelpOutline,
-                onClick = onHelpClick
-            ),
-            DrawerItem(
-                label = "امتیاز و نظر", // Rate & Review
-                icon = Icons.Default.Star,
-                onClick = onRateClick
-            ),
-            DrawerItem(
-                label = "درباره", // About
-                icon = Icons.Default.Info,
-                onClick = onAboutClick
-            ),
-            DrawerItem(
-                label = "پیام به ما", // Contact Us
-                icon = Icons.Default.Email,
-                onClick = onContactClick
-            )
+            DrawerItem(label = "راهنما", icon = Icons.Default.HelpOutline, onClick = onHelpClick),
+            DrawerItem(label = "امتیاز و نظر", icon = Icons.Default.Star, onClick = onRateClick),
+            DrawerItem(label = "درباره", icon = Icons.Default.Info, onClick = onAboutClick),
+            DrawerItem(label = "پیام به ما", icon = Icons.Default.Email, onClick = onContactClick),
         )
 
         items.forEach { item ->
