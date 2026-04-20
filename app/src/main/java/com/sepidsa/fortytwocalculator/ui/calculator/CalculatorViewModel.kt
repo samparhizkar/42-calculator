@@ -5,13 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.sepidsa.fortytwocalculator.ExpressionEvaluator
-import com.sepidsa.fortytwocalculator.NumberConverterArabic
-import com.sepidsa.fortytwocalculator.NumberConverterFrench
-import com.sepidsa.fortytwocalculator.NumberConverterFrenchPartII
-import com.sepidsa.fortytwocalculator.NumberConverterPersianPartII
-import com.sepidsa.fortytwocalculator.NumberConveterAmerican
-import com.sepidsa.fortytwocalculator.NumberConveterAmericanPartII
-import com.sepidsa.fortytwocalculator.NumberConveterPersianPartI
+import com.sepidsa.fortytwocalculator.NumberToWordsConverter
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -495,44 +489,28 @@ class CalculatorViewModel(
 
     private fun updateTranslation() {
         val state = _uiState.value
-        if (state.isCalculationPerformed) {
-            val integerFraction = abs(state.rawResult).toLong().toString()
-            val resultIsNegative = state.rawResult < -0.0000009
-            val decimalFraction = state.decimalFraction
-
-            val translation = when (state.language) {
-                LANGUAGE_ENGLISH -> {
-                    var text = (if (resultIsNegative) "minus " else "") + NumberConveterAmerican.convert(integerFraction)
-                    if (decimalFraction.isNotEmpty()) {
-                        text += NumberConveterAmericanPartII.convert(decimalFraction)
-                    }
-                    text
-                }
-                LANGUAGE_FRENCH -> {
-                    var text = (if (resultIsNegative) "moins " else "") + NumberConverterFrench.convert(integerFraction)
-                    if (decimalFraction.isNotEmpty()) {
-                        text += NumberConverterFrenchPartII.convert(decimalFraction)
-                    }
-                    text
-                }
-                LANGUAGE_ARABIC -> {
-                    val arabic = NumberConverterArabic(BigDecimal.valueOf(abs(state.rawResult)))
-                    (if (resultIsNegative) "ناقص " else "") + arabic.convertToArabic()
-                }
-                LANGUAGE_PERSIAN -> {
-                    var text = NumberConveterPersianPartI().convert(integerFraction)
-                    if (decimalFraction.isNotEmpty()) {
-                        val partII = NumberConverterPersianPartII.convert(decimalFraction)
-                        text += if (abs(state.rawResult) >= 1.0) " ممیز $partII" else partII
-                    }
-                    (if (resultIsNegative) "منفی " else "") + text
-                }
-                else -> ""
-            }
-            _uiState.value = state.copy(translatedResult = translation)
-        } else {
+        if (!state.isCalculationPerformed) {
             _uiState.value = state.copy(translatedResult = state.expression)
+            return
         }
+
+        val (localeCode, negativePrefix) = when (state.language) {
+            LANGUAGE_ENGLISH -> "en" to "minus "
+            LANGUAGE_FRENCH -> "fr" to "moins "
+            LANGUAGE_ARABIC -> "ar" to "ناقص "
+            LANGUAGE_PERSIAN -> "fa" to "منفی "
+            else -> null to ""
+        }
+
+        val translation = localeCode?.let { locale ->
+            val isNegative = state.rawResult < -0.0000009
+            val absoluteResult = abs(state.rawResult).toBigDecimal().toPlainString()
+            val words = NumberToWordsConverter.convert(absoluteResult, locale)
+            
+            if (isNegative && words.isNotEmpty()) "$negativePrefix$words" else words
+        } ?: ""
+
+        _uiState.value = state.copy(translatedResult = translation)
     }
 
     private fun loadLanguage(): Int {
