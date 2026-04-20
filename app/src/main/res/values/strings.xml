@@ -181,7 +181,6 @@
   <string name="demo_parallax_plus">+</string>
   <string name="accent_button">accent_button</string>
 
-  <string name="title_activity_help">HelpActivity</string>
   <string name="dummy_button">Dummy Button</string>
   <string name="dummy_content">DUMMY\nCONTENT</string>
 
@@ -208,13 +207,10 @@
   <string name="farsi_list_is_empty">لیست خالیست</string>
   <string name="farsi_clear_starred">ستاره دارها هم پاک شه</string>
   <string name="farsi_enter_constant">ثابت را وارد کنید</string>
-  <string name="farsi_choose_email_app">با چی بفرستم؟</string>
-  <string name="farsi_about_42_calc">راجع به ماشین حساب  ۴۲</string>
-    <string name="about_string">سپیدسا</string>
+
     <string name="app_tour_agree">عالیه</string>
   <string name="tenpowerx_tag">E</string>
-    <string name="title_activity_about">AboutActivity</string>
-    <string name="sepidsa_webpage">www.sepidsa.com</string>
+
 
 
 </resources>

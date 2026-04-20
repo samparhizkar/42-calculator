@@ -10,9 +10,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Settings
@@ -38,8 +35,6 @@ import com.sepidsa.fortytwocalculator.ui.history.HistoryUiState
 import com.sepidsa.fortytwocalculator.ui.scientific.ScientificScreen
 import com.sepidsa.fortytwocalculator.ui.dialogs.ColorPickerDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.SettingsDialog
-import com.sepidsa.fortytwocalculator.ui.dialogs.AboutDialog
-import com.sepidsa.fortytwocalculator.ui.dialogs.HelpDialog
 import com.sepidsa.fortytwocalculator.ui.theme.DmMono
 import com.sepidsa.fortytwocalculator.ui.theme.VoidDarkBackground
 import com.sepidsa.fortytwocalculator.data.LogEntity
@@ -66,19 +61,13 @@ fun MainScreen(
     onSettingsClick: () -> Unit,
     onSettingsFontChanged: (Int) -> Unit,
     onSettingsLanguageChanged: (Int) -> Unit,
-    onRateUs: () -> Unit,
     onMuteClick: () -> Unit,
     onColorsClick: () -> Unit,
-    onContactUs: () -> Unit,
     onAddStarClick: () -> Unit,
     onAddLabelClick: () -> Unit,
-    onAboutClick: () -> Unit,
-    onHelpClick: () -> Unit,
     isMuted: Boolean
 ) {
     val pagerState = rememberPagerState(initialPage = 1, pageCount = { 2 })
-    var showAbout by remember { mutableStateOf(false) }
-    var showHelp by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var showScientific by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -89,12 +78,7 @@ fun MainScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            AppDrawer(
-                onHelpClick = { showHelp = true; scope.launch { drawerState.close() } },
-                onRateClick = onRateUs,
-                onAboutClick = { showAbout = true; scope.launch { drawerState.close() } },
-                onContactClick = onContactUs
-            )
+            AppDrawer()
         },
         gesturesEnabled = true
     ) {
@@ -158,26 +142,17 @@ fun MainScreen(
                     onMuteClick = onMuteClick,
                     onColorsClick = onColorsClick,
                     onMenuClick = { scope.launch { drawerState.open() } },
-                    onAboutClick = { showAbout = true },
-                    onHelpClick = { showHelp = true },
                     isMuted = isMuted
                 )
             }
         }
     }
 
-    if (showAbout) {
-        AboutDialog(onDismiss = { showAbout = false })
-    }
-    if (showHelp) {
-        HelpDialog(onDismiss = { showHelp = false })
-    }
     if (showSettings) {
         SettingsDialog(
             onDismiss = { showSettings = false },
             onFontChanged = onSettingsFontChanged,
-            onLanguageChanged = onSettingsLanguageChanged,
-            onRateUs = onRateUs
+            onLanguageChanged = onSettingsLanguageChanged
         )
     }
     if (showScientific) {
@@ -376,8 +351,6 @@ fun BottomActionBar(
     onMuteClick: () -> Unit,
     onColorsClick: () -> Unit,
     onMenuClick: () -> Unit,
-    onAboutClick: () -> Unit,
-    onHelpClick: () -> Unit,
     isMuted: Boolean
 ) {
     Row(
@@ -386,13 +359,6 @@ fun BottomActionBar(
             .padding(horizontal = 8.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        IconButton(onClick = onHelpClick) {
-            Icon(
-                Icons.Default.HelpOutline,
-                contentDescription = "Help",
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
-            )
-        }
         IconButton(onClick = onSettingsClick) {
             Icon(
                 Icons.Default.Settings,
@@ -414,13 +380,6 @@ fun BottomActionBar(
                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
             )
         }
-        IconButton(onClick = onAboutClick) {
-            Icon(
-                Icons.Default.Info,
-                contentDescription = "About",
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
-            )
-        }
         IconButton(onClick = onMenuClick) {
             Icon(
                 Icons.Default.Menu,
@@ -435,19 +394,8 @@ fun BottomActionBar(
 // Navigation Drawer
 // ─────────────────────────────────────────────────────────────────────────────
 
-private data class DrawerItem(
-    val label: String,
-    val icon: ImageVector,
-    val onClick: () -> Unit
-)
-
 @Composable
-private fun AppDrawer(
-    onHelpClick: () -> Unit,
-    onRateClick: () -> Unit,
-    onAboutClick: () -> Unit,
-    onContactClick: () -> Unit
-) {
+private fun AppDrawer() {
     ModalDrawerSheet(
         drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
@@ -471,21 +419,6 @@ private fun AppDrawer(
 
         HorizontalDivider()
 
-        val items = listOf(
-            DrawerItem(label = "راهنما", icon = Icons.Default.HelpOutline, onClick = onHelpClick),
-            DrawerItem(label = "امتیاز و نظر", icon = Icons.Default.Star, onClick = onRateClick),
-            DrawerItem(label = "درباره", icon = Icons.Default.Info, onClick = onAboutClick),
-            DrawerItem(label = "پیام به ما", icon = Icons.Default.Email, onClick = onContactClick),
-        )
-
-        items.forEach { item ->
-            NavigationDrawerItem(
-                icon = { Icon(item.icon, contentDescription = item.label) },
-                label = { Text(item.label) },
-                selected = false,
-                onClick = item.onClick,
-                modifier = Modifier.padding(horizontal = 12.dp)
-            )
-        }
+        // No drawer items currently as all legacy options (About, Help, Contact, Rate Us) are removed.
     }
 }

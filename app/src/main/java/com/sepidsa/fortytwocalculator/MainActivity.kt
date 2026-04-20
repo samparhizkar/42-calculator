@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.sepidsa.fortytwocalculator.data.ConstantEntity
+import com.sepidsa.fortytwocalculator.data.SettingsRepository
 import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorUiEvent
 import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorViewModel
 import com.sepidsa.fortytwocalculator.ui.calculator.SoundType
@@ -72,10 +73,13 @@ class MainActivity : FragmentActivity() {
     val historyViewModel: HistoryViewModel by viewModels()
     val constantViewModel: ConstantViewModel by viewModels()
     val calculatorViewModel: CalculatorViewModel by viewModels()
+    private lateinit var settingsRepository: SettingsRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        settingsRepository = SettingsRepository(this)
 
         showSplashAndTour()
 
@@ -120,22 +124,13 @@ class MainActivity : FragmentActivity() {
                             // Settings dialog is now handled within MainScreen
                         },
                         onSettingsFontChanged = { fontCode ->
-                            // Persist dialpad font change
-                            val prefs = getSharedPreferences("typography", MODE_PRIVATE)
-                            prefs.edit().putInt("DIALPAD_FONT", fontCode).apply()
+                            settingsRepository.dialpadFont = fontCode
                         },
                         onSettingsLanguageChanged = { langCode ->
-                            // Update the calculator ViewModel language
                             calculatorViewModel.setLanguage(langCode)
-                        },
-                        onRateUs = {
-                            displayRateUs()
                         },
                         onMuteClick = { reverseVolume() },
                         onColorsClick = { showColorPicker = true },
-                        onContactUs = {
-                            displayContactUs()
-                        },
                         onAddStarClick = {
                             lifecycleScope.launch {
                                 historyViewModel.starLogEntry(mLatestInsertedId, true)
@@ -144,24 +139,18 @@ class MainActivity : FragmentActivity() {
                         onAddLabelClick = {
                             showAddLabelDialog()
                         },
-                        onAboutClick = {
-                            // About dialog is handled within MainScreen
-                        },
-                        onHelpClick = {
-                            // Help dialog is handled within MainScreen
-                        },
-                        isMuted = !volumeFromPreference
+                        isMuted = !settingsRepository.hasVolume
                     )
 
                     if (showColorPicker) {
                         ColorPickerDialog(
-                            initialAccentColor = accentColorCode,
-                            initialKeypadColor = keypadBackgroundColorCode,
-                            isClassicTheme = isClassicTheme,
+                            initialAccentColor = settingsRepository.accentColor,
+                            initialKeypadColor = settingsRepository.keypadBackgroundColor,
+                            isClassicTheme = settingsRepository.isClassicTheme,
                             onAcceptColors = { accentColor, keypadColor, useClassicTheme ->
-                                saveAccentColorCode(accentColor)
-                                saveKeypadBackgroundColorCode(keypadColor)
-                                saveClassicTheme(useClassicTheme)
+                                settingsRepository.accentColor = accentColor
+                                settingsRepository.keypadBackgroundColor = keypadColor
+                                settingsRepository.isClassicTheme = useClassicTheme
                                 // Recreate activity to apply new theme colors
                                 recreate()
                             },
@@ -271,124 +260,26 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    private fun displayRateUs() {
-        val packageName = packageName
-        val marketIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
-        val webIntent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://play.google.com/store/apps/details?id=$packageName"),
-        )
-
-        try {
-            startActivity(marketIntent)
-        } catch (_: ActivityNotFoundException) {
-            startActivity(webIntent)
-        }
-    }
-
-    private fun displayContactUs() {
-        sendEmail(this, getString(R.string.farsi_about_42_calc), "", null)
-    }
-
     companion object {
         const val TAG: String = "mainactivity"
-
-        private const val DEFAULT_LANGUAGE: Byte = 0
-        const val LANGUAGE_PERSIAN: Byte = 0
-
-        fun sendEmail(pContext: Context, pSubject: String, pBody: String, pAttachments: ArrayList<String>?) {
-            // ... (keep the same as before)
-        }
-
-        protected fun sendEmailUsingSelectedEmailApp(
-            pContext: Context,
-            pSubject: String?,
-            pBody: String?,
-            pAttachments: ArrayList<String>?,
-            pSelectedEmailApp: android.content.pm.ResolveInfo?,
-        ) {
-            // ... (keep the same as before)
-        }
     }
-
-    val accentColorCode: Int
-        get() {
-            val appPreferences = applicationContext.getSharedPreferences("THEME", MODE_PRIVATE)
-            return appPreferences.getInt("ACCENT_COLOR_CODE", Color.parseColor("#009688"))
-        }
-
-    val keypadBackgroundColorCode: Int
-        get() {
-            val appPreferences = applicationContext.getSharedPreferences("THEME", Context.MODE_PRIVATE)
-            return appPreferences.getInt("KEYPAD_BACKGROUND_COLOR_CODE", Color.WHITE)
-        }
-
-    val isClassicTheme: Boolean
-        get() {
-            val appPreferences = applicationContext.getSharedPreferences("THEME", Context.MODE_PRIVATE)
-            return appPreferences.getBoolean("CLASSIC_THEME", false)
-        }
-
-    fun saveAccentColorCode(colorCode: Int) {
-        val appPreferences = applicationContext.getSharedPreferences("THEME", Context.MODE_PRIVATE)
-        val editor = appPreferences.edit()
-        editor.putInt("ACCENT_COLOR_CODE", colorCode)
-        editor.apply()
-    }
-
-    fun saveKeypadBackgroundColorCode(colorCode: Int) {
-        val appPreferences = applicationContext.getSharedPreferences("THEME", Context.MODE_PRIVATE)
-        val editor = appPreferences.edit()
-        editor.putInt("KEYPAD_BACKGROUND_COLOR_CODE", colorCode)
-        editor.apply()
-    }
-
-    fun saveClassicTheme(useClassicTheme: Boolean) {
-        val appPreferences = applicationContext.getSharedPreferences("THEME", Context.MODE_PRIVATE)
-        val editor = appPreferences.edit()
-        editor.putBoolean("CLASSIC_THEME", useClassicTheme)
-        editor.apply()
-    }
-
-    val volumeFromPreference: Boolean
-        get() {
-            val appPreferences = applicationContext.getSharedPreferences("volumeState", Context.MODE_PRIVATE)
-            return appPreferences.getBoolean("hasVolume", true)
-        }
 
     private fun reverseVolume(): Boolean {
-        return if (volumeFromPreference) {
-            setVolumeInPreference(false)
-            false
-        } else {
-            setVolumeInPreference(true)
-            true
-        }
-    }
-
-    private fun setVolumeInPreference(hasVolume: Boolean) {
-        val appPreferences = applicationContext.getSharedPreferences("volumeState", MODE_PRIVATE)
-        val editor = appPreferences.edit()
-        editor.putBoolean("hasVolume", hasVolume)
-        editor.apply()
+        val newVolumeState = !settingsRepository.hasVolume
+        settingsRepository.hasVolume = newVolumeState
+        return newVolumeState
     }
 
     private fun showSplashAndTour() {
-        val appPreferences = applicationContext.getSharedPreferences("APP", MODE_PRIVATE)
-        val splashAndTourViewed = appPreferences.getBoolean("hasViewedTour", false)
-        if (!splashAndTourViewed) {
-            val editor = appPreferences.edit()
-            editor.putBoolean("hasViewedTour", true)
-            editor.apply()
+        if (!settingsRepository.hasViewedTour) {
+            settingsRepository.hasViewedTour = true
             val intent = Intent(this, ParallaxPagerActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun populateConstantDatabaseFirstRun() {
-        val appPreferences = applicationContext.getSharedPreferences("APP", MODE_PRIVATE)
-        val populateConstantDatabase = appPreferences.getBoolean("hasPopulatedConstantDatabase", false)
-        if (!populateConstantDatabase) {
+        if (!settingsRepository.hasPopulatedConstantDatabase) {
             val names = resources.getStringArray(R.array.constant_default_names)
             val numbers = resources.getStringArray(R.array.constant_default_numbers)
             val selections = resources.getStringArray(R.array.constant_default_selections)
@@ -403,16 +294,14 @@ class MainActivity : FragmentActivity() {
                 )
             }
 
-            val editor = appPreferences.edit()
-            editor.putBoolean("hasPopulatedConstantDatabase", true)
-            editor.apply()
+            settingsRepository.hasPopulatedConstantDatabase = true
         }
     }
 
     fun playSound(id: Int) {
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
-        val volume = if (volumeFromPreference) maxVolume else 0f
+        val volume = if (settingsRepository.hasVolume) maxVolume else 0f
 
         if (mSoundPoolLoaded) {
             mSoundPool.play(id, volume, volume, 1, 0, 0.99f)

@@ -60,7 +60,6 @@ fun SettingsDialog(
     onDismiss: () -> Unit,
     onFontChanged: (Int) -> Unit,
     onLanguageChanged: (Int) -> Unit,
-    onRateUs: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -206,27 +205,6 @@ fun SettingsDialog(
                 }
 
                 HorizontalDivider()
-
-                // ── Rate Us ──
-                OutlinedButton(
-                    onClick = onRateUs,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-                ) {
-                    Icon(
-                        Icons.Default.Star,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "★ ★ ★ ★ ★ چطور بود؟؟", // "How was it?" in Persian
-                        textAlign = TextAlign.Center
-                    )
-                }
             }
         },
         confirmButton = {

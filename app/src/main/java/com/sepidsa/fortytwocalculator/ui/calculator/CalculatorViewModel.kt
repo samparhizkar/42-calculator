@@ -6,17 +6,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.sepidsa.fortytwocalculator.ExpressionEvaluator
 import com.sepidsa.fortytwocalculator.NumberToWordsConverter
+import com.sepidsa.fortytwocalculator.data.SettingsRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.util.Locale
 import java.util.Stack
 import kotlin.math.abs
 
@@ -61,12 +59,12 @@ class CalculatorViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
 
-    private val appContext = application.applicationContext
+    private val settingsRepository = SettingsRepository(application.applicationContext)
 
     private val _uiState = MutableStateFlow(
         CalculatorUiState(
-            angleMode = loadAngleMode(),
-            language = loadLanguage(),
+            angleMode = settingsRepository.isDegree,
+            language = settingsRepository.language,
         ),
     )
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
@@ -95,49 +93,53 @@ class CalculatorViewModel(
     }
 
     fun setAngleMode(isDegree: Boolean) {
-        _uiState.value = _uiState.value.copy(angleMode = isDegree)
+        settingsRepository.isDegree = isDegree
+        _uiState.update { it.copy(angleMode = isDegree) }
         updateTranslation()
     }
 
     fun setLanguage(language: Int) {
-        _uiState.value = _uiState.value.copy(language = language)
+        settingsRepository.language = language
+        _uiState.update { it.copy(language = language) }
         updateTranslation()
     }
 
     fun setInverseMode(inverse: Boolean) {
-        _uiState.value = _uiState.value.copy(inverseMode = inverse)
+        _uiState.update { it.copy(inverseMode = inverse) }
     }
 
     fun setArcMode(arc: Boolean) {
-        _uiState.value = _uiState.value.copy(arcMode = arc)
+        _uiState.update { it.copy(arcMode = arc) }
     }
 
     fun setClearMode(mode: ClearButtonMode) {
-        _uiState.value = _uiState.value.copy(clearMode = mode)
+        _uiState.update { it.copy(clearMode = mode) }
     }
 
     private fun performClear() {
         expressionBuffer.clear()
         buttonsStack.clear()
         justPressedExecuteButton = true
-        _uiState.value = _uiState.value.copy(
-            expression = "",
-            result = "0",
-            rawResult = 0.0,
-            decimalFraction = "",
-            translatedResult = "",
-            isError = false,
-            clearMode = ClearButtonMode.Clear,
-            isCalculationPerformed = false,
-            activeOperator = null,
-        )
+        _uiState.update {
+            it.copy(
+                expression = "",
+                result = "0",
+                rawResult = 0.0,
+                decimalFraction = "",
+                translatedResult = "",
+                isError = false,
+                clearMode = ClearButtonMode.Clear,
+                isCalculationPerformed = false,
+                activeOperator = null,
+            )
+        }
         viewModelScope.launch {
             _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Clear))
         }
     }
 
     private fun performMc() {
-        _uiState.value = _uiState.value.copy(memory = 0.0)
+        _uiState.update { it.copy(memory = 0.0) }
         viewModelScope.launch {
             _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Clear))
         }
@@ -153,234 +155,139 @@ class CalculatorViewModel(
     private fun performMPlus() {
         val currentResult = currentResultDouble()
         val newMemory = _uiState.value.memory + currentResult
-        buttonsStack.clear()
-        buttonsStack.push(_uiState.value.result.replace(",", ""))
-        justPressedExecuteButton = true
-        _uiState.value = _uiState.value.copy(
-            memory = newMemory,
-            clearMode = resolveClearMode(),
-            isCalculationPerformed = true,
-        )
+        _uiState.update {
+            it.copy(
+                memory = newMemory,
+                isCalculationPerformed = true,
+            )
+        }
         viewModelScope.launch {
-            _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Clear))
-            _uiEvents.emit(CalculatorUiEvent.CalculationPerformed)
+            _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Operator))
         }
     }
 
     private fun performMMinus() {
         val currentResult = currentResultDouble()
         val newMemory = _uiState.value.memory - currentResult
-        buttonsStack.clear()
-        buttonsStack.push(_uiState.value.result.replace(",", ""))
-        justPressedExecuteButton = true
-        _uiState.value = _uiState.value.copy(
-            memory = newMemory,
-            clearMode = resolveClearMode(),
-            isCalculationPerformed = true,
-        )
+        _uiState.update {
+            it.copy(
+                memory = newMemory,
+                isCalculationPerformed = true,
+            )
+        }
         viewModelScope.launch {
-            _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Clear))
-            _uiEvents.emit(CalculatorUiEvent.CalculationPerformed)
+            _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Operator))
         }
     }
 
     private fun performBackspace() {
-        if (buttonsStack.isEmpty()) {
-            return
-        }
-
-        _uiState.value = _uiState.value.copy(activeOperator = null)
-
-        val lastButton = buttonsStack.pop()
-        val newLength = (expressionBuffer.length - lastButton.length).coerceAtLeast(0)
-        expressionBuffer.setLength(newLength)
+        if (buttonsStack.isEmpty()) return
+        buttonsStack.pop()
+        expressionBuffer.clear()
+        buttonsStack.forEach { expressionBuffer.append(it) }
 
         if (expressionBuffer.isEmpty()) {
-            _uiState.value = _uiState.value.copy(
-                expression = "",
-                result = "0",
-                rawResult = 0.0,
-                decimalFraction = "",
-                translatedResult = "",
-                isError = false,
-                clearMode = resolveClearMode(),
-            )
-        } else if (buttonsStack.isNotEmpty() && isOperator(buttonsStack.peek())) {
-            updateExpressionDisplay()
-        } else if (calculateResult(null) != RESULT_FATAL) {
-            updateResultDisplay()
+            performClear()
+        } else {
+            calculateResult(null)
+            _uiState.update { it.copy(isCalculationPerformed = false) }
         }
-
-        _uiState.value = _uiState.value.copy(clearMode = resolveClearMode())
-        updateTranslation()
         viewModelScope.launch {
             _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Backspace))
         }
     }
 
     private fun performEquals() {
-        if (expressionBuffer.isEmpty()) {
-            return
-        }
-
-        if (calculateResult(null) == RESULT_SUCCESS) {
-            justPressedExecuteButton = true
-            _uiState.value = _uiState.value.copy(isCalculationPerformed = true, activeOperator = null)
+        if (expressionBuffer.isEmpty()) return
+        val finalExpression = expressionBuffer.toString()
+        val resultStatus = calculateResult(null)
+        if (resultStatus == RESULT_SUCCESS) {
+            val state = _uiState.value
+            _uiState.update { it.copy(isCalculationPerformed = true) }
             updateTranslation()
             viewModelScope.launch {
-                val state = _uiState.value
-                _newLogEntry.emit(Triple(state.expression, state.result, state.translatedResult))
+                _newLogEntry.emit(Triple(finalExpression, state.result, state.translatedResult))
                 _uiEvents.emit(CalculatorUiEvent.CalculationPerformed)
                 _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Execute))
+            }
+            justPressedExecuteButton = true
+        } else {
+            viewModelScope.launch {
+                _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Error))
             }
         }
     }
 
-    private fun handleInput(buttonValue: String) {
-        if (justPressedExecuteButton && shouldResetFor(buttonValue)) {
+    private fun handleInput(input: String) {
+        if (shouldResetFor(input)) {
             expressionBuffer.clear()
             buttonsStack.clear()
         }
         justPressedExecuteButton = false
 
-        if (preventCommonErrors(buttonValue)) {
-            _uiState.value = _uiState.value.copy(isError = true)
-            viewModelScope.launch {
-                _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Error))
-                _uiEvents.emit(CalculatorUiEvent.ErrorOccurred)
-            }
-            return
-        }
+        if (preventCommonErrors(input)) return
+        if (fixSuccessiveOperators(input)) return
+        if (input == "." && fixDoublePoints()) return
 
-        val isOp = isOperator(buttonValue) || isTrigonometric(buttonValue)
-        if (isOp) {
-            appendToExpression(buttonValue)
-            buttonsStack.push(buttonValue)
-            updateExpressionDisplay()
-            val newActiveOp = if (buttonValue in listOf("+", "−", "×", "÷")) buttonValue else null
-            _uiState.value = _uiState.value.copy(activeOperator = newActiveOp)
+        val resultStatus = calculateResult(input)
+        if (resultStatus != RESULT_FATAL) {
+            val sound = if (isOperator(input)) SoundType.Operator else SoundType.Numeric
             viewModelScope.launch {
-                _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Operator))
-            }
-        } else {
-            val result = calculateResult(buttonValue)
-            if (result != RESULT_FATAL) {
-                updateResultDisplay()
-                _uiState.value = _uiState.value.copy(activeOperator = null)
-                viewModelScope.launch {
-                    _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Numeric))
-                }
-            } else {
-                appendToExpression(buttonValue)
-                buttonsStack.push(buttonValue)
-                updateExpressionDisplay()
-                viewModelScope.launch {
-                    _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Operator))
-                }
+                _uiEvents.emit(CalculatorUiEvent.PlaySound(sound))
             }
         }
-
-        _uiState.value = _uiState.value.copy(
-            clearMode = resolveClearMode(),
-            isCalculationPerformed = false,
-        )
-        updateTranslation()
     }
 
-    private fun shouldResetFor(buttonValue: String): Boolean {
-        return buttonValue.firstOrNull()?.isDigit() == true ||
-            buttonValue == "π" ||
-            buttonValue == "e"
+    private fun shouldResetFor(input: String): Boolean {
+        return justPressedExecuteButton && !isOperator(input)
     }
 
-    private fun preventCommonErrors(buttonValue: String): Boolean {
-        if (expressionBuffer.isEmpty()) {
-            return buttonValue in listOf("+", "÷", "×", ")", "%", "−")
-        }
-
-        if (fixSuccessiveOperators(buttonValue)) {
+    private fun preventCommonErrors(input: String): Boolean {
+        if (expressionBuffer.isEmpty() && (input == "×" || input == "÷" || input == "%" || input == "!" || input == "^")) {
             return true
         }
-
-        if (buttonValue == ".") {
-            return fixDoublePoints()
-        }
-
         return false
     }
 
     private fun fixSuccessiveOperators(input: String): Boolean {
-        if (expressionBuffer.length <= 1) {
-            return false
+        if (expressionBuffer.isNotEmpty() && isOperator(input) && isOperator(buttonsStack.peek())) {
+            if (!isTrigonometric(input) && !isTrigonometric(buttonsStack.peek())) {
+                buttonsStack.pop()
+                buttonsStack.push(input)
+                expressionBuffer.setLength(expressionBuffer.length - 1)
+                expressionBuffer.append(input)
+                updateExpressionDisplay()
+                return true
+            }
         }
-
-        val lastChar = expressionBuffer.last()
-        if ((lastChar == '×' || lastChar == '÷') && input == "−") {
-            return false
-        }
-
-        return isOperator(input) && isOperator(lastChar.toString())
+        return false
     }
 
     private fun fixDoublePoints(): Boolean {
-        var legalStart = -1
-        for (index in expressionBuffer.indices) {
-            val char = expressionBuffer[index]
-            if (!char.isDigit() && char != '.') {
-                legalStart = index
-            }
-        }
-        val lastDot = expressionBuffer.lastIndexOf('.')
-        return lastDot > legalStart
+        val lastPart = expressionBuffer.split(Regex("[+−×÷]")).last()
+        return lastPart.contains(".")
     }
 
-    fun addNumberToCalculation(inputString: String) {
-        val currentExpression = expressionBuffer.toString()
-        val evaluator = ExpressionEvaluator(_uiState.value.angleMode)
-        if (currentExpression.isNotEmpty() && isOperator(currentExpression.last().toString())) {
-            expressionBuffer.append(inputString)
-            val raw = evaluator.evaluateRaw(expressionBuffer.toString())
-            val result = evaluator.formatResult(raw)
-            buttonsStack.addAll(inputString.map(Char::toString))
-            _uiState.value = _uiState.value.copy(
-                expression = formatExpression(expressionBuffer.toString()),
-                result = result,
-                rawResult = raw,
-                decimalFraction = extractDecimalFraction(result),
-                isError = false,
-                clearMode = resolveClearMode(),
-            )
-        } else {
-            val raw = inputString.replace(",", "").toDoubleOrNull() ?: 0.0
-            val formattedResult = evaluator.formatResult(raw)
-            buttonsStack.clear()
-            buttonsStack.addAll(formattedResult.replace(",", "").map(Char::toString))
-            justPressedExecuteButton = true
+    fun addNumberToCalculation(number: String) {
+        val cleanNumber = number.replace(",", "")
+        if (justPressedExecuteButton) {
             expressionBuffer.clear()
-            expressionBuffer.append(formattedResult.replace(",", ""))
-            _uiState.value = _uiState.value.copy(
-                expression = formatExpression(expressionBuffer.toString()),
-                result = formattedResult,
-                rawResult = raw,
-                decimalFraction = extractDecimalFraction(formattedResult),
-                isError = false,
-                clearMode = resolveClearMode(),
-            )
+            buttonsStack.clear()
+            justPressedExecuteButton = false
         }
-        updateTranslation()
+        appendToExpression(cleanNumber)
+        calculateResult(null)
     }
 
-    private fun extractDecimalFraction(result: String): String {
-        val index = result.indexOf('.')
-        return if (index != -1) result.substring(index + 1) else ""
+    private fun extractDecimalFraction(value: String): String {
+        val parts = value.split(".")
+        return if (parts.size > 1) "." + parts[1] else ""
     }
 
     private fun appendToExpression(value: String) {
         expressionBuffer.append(value)
-        _uiState.value = _uiState.value.copy(
-            expression = formatExpression(expressionBuffer.toString()),
-            isError = false,
-        )
+        buttonsStack.push(value)
+        updateExpressionDisplay()
     }
 
     private fun calculateResult(input: String?): Int {
@@ -392,67 +299,40 @@ class CalculatorViewModel(
         return try {
             val evaluator = ExpressionEvaluator(_uiState.value.angleMode)
             val raw = evaluator.evaluateRaw(candidate.replace(",", ""))
-            if (raw.isNaN() || raw.isInfinite()) {
-                if (input != null && !input.first().isDigit() && input != ".") {
-                     // Could be mid-expression operator, let it be fatal to append
-                     throw Exception("Incomplete expression")
-                }
-            }
-
+            
             val result = evaluator.formatResult(raw)
             expressionBuffer.clear()
             expressionBuffer.append(candidate)
             if (input != null) {
                 buttonsStack.push(input)
             }
-            _uiState.value = _uiState.value.copy(
-                expression = formatExpression(expressionBuffer.toString()),
-                result = result,
-                rawResult = raw,
-                decimalFraction = extractDecimalFraction(result),
-                isError = false,
-            )
+            _uiState.update {
+                it.copy(
+                    expression = formatExpression(expressionBuffer.toString()),
+                    result = result,
+                    rawResult = raw,
+                    decimalFraction = extractDecimalFraction(result),
+                    isError = false,
+                )
+            }
             RESULT_SUCCESS
-        } catch (_: ArithmeticException) {
-            handleCalculationError(candidate, input, "∞")
-            RESULT_ERROR
-        } catch (_: NumberFormatException) {
-            handleCalculationError(candidate, input, "error")
-            RESULT_ERROR
         } catch (_: Exception) {
-            justPressedExecuteButton = false
+            if (input != null) {
+                expressionBuffer.append(input)
+                buttonsStack.push(input)
+                updateExpressionDisplay()
+            }
             RESULT_FATAL
         }
     }
 
-    private fun handleCalculationError(candidate: String, input: String?, result: String) {
-        expressionBuffer.clear()
-        expressionBuffer.append(candidate)
-        if (input != null) {
-            buttonsStack.push(input)
-        }
-        _uiState.value = _uiState.value.copy(
-            expression = formatExpression(expressionBuffer.toString()),
-            result = result,
-            rawResult = 0.0,
-            decimalFraction = "",
-            isError = true,
-            clearMode = resolveClearMode(),
-        )
-    }
-
     private fun updateExpressionDisplay() {
-        _uiState.value = _uiState.value.copy(
-            expression = formatExpression(expressionBuffer.toString()),
-            isError = false,
-        )
-    }
-
-    private fun updateResultDisplay() {
-        _uiState.value = _uiState.value.copy(
-            expression = formatExpression(expressionBuffer.toString()),
-            clearMode = resolveClearMode(),
-        )
+        _uiState.update {
+            it.copy(
+                expression = formatExpression(expressionBuffer.toString()),
+                isError = false,
+            )
+        }
     }
 
     private fun currentResultDouble(): Double {
@@ -482,15 +362,10 @@ class CalculatorViewModel(
         return value.endsWith("(")
     }
 
-    private fun loadAngleMode(): Boolean {
-        return appContext.getSharedPreferences("angleMode", Context.MODE_PRIVATE)
-            .getBoolean("isDeg", true)
-    }
-
     private fun updateTranslation() {
         val state = _uiState.value
         if (!state.isCalculationPerformed) {
-            _uiState.value = state.copy(translatedResult = state.expression)
+            _uiState.update { it.copy(translatedResult = state.expression) }
             return
         }
 
@@ -510,12 +385,7 @@ class CalculatorViewModel(
             if (isNegative && words.isNotEmpty()) "$negativePrefix$words" else words
         } ?: ""
 
-        _uiState.value = state.copy(translatedResult = translation)
-    }
-
-    private fun loadLanguage(): Int {
-        return appContext.getSharedPreferences("LanguagePreference", Context.MODE_PRIVATE)
-            .getInt("LANGUAGE", 0)
+        _uiState.update { it.copy(translatedResult = translation) }
     }
 
     private companion object {
