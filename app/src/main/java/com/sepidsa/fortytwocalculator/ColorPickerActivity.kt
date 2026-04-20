@@ -65,8 +65,8 @@ class ColorPickerActivity : FragmentActivity(), ColorPickerSwatch.OnColorSelecte
 
     private fun setTypefaces() {
         var fontChaange = findViewById<TextView>(R.id.textview_accent)
-        fontChaange.typeface = mYekanFont
-        fontChaange = findViewById(R.id.textview_use_classic)
+//        fontChaange.typeface = mYekanFont
+//        fontChaange = findViewById(R.id.textview_use_classic)
         fontChaange.typeface = mYekanFont
         fontChaange = findViewById(R.id.textView_keypad)
         fontChaange.typeface = mYekanFont
