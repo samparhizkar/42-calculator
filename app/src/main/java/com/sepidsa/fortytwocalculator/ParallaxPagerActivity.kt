@@ -63,7 +63,7 @@ class ParallaxPagerActivity : FragmentActivity() {
                     }
                 } else {
                     if (!isOpaque) {
-                        pager.setBackgroundColor(context.getColor(R.color.tutorial_background_opaque))
+                        pager.setBackgroundColor(getColor(R.color.tutorial_background_opaque))
                         isOpaque = true
                     }
                 }

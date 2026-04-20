@@ -43,7 +43,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-compose-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-compose-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
-mxparser = { group = "org.mariuszgromada.math", name = "mxparser", version.ref = "mxparser" }
+mxparser = { group = "org.mariuszgromada.math", name = "MathParser.org-mXparser", version.ref = "mxparser" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

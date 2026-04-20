@@ -1,11 +1,13 @@
 package com.sepidsa.fortytwocalculator.ui.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Email
@@ -18,6 +20,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.VolumeOff
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,8 +36,6 @@ import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorUiState
 import com.sepidsa.fortytwocalculator.ui.history.HistoryScreen
 import com.sepidsa.fortytwocalculator.ui.history.HistoryUiState
 import com.sepidsa.fortytwocalculator.ui.scientific.ScientificScreen
-import com.sepidsa.fortytwocalculator.ui.constants.ConstantsScreen
-import com.sepidsa.fortytwocalculator.ui.constants.ConstantsUiState
 import com.sepidsa.fortytwocalculator.ui.dialogs.ColorPickerDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.SettingsDialog
 import com.sepidsa.fortytwocalculator.ui.dialogs.AboutDialog
@@ -44,6 +45,7 @@ import com.sepidsa.fortytwocalculator.ui.theme.VoidDarkBackground
 import com.sepidsa.fortytwocalculator.data.LogEntity
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     calculatorState: CalculatorUiState,
@@ -74,10 +76,12 @@ fun MainScreen(
     onHelpClick: () -> Unit,
     isMuted: Boolean
 ) {
-    val pagerState = rememberPagerState(initialPage = 1, pageCount = { 3 })
+    val pagerState = rememberPagerState(initialPage = 1, pageCount = { 2 })
     var showAbout by remember { mutableStateOf(false) }
     var showHelp by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
+    var showScientific by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -108,8 +112,14 @@ fun MainScreen(
                 modifier = Modifier.weight(0.38f)
             )
 
-            // Pager: History | Calculator | Scientific
+            // Pager: History | Calculator
             Column(modifier = Modifier.weight(0.62f)) {
+                // SCI expand affordance — visible above the keypad at all times
+                SciExpandButton(
+                    onClick = { showScientific = true },
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                )
+
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier.weight(1f)
@@ -128,18 +138,10 @@ fun MainScreen(
                             onShare = onShareHistoryItem,
                             onFilterChange = onHistoryFilterChange,
                         )
-                        1 -> CalculatorScreen(
+                        else -> CalculatorScreen(
                             state = calculatorState,
                             onKeyPress = onCalculatorKeyPress,
                             onAngleModeChanged = onAngleModeToggle
-                        )
-                        2 -> ScientificScreen(
-                            state = calculatorState,
-                            onKeyPress = onScientificKeyPress,
-                            onInverseToggle = onInverseToggle,
-                            onArcToggle = onArcToggle,
-                            onAngleModeToggle = onAngleModeToggle,
-                            onConstantClick = onConstantClick
                         )
                     }
                 }
@@ -177,6 +179,40 @@ fun MainScreen(
             onLanguageChanged = onSettingsLanguageChanged,
             onRateUs = onRateUs
         )
+    }
+    if (showScientific) {
+        ModalBottomSheet(
+            onDismissRequest = { showScientific = false },
+            sheetState = sheetState,
+            containerColor = Color(0xFF0E0E0E),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(
+                topStart = 20.dp, topEnd = 20.dp,
+            ),
+            dragHandle = {
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .width(32.dp)
+                        .height(4.dp)
+                        .background(
+                            Color.White.copy(alpha = 0.15f),
+                            androidx.compose.foundation.shape.RoundedCornerShape(2.dp),
+                        )
+                )
+            },
+        ) {
+            ScientificScreen(
+                state = calculatorState,
+                onKeyPress = { value ->
+                    onScientificKeyPress(value)
+                    showScientific = false
+                },
+                onInverseToggle = onInverseToggle,
+                onArcToggle = onArcToggle,
+                onAngleModeToggle = onAngleModeToggle,
+                onConstantClick = onConstantClick,
+            )
+        }
     }
 }
 
@@ -283,6 +319,32 @@ fun CalculatorDisplay(
                 )
             }
         }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SCI expand button
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun SciExpandButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val shape = androidx.compose.foundation.shape.RoundedCornerShape(50)
+    Box(
+        modifier = modifier
+            .padding(vertical = 5.dp)
+            .clip(shape)
+            .background(Color.White.copy(alpha = 0.05f))
+            .border(1.dp, Color.White.copy(alpha = 0.10f), shape)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 18.dp, vertical = 4.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "SCI  ▲",
+            fontFamily = DmMono,
+            fontSize = 11.sp,
+            color = Color.White.copy(alpha = 0.38f),
+        )
     }
 }
 

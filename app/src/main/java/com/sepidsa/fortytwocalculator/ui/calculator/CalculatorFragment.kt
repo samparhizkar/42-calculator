@@ -49,6 +49,5 @@ class CalculatorFragment : Fragment() {
 
     private fun onAngleModeChanged(isDegree: Boolean) {
         viewModel.setAngleMode(isDegree)
-        (activity as? MainActivity)?.setAngleMode(isDegree)
     }
 }
