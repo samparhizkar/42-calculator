@@ -59,7 +59,6 @@ fun MainScreen(
     onArcToggle: (Boolean) -> Unit,
     onConstantClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onSettingsFontChanged: (Int) -> Unit,
     onSettingsLanguageChanged: (Int) -> Unit,
     onColorsClick: () -> Unit,
     onAddStarClick: () -> Unit,
@@ -147,7 +146,6 @@ fun MainScreen(
     if (showSettings) {
         SettingsDialog(
             onDismiss = { showSettings = false },
-            onFontChanged = onSettingsFontChanged,
             onLanguageChanged = onSettingsLanguageChanged
         )
     }

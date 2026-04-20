@@ -121,9 +121,6 @@ class MainActivity : FragmentActivity() {
                         onSettingsClick = {
                             // Settings dialog is now handled within MainScreen
                         },
-                        onSettingsFontChanged = { fontCode ->
-                            settingsRepository.dialpadFont = fontCode
-                        },
                         onSettingsLanguageChanged = { langCode ->
                             calculatorViewModel.setLanguage(langCode)
                         },

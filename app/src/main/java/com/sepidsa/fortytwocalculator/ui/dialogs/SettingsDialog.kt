@@ -44,12 +44,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sepidsa.fortytwocalculator.R
 
-// Font constants — must match legacy values used in SharedPreferences
-private const val FONT_ROBOTO_THIN = 1
-private const val FONT_ROBOTO_LIGHT = 2
-private const val FONT_ROBOTO_REGULAR = 3
-
-// Language constants — must match CalculatorViewModel
+/**
+ * Language constants — must match CalculatorViewModel
+ */
 private const val LANGUAGE_PERSIAN = 0
 private const val LANGUAGE_ENGLISH = 1
 private const val LANGUAGE_FRENCH = 2
@@ -58,18 +55,13 @@ private const val LANGUAGE_ARABIC = 3
 @Composable
 fun SettingsDialog(
     onDismiss: () -> Unit,
-    onFontChanged: (Int) -> Unit,
     onLanguageChanged: (Int) -> Unit,
 ) {
     val context = LocalContext.current
 
     // Load persisted preferences
-    val typographyPrefs = context.getSharedPreferences("typography", Context.MODE_PRIVATE)
     val languagePrefs = context.getSharedPreferences("LanguagePreference", Context.MODE_PRIVATE)
 
-    var selectedFont by remember {
-        mutableIntStateOf(typographyPrefs.getInt("DIALPAD_FONT", FONT_ROBOTO_THIN))
-    }
     var selectedLanguage by remember {
         mutableIntStateOf(languagePrefs.getInt("LANGUAGE", LANGUAGE_PERSIAN))
     }
@@ -82,9 +74,6 @@ fun SettingsDialog(
         LANGUAGE_ARABIC -> stringResource(R.string.arabic_42)
         else -> "42"
     }
-
-    // Determine font family for the dialpad preview
-    val dialpadFontFamily = rememberFontFamilyFromAssets(selectedFont)
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -117,53 +106,10 @@ fun SettingsDialog(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "42",
-                            style = MaterialTheme.typography.displayLarge,
-                            fontFamily = dialpadFontFamily,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                        Text(
                             text = translationPreview,
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
-                    }
-                }
-
-                HorizontalDivider()
-
-                // ── Dialpad Font Thickness ──
-                Text(
-                    text = "ضخامت دکمه ها", // "Button thickness" in Persian
-                    style = MaterialTheme.typography.labelMedium
-                )
-
-                val fonts = listOf(
-                    FONT_ROBOTO_THIN to "Roboto Thin",
-                    FONT_ROBOTO_LIGHT to "Roboto Light",
-                    FONT_ROBOTO_REGULAR to "Roboto Regular",
-                )
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    fonts.forEach { (fontCode, fontName) ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = selectedFont == fontCode,
-                                onClick = {
-                                    selectedFont = fontCode
-                                    // Persist
-                                    typographyPrefs.edit().putInt("DIALPAD_FONT", fontCode).apply()
-                                    onFontChanged(fontCode)
-                                }
-                            )
-                            Text(
-                                text = fontName,
-                                fontFamily = rememberFontFamilyFromAssets(fontCode),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
                     }
                 }
 
@@ -214,28 +160,4 @@ fun SettingsDialog(
         },
         shape = MaterialTheme.shapes.extraLarge
     )
-}
-
-/**
- * Load a [FontFamily] from the assets directory based on the dialpad font code.
- * The Roboto TTFs live in assets/ (not res/font/), so we load them via
- * [android.graphics.Typeface.createFromAsset] and wrap in Compose's [FontFamily].
- */
-@Composable
-private fun rememberFontFamilyFromAssets(fontCode: Int): FontFamily {
-    val context = LocalContext.current
-    val assetPath = when (fontCode) {
-        FONT_ROBOTO_THIN -> "roboto_thin.ttf"
-        FONT_ROBOTO_LIGHT -> "roboto_light.ttf"
-        FONT_ROBOTO_REGULAR -> "roboto_regular.ttf"
-        else -> null
-    }
-    return if (assetPath != null) {
-        val typeface = remember(fontCode) {
-            android.graphics.Typeface.createFromAsset(context.assets, assetPath)
-        }
-        FontFamily(typeface)
-    } else {
-        FontFamily.Default
-    }
 }
