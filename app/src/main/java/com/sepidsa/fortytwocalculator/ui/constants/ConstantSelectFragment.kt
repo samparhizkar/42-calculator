@@ -1,4 +1,4 @@
-package com.sepidsa.fortytwocalculator
+package com.sepidsa.fortytwocalculator.ui.constants
 
 import android.app.Activity
 import android.app.Dialog

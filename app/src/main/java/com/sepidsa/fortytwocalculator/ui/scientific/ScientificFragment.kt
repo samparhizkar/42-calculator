@@ -1,4 +1,4 @@
-package com.sepidsa.fortytwocalculator
+package com.sepidsa.fortytwocalculator.ui.scientific
 
 import android.content.BroadcastReceiver
 import android.content.Context

@@ -29,7 +29,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager.widget.ViewPager
 import android.text.InputType
 import android.text.method.ScrollingMovementMethod
@@ -51,9 +50,12 @@ import android.widget.TextSwitcher
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.navigation.NavigationView
-import com.sepidsa.fortytwocalculator.data.ConstantContract
-import com.sepidsa.fortytwocalculator.data.LogContract
-import com.viewpagerindicator.CirclePageIndicator
+import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorFragment
+import com.sepidsa.fortytwocalculator.ui.history.HistoryFragment
+import com.sepidsa.fortytwocalculator.ui.currency.CurrencyFragment
+import com.sepidsa.fortytwocalculator.ui.scientific.ScientificFragment
+import com.sepidsa.fortytwocalculator.ui.favorites.FavoritesFragment
+import com.sepidsa.fortytwocalculator.ui.constants.ConstantSelectFragment
 import java.io.File
 import java.io.Serializable
 import java.math.BigDecimal
@@ -144,8 +146,8 @@ class MainActivity : FragmentActivity(), View.OnClickListener, CompoundButton.On
     private lateinit var mRobotoThin: Typeface
 
     private lateinit var outAnimClear: Animation
-    private lateinit var mLogFragment: AnimatedLogFragment
-    private lateinit var mDialpadFragment: DialpadFragment
+    private lateinit var mLogFragment: HistoryFragment
+    private lateinit var mDialpadFragment: CalculatorFragment
 
     private lateinit var mTextSwitcher: TextSwitcher
 
@@ -538,9 +540,9 @@ class MainActivity : FragmentActivity(), View.OnClickListener, CompoundButton.On
         if (this::mViewPager.isInitialized && mViewPager.visibility == View.VISIBLE) {
             val fList: MutableList<Fragment> = ArrayList()
             mViewPager.offscreenPageLimit = 0
-            mLogFragment = AnimatedLogFragment()
+            mLogFragment = HistoryFragment()
             fList.add(mLogFragment)
-            fList.add(DialpadFragment())
+            fList.add(CalculatorFragment())
             if (mViewPager.tag == "portrait_phone") {
                 fList.add(ScientificFragment())
                 mLayoutState = PORTRAIT_PHONE
@@ -553,7 +555,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener, CompoundButton.On
             setmDefaultPage(DIALPAD_FRAGMENT)
         } else {
             mLayoutState = LANDSCAPE_TABLET
-            mLogFragment = supportFragmentManager.findFragmentByTag("fragment_log_tablet_land") as AnimatedLogFragment
+            mLogFragment = supportFragmentManager.findFragmentByTag("fragment_log_tablet_land") as HistoryFragment
         }
     }
 
@@ -1281,7 +1283,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener, CompoundButton.On
                 @Suppress("DEPRECATION")
                 val asyncTask: AsyncTask<Any?, Any?, Any?> = object : AsyncTask<Any?, Any?, Any?>() {
                     override fun doInBackground(vararg params: Any?): Any? {
-                        sendLogMessage(mExpressionString.toString(), mResultToDisplay, false, "")
+                        addLogEntry(mExpressionString.toString(), mResultToDisplay)
                         try {
                             Thread.sleep(600)
                         } catch (e: InterruptedException) {
@@ -1291,7 +1293,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener, CompoundButton.On
                     }
 
                     override fun onPostExecute(result: Any?) {
-                        mLogFragment.scrollToLast()
+                        // scrollToLast is now handled by HistoryFragment observing ViewModel
                     }
                 }
                 asyncTask.execute()
@@ -1346,32 +1348,21 @@ class MainActivity : FragmentActivity(), View.OnClickListener, CompoundButton.On
         mExpressionBuffer.deleteCharAt(index)
     }
 
-    fun sendLogMessage(Operation: String, Result: String, starred: Boolean, tagText: String) {
-        val intent = Intent("LogIntent")
-        intent.putExtra("OPERATION", Operation)
-        intent.putExtra("RESULT", Result)
-        intent.putExtra("RESULT_NO_COMMA", Result.replace(",", ""))
-        intent.putExtra("STARRED", starred)
-        intent.putExtra("TAG", tagText)
-        LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-        val cv = ContentValues()
-        cv.put(LogContract.LogEntry.COLUMN_RESULT, Result)
-        cv.put(LogContract.LogEntry.COLUMN_RESULT_NO_COMMA, Result.replace(",", ""))
-        cv.put(LogContract.LogEntry.COLUMN_OPERATION, Operation)
-        cv.put(LogContract.LogEntry.COLUMN_TAG, tagText)
-        cv.put(LogContract.LogEntry.COLUMN_STARRED, 0)
+    fun updateExpression(text: String) {
+        mTranslationBox.text = text
+    }
 
-        mLatestInsertedId = ContentUris.parseId(contentResolver.insert(LogContract.LogEntry.CONTENT_URI, cv)!!)
-        setMExpressionString(mResultToDisplay.replace(",", ""))
+    fun updateResult(text: String) {
+        resultTextView.text = text
     }
 
     fun sendClearButtonMessage(value: String) {
         if (mLayoutState != LANDSCAPE_TABLET) {
             val adapter = mViewPager.adapter as ViewPagerAdapter
-            val dialpadFragment = adapter.getItem(1) as DialpadFragment
+            val dialpadFragment = adapter.getItem(1) as CalculatorFragment
             dialpadFragment.setClearButtonText(value)
         } else {
-            val dialpadFragment = supportFragmentManager.findFragmentByTag("dialpad_fragment_tag") as DialpadFragment
+            val dialpadFragment = supportFragmentManager.findFragmentByTag("dialpad_fragment_tag") as CalculatorFragment
             dialpadFragment.setClearButtonText(value)
         }
     }
@@ -1379,10 +1370,10 @@ class MainActivity : FragmentActivity(), View.OnClickListener, CompoundButton.On
     fun sendChangeFontThicknessMessage() {
         if (mLayoutState != LANDSCAPE_TABLET) {
             val adapter = mViewPager.adapter as ViewPagerAdapter
-            val dialpadFragment = adapter.getItem(1) as DialpadFragment
+            val dialpadFragment = adapter.getItem(1) as CalculatorFragment
             dialpadFragment.changeFontThickness()
         } else {
-            val dialpadFragment = supportFragmentManager.findFragmentByTag("dialpad_fragment_tag") as DialpadFragment
+            val dialpadFragment = supportFragmentManager.findFragmentByTag("dialpad_fragment_tag") as CalculatorFragment
             dialpadFragment.changeFontThickness()
         }
     }

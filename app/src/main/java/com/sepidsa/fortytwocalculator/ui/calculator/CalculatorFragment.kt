@@ -1,4 +1,4 @@
-package com.sepidsa.fortytwocalculator
+package com.sepidsa.fortytwocalculator.ui.calculator
 
 import android.app.Activity
 import android.content.Context
@@ -8,20 +8,23 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CompoundButton
 import android.widget.ToggleButton
+import com.sepidsa.fortytwocalculator.ui.currency.CurrencyFragment
 
 /**
  * @author Ehsan
  */
-class DialpadFragment : Fragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+class CalculatorFragment : Fragment(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
+    private val viewModel: CalculatorViewModel by viewModels()
 
     private var arcIsOn: Boolean = false
     private val TAG: String = "recreate"
@@ -82,32 +85,50 @@ class DialpadFragment : Fragment(), View.OnClickListener, CompoundButton.OnCheck
         }
 
         mView.findViewById<View>(R.id.buttonClear).setOnLongClickListener {
-            (activity as MainActivity).aButtonIsPressed("C")
+            viewModel.onButtonPressed("C")
             setClearButtonText(resources.getString(R.string.clear))
             true
         }
 
         mView.findViewById<View>(R.id.buttonEquals).setOnLongClickListener {
-            (activity as MainActivity).aButtonIsPressed("MR")
+            viewModel.onButtonPressed("MR")
             true
         }
 
         mView.findViewById<View>(R.id.buttonTimes).setOnLongClickListener {
-            (activity as MainActivity).aButtonIsPressed("MC")
+            viewModel.onButtonPressed("MC")
             true
         }
 
         mView.findViewById<View>(R.id.buttonMinus).setOnLongClickListener {
-            (activity as MainActivity).aButtonIsPressed("M-")
+            viewModel.onButtonPressed("M-")
             setClearButtonText(resources.getString(R.string.clear))
             true
         }
         mView.findViewById<View>(R.id.buttonPlus).setOnLongClickListener {
-            (activity as MainActivity).aButtonIsPressed("M+")
+            viewModel.onButtonPressed("M+")
             true
         }
 
         return mView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                (activity as MainActivity).updateExpression(state.expression)
+                (activity as MainActivity).updateResult(state.result)
+                // TODO: Update memory display, angle mode, etc.
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.newLogEntry.collect { (expression, result) ->
+                (activity as MainActivity).addLogEntry(expression, result)
+            }
+        }
     }
 
     private fun applyArc(isArc: Boolean) {
@@ -228,13 +249,7 @@ class DialpadFragment : Fragment(), View.OnClickListener, CompoundButton.OnCheck
             }
         } else if (id == R.id.switch_deg_rad) {
             val on = (view as ToggleButton).isChecked
-            if (on) {
-                // result in Degree
-                (activity as MainActivity).setAngleMode(true)
-            } else {
-                // result in Radian
-                (activity as MainActivity).setAngleMode(false)
-            }
+            viewModel.setAngleMode(on)
         } else if (id == R.id.buttonARC) {
             if ((view as ToggleButton).isChecked) {
                 arcIsOn = true
@@ -244,15 +259,16 @@ class DialpadFragment : Fragment(), View.OnClickListener, CompoundButton.OnCheck
                 applyArc(false)
             }
         } else if (id == R.id.buttonConstant) {
-            val fm: FragmentManager = (activity as MainActivity).supportFragmentManager
-            val constantUseDialog = ConstantUseFragment()
+            val fm: FragmentManager = requireActivity().supportFragmentManager
+            val constantUseDialog = CurrencyFragment()
             constantUseDialog.show(fm, "fragment_constant_use")
         } else {
-            if (view.tag.toString() == "trigonomic") {
-                (activity as MainActivity).aButtonIsPressed((view as Button).text.toString() + "(")
+            val buttonValue = if (view.tag.toString() == "trigonomic") {
+                (view as Button).text.toString() + "("
             } else {
-                (activity as MainActivity).aButtonIsPressed((view as Button).tag.toString())
+                (view as Button).tag.toString()
             }
+            viewModel.onButtonPressed(buttonValue)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.sepidsa.fortytwocalculator
+package com.sepidsa.fortytwocalculator.ui.history
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -7,9 +7,8 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
-import androidx.loader.content.Loader
+import androidx.fragment.app.viewModels
+import kotlinx.coroutines.delay
 import androidx.appcompat.app.AlertDialog
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -27,10 +26,11 @@ import com.sepidsa.fortytwocalculator.data.LogContract
 /**
  * Created by Farshid on 5/17/2015.
  */
-class AnimatedLogFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
+class HistoryFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
-    private val LOG_TAG_ = AnimatedLogFragment::class.java.simpleName
+    private val LOG_TAG_ = HistoryFragment::class.java.simpleName
 
+    private val viewModel: HistoryViewModel by viewModels()
     private lateinit var mLogAdapter: LogAdapter
     private lateinit var mListView: ListView
     private lateinit var mClearButton: Button
@@ -39,9 +39,21 @@ class AnimatedLogFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     private var mPosition: Int = ListView.INVALID_POSITION
     private val mLogFragment: Fragment = this
 
+    fun addLogEntry(expression: String, result: String) {
+        viewModel.addLogEntry(expression, result)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         loaderManager.initLoader(LOG_LOADER, null, this)
         super.onActivityCreated(savedInstanceState)
+
+        // Observe new log entries
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.newLogEntry.collect { entry ->
+                delay(600)
+                scrollToLast()
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
