@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>42 — VOID v2</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      gap: 64px;
+      padding: 48px 32px;
+    }
+
+    .phone {
+      width: 300px;
+      height: 600px;
+      background: #080808;
+      border-radius: 48px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.07),
+        0 48px 96px rgba(0,0,0,0.9),
+        0 12px 32px rgba(0,0,0,0.6);
+      user-select: none;
+    }
+
+    .notch {
+      position: absolute;
+      top: 12px; left: 50%;
+      transform: translateX(-50%);
+      width: 64px; height: 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.07);
+      z-index: 10;
+    }
+
+    /* Corner ambient glow from = key */
+    .phone::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(26,188,156,0.13) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Display ── */
+    .display {
+      padding: 44px 20px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
+      min-height: 195px;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .expr-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.22);
+      letter-spacing: 0.04em;
+      min-height: 18px;
+      transition: opacity 0.3s ease;
+    }
+
+    /* ── Per-digit result ── */
+    .result-wrap {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      margin-top: 4px;
+      /* Size transitions smoothly as digit count changes */
+      transition: font-size 0.22s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    /* Each digit lives in its own clipping cell */
+    .digit-cell {
+      position: relative;
+      overflow: hidden;
+      /* height matches the font-size × line-height */
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .digit {
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      display: block;
+      /* Breathing when idle */
+      animation: breathe 4s ease-in-out infinite;
+    }
+
+    .digit.no-breathe {
+      animation: none;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.78; }
+    }
+
+    /* Slide-in from below: new digit entering */
+    @keyframes digitIn {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    /* Slide-out upward: old digit leaving */
+    @keyframes digitOut {
+      from { transform: translateY(0);     opacity: 1; }
+      to   { transform: translateY(-110%); opacity: 0; }
+    }
+
+    /* Equals press: spring scale on each digit, staggered */
+    @keyframes digitSpring {
+      0%   { transform: translateY(0) scale(1); }
+      40%  { transform: translateY(-6px) scale(1.06); }
+      70%  { transform: translateY(2px)  scale(0.97); }
+      100% { transform: translateY(0)    scale(1); }
+    }
+
+    /* Color warmup on equals */
+    @keyframes digitWarm {
+      0%   { color: #fff; }
+      35%  { color: #d4ffef; }
+      100% { color: #fff; }
+    }
+
+    .words-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-style: italic;
+      color: rgba(255,255,255,0.2);
+      margin-top: 7px;
+      min-height: 15px;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    /* ── Keypad ── */
+    .keypad {
+      flex: 1;
+      padding: 4px 10px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .row { flex: 1; display: flex; gap: 5px; }
+
+    .key {
+      flex: 1;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 20px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.78);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      transition: box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      transform-origin: center;
+    }
+
+    /* Bloom overlay */
+    .key::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.22) 0%, transparent 68%);
+      opacity: 0;
+      transition: opacity 0.22s ease;
+      pointer-events: none;
+    }
+
+    .key.pressed { transform: scale(0.88); }
+    .key.pressed::before { opacity: 1; }
+
+    .key.op {
+      background: rgba(255,255,255,0.065);
+      border-color: rgba(255,255,255,0.13);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.09), inset 0 -1px 0 rgba(0,0,0,0.2);
+    }
+
+    .key.op.active-op {
+      background: rgba(26,188,156,0.13);
+      border-color: rgba(26,188,156,0.38);
+      color: #1ddbb8;
+      box-shadow:
+        inset 0 1px 0 rgba(26,188,156,0.18),
+        0 0 14px rgba(26,188,156,0.22),
+        0 0 4px  rgba(26,188,156,0.12);
+    }
+
+    .key.eq {
+      background: #1abc9c;
+      border-color: transparent;
+      color: #001f16;
+      font-weight: 500;
+      font-size: 22px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        0 0 30px rgba(26,188,156,0.5),
+        0 0 10px rgba(26,188,156,0.25),
+        0 0 70px rgba(26,188,156,0.09);
+    }
+
+    .key.eq::before {
+      background: radial-gradient(circle at center, rgba(255,255,255,0.35) 0%, transparent 68%);
+    }
+
+    .key.clr {
+      background: rgba(255,45,45,0.08);
+      border-color: rgba(255,80,80,0.2);
+      color: rgba(255,100,100,0.85);
+      box-shadow: inset 0 1px 0 rgba(255,100,100,0.06), inset 0 -1px 0 rgba(0,0,0,0.2);
+    }
+
+    .key.clr::before {
+      background: radial-gradient(circle at center, rgba(255,100,100,0.22) 0%, transparent 68%);
+    }
+
+    /* Sonar */
+    .sonar {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 5;
+      overflow: hidden; border-radius: 48px;
+    }
+
+    .sonar-ring {
+      position: absolute;
+      border: 1.5px solid rgba(26,188,156,0.55);
+      border-radius: 50%;
+      transform: translate(-50%,-50%) scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Annotations */
+    .annotations {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      max-width: 230px;
+    }
+
+    .anno-label {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: #1abc9c; margin-bottom: 3px;
+    }
+
+    .anno-text {
+      font-size: 13px; color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+    }
+
+    .anno-text strong { color: rgba(255,255,255,0.82); font-weight: 500; }
+
+    .page-label {
+      position: fixed; top: 24px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.15);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<p class="page-label">42 Calculator · VOID v2 · Interactive</p>
+
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="sonar" id="sonar"></div>
+
+  <div class="display">
+    <div class="expr-line" id="expr"></div>
+    <div class="result-wrap" id="result-wrap">
+      <!-- digits injected by JS -->
+    </div>
+    <div class="words-line" id="words"></div>
+  </div>
+
+  <div class="keypad">
+    <div class="row">
+      <div class="key clr" data-val="C">C</div>
+      <div class="key op"  data-val="(">(</div>
+      <div class="key op"  data-val=")">)</div>
+      <div class="key op"  data-val="÷">÷</div>
+    </div>
+    <div class="row">
+      <div class="key" data-val="7">7</div>
+      <div class="key" data-val="8">8</div>
+      <div class="key" data-val="9">9</div>
+      <div class="key op" data-val="×">×</div>
+    </div>
+    <div class="row">
+      <div class="key" data-val="4">4</div>
+      <div class="key" data-val="5">5</div>
+      <div class="key" data-val="6">6</div>
+      <div class="key op" data-val="−">−</div>
+    </div>
+    <div class="row">
+      <div class="key" data-val="1">1</div>
+      <div class="key" data-val="2">2</div>
+      <div class="key" data-val="3">3</div>
+      <div class="key op" data-val="+">+</div>
+    </div>
+    <div class="row">
+      <div class="key op" data-val=".">.</div>
+      <div class="key"    data-val="0">0</div>
+      <div class="key op" data-val="%">%</div>
+      <div class="key eq" data-val="=">=</div>
+    </div>
+  </div>
+</div>
+
+<div class="annotations">
+  <div>
+    <p class="anno-label">Per-digit animation</p>
+    <p class="anno-text"><strong>Unchanged digits stay locked.</strong> Type <em>56</em> then <em>6</em> — the "56" holds still while only the new digit slides in from below. Feels like a precision mechanical counter.</p>
+  </div>
+  <div>
+    <p class="anno-label">Equals spring</p>
+    <p class="anno-text"><strong>Each digit springs independently,</strong> staggered left-to-right. The result bounces in with a slight overshoot, then a teal warmup flash confirms the answer.</p>
+  </div>
+  <div>
+    <p class="anno-label">Active operator</p>
+    <p class="anno-text"><strong>Pressed operator holds its glow</strong> until the next digit clears it. You always know the pending operation without reading the expression line.</p>
+  </div>
+  <div>
+    <p class="anno-label">Sonar on =</p>
+    <p class="anno-text"><strong>Teal ring expands from the = key</strong> outward across the keypad when you press equals. Words typewrite in after.</p>
+  </div>
+  <div>
+    <p class="anno-label">Breathing idle</p>
+    <p class="anno-text"><strong>Result pulses slowly</strong> when you stop typing. The app feels alive, not frozen.</p>
+  </div>
+</div>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────
+let expr       = '';
+let activeOpEl = null;
+let idleTimer  = null;
+let currentDisplayed = '0'; // what's currently in the digit cells
+
+// ─── Number → words ──────────────────────────────────────────────
+const ONES = ['','one','two','three','four','five','six','seven','eight','nine',
+  'ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+const TENS = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+
+function chunk(n) {
+  if (!n) return '';
+  if (n < 20)  return ONES[n];
+  if (n < 100) return TENS[Math.floor(n/10)] + (n%10 ? ' '+ONES[n%10] : '');
+  return ONES[Math.floor(n/100)] + ' hundred' + (n%100 ? ' '+chunk(n%100) : '');
+}
+function toWords(val) {
+  const n = parseFloat(val);
+  if (!isFinite(n) || isNaN(n) || n === 0) return '';
+  const abs = Math.abs(Math.round(n)), sign = n < 0 ? 'negative ' : '';
+  if (abs >= 1e12) return sign + parseFloat((abs/1e12).toPrecision(4)) + ' trillion';
+  if (abs >= 1e9)  { const b=Math.floor(abs/1e9),r=abs%1e9; return sign+chunk(b)+' billion'+(r?' '+toWords(r):''); }
+  if (abs >= 1e6)  { const m=Math.floor(abs/1e6),r=abs%1e6; return sign+chunk(m)+' million'+(r?' '+toWords(r):''); }
+  if (abs >= 1e3)  { const t=Math.floor(abs/1e3),r=abs%1e3; return sign+chunk(t)+' thousand'+(r?' '+chunk(r):''); }
+  return sign + chunk(abs);
+}
+
+// ─── Eval ─────────────────────────────────────────────────────────
+function evalExpr(e) {
+  try {
+    const s = e.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-')
+               .replace(/π/g,'Math.PI');
+    const r = new Function('return ('+s+')')();
+    if (!isFinite(r)) return null;
+    return parseFloat(r.toPrecision(12)).toString();
+  } catch { return null; }
+}
+
+// ─── Font size based on digit count ───────────────────────────────
+function fontSizeFor(str) {
+  const l = str.replace(/[^0-9.,-]/g,'').length;
+  if (l <= 4)  return 80;
+  if (l <= 6)  return 64;
+  if (l <= 8)  return 50;
+  if (l <= 10) return 40;
+  return 32;
+}
+
+// ─── Per-digit rendering ──────────────────────────────────────────
+const resultWrap = document.getElementById('result-wrap');
+
+function renderDigits(newStr, mode = 'type') {
+  // mode: 'type' | 'equals' | 'clear'
+  const oldStr = currentDisplayed;
+  currentDisplayed = newStr;
+
+  const fs = fontSizeFor(newStr);
+  resultWrap.style.fontSize = fs + 'px';
+
+  // Align from the RIGHT: compare character by character from the right
+  const oldChars = [...oldStr];
+  const newChars = [...newStr];
+
+  // Build new DOM
+  // Strategy:
+  //   - chars that exist in the same right-aligned position and haven't changed → keep, no animation
+  //   - chars that changed in place → exit old up, enter new from below
+  //   - new chars on the left (number grew) → enter from below
+  //   - removed chars (number shrank) → exit upward
+
+  // Right-align: pad shorter one on the left with null
+  const maxLen = Math.max(oldChars.length, newChars.length);
+  const oldPad = Array(maxLen - oldChars.length).fill(null).concat(oldChars);
+  const newPad = Array(maxLen - newChars.length).fill(null).concat(newChars);
+
+  // Get existing cells (right-aligned, same order)
+  const existingCells = [...resultWrap.querySelectorAll('.digit-cell')];
+  // existingCells are in DOM order = left to right = matches oldPad
+
+  const cellHeight = Math.round(fs * 1.05); // slight extra for descenders
+
+  // We'll rebuild the wrap content
+  // For cells that need exit animation, clone them and overlay during transition
+  const fragment = document.createDocumentFragment();
+
+  newPad.forEach((newCh, i) => {
+    const oldCh = oldPad[i];
+    const cell = document.createElement('div');
+    cell.className = 'digit-cell';
+    cell.style.height = cellHeight + 'px';
+
+    const span = document.createElement('span');
+    span.className = 'digit no-breathe';
+    span.style.fontSize = fs + 'px';
+    span.textContent = newCh ?? '';
+
+    if (newCh === null) {
+      // Slot is empty (padding for alignment) — invisible spacer
+      cell.style.opacity = '0';
+      cell.style.width = '0';
+      cell.style.overflow = 'hidden';
+      cell.appendChild(span);
+    } else if (oldCh === null) {
+      // New digit appearing — slide in from below
+      if (mode === 'clear') {
+        span.style.animation = `digitIn 0.18s cubic-bezier(0.22,1,0.36,1) both`;
+      } else {
+        const delay = mode === 'equals'
+          ? (newChars.length - 1 - (i - (maxLen - newChars.length))) * 28
+          : 0;
+        span.style.animation = `digitIn 0.18s cubic-bezier(0.22,1,0.36,1) ${delay}ms both`;
+      }
+      cell.appendChild(span);
+    } else if (newCh !== oldCh) {
+      // Digit changed — old exits up, new enters from below
+      if (mode === 'equals') {
+        // Spring bounce per digit, staggered
+        const rightIdx = newChars.length - 1 - (i - (maxLen - newChars.length));
+        const delay = rightIdx * 30;
+        span.style.animation =
+          `digitIn 0.2s cubic-bezier(0.22,1,0.36,1) ${delay}ms both,
+           digitSpring 0.38s cubic-bezier(0.22,1,0.36,1) ${delay + 60}ms both,
+           digitWarm 0.5s ease ${delay + 60}ms both`;
+      } else {
+        span.style.animation = `digitIn 0.15s cubic-bezier(0.22,1,0.36,1) both`;
+      }
+      cell.appendChild(span);
+    } else {
+      // Unchanged digit — stays perfectly still
+      span.style.animation = 'none';
+      span.style.transform = 'translateY(0)';
+      span.style.opacity = '1';
+      cell.appendChild(span);
+    }
+
+    fragment.appendChild(cell);
+  });
+
+  // Replace content
+  resultWrap.innerHTML = '';
+  resultWrap.appendChild(fragment);
+
+  // Re-enable breathing after a short delay (only when idle)
+  resetIdleBreathing();
+}
+
+function resetIdleBreathing() {
+  clearTimeout(idleTimer);
+  // Stop breathing while typing
+  resultWrap.querySelectorAll('.digit').forEach(d => d.classList.add('no-breathe'));
+  idleTimer = setTimeout(() => {
+    resultWrap.querySelectorAll('.digit').forEach(d => d.classList.remove('no-breathe'));
+  }, 2000);
+}
+
+// ─── Typewriter for words ─────────────────────────────────────────
+const wordsEl = document.getElementById('words');
+let typeTimer = null;
+
+function typewrite(text) {
+  clearTimeout(typeTimer);
+  wordsEl.textContent = '';
+  if (!text) return;
+  let i = 0;
+  function step() {
+    if (i <= text.length) {
+      wordsEl.textContent = text.slice(0, i);
+      i++;
+      typeTimer = setTimeout(step, 26);
+    }
+  }
+  step();
+}
+
+// ─── Sonar ────────────────────────────────────────────────────────
+const sonarEl = document.getElementById('sonar');
+
+function fireSonar() {
+  const phoneRect = document.getElementById('phone').getBoundingClientRect();
+  const eqRect    = document.querySelector('.key.eq').getBoundingClientRect();
+  const cx = eqRect.left + eqRect.width/2  - phoneRect.left;
+  const cy = eqRect.top  + eqRect.height/2 - phoneRect.top;
+  const maxR = Math.hypot(Math.max(cx, phoneRect.width - cx), Math.max(cy, phoneRect.height - cy));
+
+  [0, 110].forEach(delay => {
+    const ring = document.createElement('div');
+    ring.className = 'sonar-ring';
+    ring.style.cssText = `left:${cx}px;top:${cy}px;width:20px;height:20px;`;
+    sonarEl.appendChild(ring);
+    setTimeout(() => {
+      ring.style.transition = `transform 0.75s cubic-bezier(0.2,0.8,0.3,1), opacity 0.75s ease`;
+      ring.style.transform  = `translate(-50%,-50%) scale(${(maxR * 2.2) / 20})`;
+      ring.style.opacity    = '0';
+      setTimeout(() => ring.remove(), 800);
+    }, delay + 10);
+  });
+}
+
+// ─── Key press handler ────────────────────────────────────────────
+const exprEl = document.getElementById('expr');
+const operators = ['÷','×','−','+'];
+
+function clearActiveOp() {
+  if (activeOpEl) { activeOpEl.classList.remove('active-op'); activeOpEl = null; }
+}
+
+function handleKey(val, keyEl) {
+  if (val === 'C') {
+    expr = '';
+    clearActiveOp();
+    exprEl.textContent = '';
+    exprEl.style.opacity = '1';
+    renderDigits('0', 'clear');
+    typewrite('');
+    return;
+  }
+
+  if (val === '=') {
+    if (!expr) return;
+    const res = evalExpr(expr);
+    if (res !== null) {
+      fireSonar();
+      const savedExpr = expr;
+      exprEl.style.opacity = '0';
+      setTimeout(() => {
+        exprEl.textContent = savedExpr + ' =';
+        exprEl.style.opacity = '0.22';
+      }, 160);
+      expr = res;
+      renderDigits(res, 'equals');
+      const w = toWords(res);
+      setTimeout(() => typewrite(w), 120);
+      clearActiveOp();
+    }
+    return;
+  }
+
+  const isOp = operators.includes(val);
+
+  if (!isOp) {
+    clearActiveOp();
+  } else {
+    clearActiveOp();
+    activeOpEl = keyEl;
+    keyEl.classList.add('active-op');
+  }
+
+  expr += val;
+  exprEl.textContent = expr;
+  exprEl.style.opacity = '1';
+
+  const live = evalExpr(expr);
+  if (live !== null) {
+    renderDigits(live, 'type');
+    typewrite(toWords(live));
+  }
+}
+
+// ─── Wire keys ────────────────────────────────────────────────────
+document.querySelectorAll('.key').forEach(key => {
+  // Press visual (immediate on pointerdown for zero-latency feel)
+  key.addEventListener('pointerdown', () => {
+    key.classList.add('pressed');
+    key.style.transition = 'transform 0.05s ease';
+    key.style.transform = 'scale(0.88)';
+  });
+
+  const release = () => {
+    key.style.transition = 'transform 0.22s cubic-bezier(0.22,1,0.36,1)';
+    key.style.transform = 'scale(1)';
+    setTimeout(() => {
+      key.classList.remove('pressed');
+      key.style.transition = '';
+      key.style.transform = '';
+    }, 220);
+  };
+
+  key.addEventListener('pointerup',     release);
+  key.addEventListener('pointerleave',  release);
+  key.addEventListener('click', () => handleKey(key.dataset.val, key));
+});
+
+// ─── Initial render ───────────────────────────────────────────────
+renderDigits('0', 'type');
+</script>
+</body>
+</html>

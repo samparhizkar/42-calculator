@@ -32,7 +32,6 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
     int idList[];
     private boolean inversed = false;
     private boolean arcIsOn = false;
-    private boolean mIsRetroOn = false;
     private float scientific_toggle_textSize = 18f;
 
 
@@ -48,21 +47,7 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       if(savedInstanceState == null){
-           mIsRetroOn = ((MainActivity)getActivity()).isRetroThemeSelected();
-       }else {
-           mIsRetroOn = savedInstanceState.getBoolean("mIsRetroOn",false);
-       }
-        if(mIsRetroOn) {
-            mView = inflater.inflate(R.layout.fragment_scientific_retro, container, false);
-            ((ToggleButton) (mView.findViewById(R.id.switch_deg_rad))).setTextSize(scientific_toggle_textSize);
-            ((ToggleButton) (mView.findViewById(R.id.buttonInverse))).setTextSize(scientific_toggle_textSize);
-            ((ToggleButton) (mView.findViewById(R.id.buttonARC))).setTextSize(scientific_toggle_textSize);
-
-        }else {
-            mView = inflater.inflate(R.layout.fragment_scientific_flat, container, false);
-
-        }        // Set the listener for all the gray_buttons
+        mView = inflater.inflate(R.layout.fragment_scientific_flat, container, false);        // Set the listener for all the gray_buttons
 //        this.setRetainInstance(false);
         idList =getScientificButtonsID();
         for(int id : idList) {
@@ -75,12 +60,8 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
             }
         }
         if(mView.findViewById(R.id.switch_deg_rad) != null) {
-            if(mIsRetroOn){
-                ((Button) (mView.findViewById(R.id.buttonConstant))).setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "yekan.ttf"));
-
-            }else {
-                ((Button) (mView.findViewById(R.id.buttonConstant))).setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "lotus.ttf"));
-            }            ((ToggleButton) (mView.findViewById(R.id.switch_deg_rad))).setChecked(((MainActivity) getActivity()).getAngleMode());
+            ((Button) (mView.findViewById(R.id.buttonConstant))).setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "lotus.ttf"));
+            ((ToggleButton) (mView.findViewById(R.id.switch_deg_rad))).setChecked(((MainActivity) getActivity()).getAngleMode());
             ((ToggleButton) (mView.findViewById(R.id.switch_deg_rad))).setOnCheckedChangeListener(this);
             mView.findViewById(R.id.switch_deg_rad).setOnClickListener(this);
         }
@@ -103,10 +84,7 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
 //                        }
 
                     case "changeKeypadFontColor":
-                        if(!mIsRetroOn) {
-
-                            setTextColorState(idList, getNonAccentColorStateList());
-                        }
+                        setTextColorState(idList, getNonAccentColorStateList());
                         break;
                 }
             }
@@ -271,18 +249,9 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("mIsRetroOn",mIsRetroOn);
-//        outState.putSerializable("defaultFont", (Serializable) defaultFont);
-
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
-        if(!mIsRetroOn){
-            redrawKeypadInFlatTheme();
-        }
+        redrawKeypadInFlatTheme();
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(mThemeChangedReciever, new IntentFilter("themeIntent"));
 
     }
@@ -294,9 +263,7 @@ public class ScientificFragment extends Fragment implements OnClickListener,Comp
             View v = mView.findViewById(id);
             if (v != null) {
                 if( v instanceof Button){
-                    if(!mIsRetroOn) {
-                        ((Button) v).setTextColor(((MainActivity) getActivity()).getDialpadFontColor());
-                    }
+                    ((Button) v).setTextColor(((MainActivity) getActivity()).getDialpadFontColor());
                 }
             }
         }

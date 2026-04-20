@@ -5,9 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -16,9 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
@@ -33,7 +28,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 import android.text.InputType;
@@ -61,7 +55,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.sepidsa.fortytwocalculator.data.ConstantContract;
 import com.sepidsa.fortytwocalculator.data.LogContract;
-import com.sepidsa.fortytwocalculator.sync.CurrencySyncAdapter;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.File;
@@ -79,7 +72,6 @@ import java.util.Stack;
 
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,  CompoundButton.OnCheckedChangeListener {
-    private static final String BAZAAR_PACKAGE_NAME = "com.farsitel.bazaar";
     OnHeadlineSelectedListener mCallback;
 
     private static final String FRAGMENT_TAG_LOG_ = "log fragment";
@@ -217,16 +209,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private Typeface mPhalls,mDigital_7;
     private Typeface mRobotoThin;
 
-    // SKUs for our products: the premium upgrade (non-consumable)
-    // Does the user have the premium upgrade?
-    boolean mIsPremium = false;
-    boolean mHasPuyrchasedClassicTheme = false;
-
-    // (arbitrary) request code for the purchase flow
     static final String TAG_recreate = "recreate";
 
-
-    private Button mCurrencyList;
     private Animation out_anim_clear;
     private AnimatedLogFragment mLogFragment;
     private DialpadFragment mDialpadFragment;
@@ -245,16 +229,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         showSplashAndTour();
-        if(!getGoGoldNotifViewed()&&!getPremiumPreference()){
-            setGoGoldNotifViewed(true);
-            goGoldNotif();
-        }
         setTypeFaces();
-        if(isRetroThemeSelected()){
-            setContentView(R.layout.activity_main_retro);
-        }else {
-            setContentView(R.layout.activity_main);
-        }
+        setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
 
@@ -273,11 +249,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mFavoritesList = (Button)findViewById(R.id.favorites_list);
         mAddStars = (Button)findViewById(R.id.btn_add_star);
         mAddLabel = (Button)findViewById(R.id.add_label);
-        mCurrencyList =  (Button)findViewById(R.id.currency_list);
         mFavoritesList.setOnClickListener(this);
         mAddStars.setOnClickListener(this);
         mAddLabel.setOnClickListener(this);
-        mCurrencyList.setOnClickListener(this);
 
         mTextSwitcher = (TextSwitcher)findViewById(R.id.text_switcher);
 //        If it's a new instance of application i.e. Not because of rotation or configuration changes =================
@@ -285,7 +259,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         refreshFonts();
         setIconButtons();
         buildNavigationDrawer();
-        CurrencySyncAdapter.initializeSyncAdapter(this);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -309,16 +282,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
 
-    public static boolean isBazaarPackageInstalled(Context context, String packageName) {
-        final PackageManager packageManager = context.getPackageManager();
-        Intent intent = packageManager.getLaunchIntentForPackage(packageName);
-        if (intent == null) {
-            return false;
-        }
-        List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return list.size() > 0;
-    }
-
     private void buildNavigationDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
@@ -333,8 +296,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 displayAbout();
             } else if (id == R.id.drawer_contact) {
                 displayContactUs();
-            } else if (id == R.id.drawer_premium) {
-                displayUpgradeToPremium(0);
             }
             return true;
         });
@@ -348,20 +309,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-
-    private void displayUpgradeToPremium(int i) {
-        try{
-            Intent myIntent = new Intent(MainActivity.this, PremiumShowcasePagerActivity.class);
-            myIntent.putExtra("page", i);
-            MainActivity.this.startActivity(myIntent);
-        }
-        catch (RuntimeException e ){
-            Toast.makeText(getApplicationContext(),"مشکل در اتصال به بازار",Toast.LENGTH_LONG);
-        }
-
-
-
-    }
 
     private void displayContactUs() {
         sendEmail(this, getString(R.string.farsi_about_42_calc), "", null);
@@ -516,7 +463,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         outState.putSerializable("mButtonStack", mButtonsStack);
         outState.putString("mExpressionBuffer", mExpressionBuffer.toString());
         outState.putBoolean("mJustPressedExecuteButton", mJustPressedExecuteButton);
-        outState.putBoolean("mISRetroThemeOn", isRetroThemeSelected());
         outState.putSerializable("mMemoryVariable", mMemoryVariable);
         outState.putString("mResultToDisplay", mResultToDisplay);
         outState.putString("mDecimal_fraction", mDecimal_fraction);
@@ -569,38 +515,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-public void goGoldNotif() {
-    // First let's define the intent to trigger when notification is selected
-// Start out by creating a normal intent (in this case to open an activity)
-    Intent intent = new Intent(this, PremiumShowcasePagerActivity.class);
-    // Next, let's turn this into a PendingIntent using
-//   public static PendingIntent getActivity(Context context, int requestCode,
-//       Intent intent, int flags)
-    int requestID = (int) System.currentTimeMillis(); //unique requestID to differentiate between various notification with same NotifId
-    int flags = PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE; // cancel old intent and create new one
-    PendingIntent pIntent = PendingIntent.getActivity(this, requestID, intent, flags);
-    // Now we can attach this to the notification using setContentIntent
-    Notification noti =
-            new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.ic_launcher)
-                    .setContentTitle("ماشین حساب ۴۲")
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
-                    .setContentText("نسخه طلایی ماشین حساب ۴۲ رو امتحان کردی ؟")
-                    .setContentIntent(pIntent).build();
-
-// Hide the notification after its selected
-//    noti.setAutoCancel(true);
-    noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
-    NotificationManager mNotificationManager =
-            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-// mId allows you to update the notification later on.
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-            checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-        mNotificationManager.notify(0, noti);
-    }
-
-}
     @Override
     protected void onStart() {
 
@@ -619,9 +533,7 @@ public void goGoldNotif() {
                 getMTranslationEditText().setTypeface(getFontForComponent("RESULT_FONT"));
         }
 
-        if(!isRetroThemeSelected()) {
-            resultTextView.setBackgroundColor(getAccentColorCode());
-        }
+        resultTextView.setBackgroundColor(getAccentColorCode());
         if(getAngleMode() == true){
             mScientificModeTextView.setText("DEG");
         }else{
@@ -701,12 +613,7 @@ public void goGoldNotif() {
         Log.d(TAG_recreate, "Activity ondestroy");
 
         if (isFinishing()) {
-            // todo clear database if user if non-premium
-            if(!getPremiumPreference()) {
-                getContentResolver().delete(LogContract.LogEntry.CONTENT_URI, null, null);
-            }
-
-
+            // nothing to clean up
         } else {
             //It's an orientation change.
             if (mHandler != null) {
@@ -777,8 +684,6 @@ public void goGoldNotif() {
     }
 
     private void setIconButtons() {
-        //todo refactor code
-        mCurrencyList.setTypeface(mFlatIcon);
         mFavoritesList.setTypeface(mFlatIcon);
         mFavoritesList.setText(getResources().getString(R.string.list));
         mFavoritesList.setTextSize(30);
@@ -789,16 +694,9 @@ public void goGoldNotif() {
     }
 
     private void setResultTextBox(){
-
-        if(!isRetroThemeSelected()) {
-            resultTextView.setBackgroundColor(getAccentColorCode());
-            result_textView_holder.setBackgroundColor(getAccentColorCode());
-            resultTextView.setTextColor(Color.WHITE);
-        }else {
-            resultTextView.setBackgroundColor(Color.BLACK);
-            resultTextView.setTextColor(Color.BLACK);
-
-        }
+        resultTextView.setBackgroundColor(getAccentColorCode());
+        result_textView_holder.setBackgroundColor(getAccentColorCode());
+        resultTextView.setTextColor(Color.WHITE);
         resultTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
     }
 
@@ -858,22 +756,9 @@ public void goGoldNotif() {
     }
 
     void redrawAccent(){
-
-        if(!isRetroThemeSelected()) {
-            mFavoritesList.setTextColor(getAccentColorCode());
-            mCurrencyList.setTextColor(getAccentColorCode());
-            if(mViewPager!=null) {
-                mViewPagerIndicator.setFillColor(getAccentColorCode());
-            }
-        }else {
-            resultTextView.setBackgroundColor(Color.TRANSPARENT);
-            result_textView_holder.setBackgroundColor(Color.TRANSPARENT);
-            mFavoritesList.setTextColor(Color.BLACK);
-            mCurrencyList.setTextColor(Color.BLACK);
-            mAddStars.setTextColor(Color.BLACK);
-            if(mViewPager!=null) {
-                mViewPagerIndicator.setFillColor(Color.parseColor("#9e9e9e"));
-            }
+        mFavoritesList.setTextColor(getAccentColorCode());
+        if(mViewPager!=null) {
+            mViewPagerIndicator.setFillColor(getAccentColorCode());
         }
     }
 
@@ -895,17 +780,9 @@ public void goGoldNotif() {
 
     private void redrawKeypadBackground() {
         View activityView = findViewById(R.id.activity_body);
-        if (isRetroThemeSelected()){
-//                activityView.setBackground(getDrawable(R.drawable.background_normal));
-            mTranslationBox.setBackgroundColor(Color.TRANSPARENT);
-
-        }else{
-//            fragmentContainer.setBackground(key());
-            mTranslationBox.setBackgroundColor(getKeypadBackgroundColorCode());
-            mTranslationBox.setTextColor(getDialpadFontColor());
-            activityView.setBackgroundColor(getKeypadBackgroundColorCode());
-
-        }
+        mTranslationBox.setBackgroundColor(getKeypadBackgroundColorCode());
+        mTranslationBox.setTextColor(getDialpadFontColor());
+        activityView.setBackgroundColor(getKeypadBackgroundColorCode());
     }
 
 
@@ -1238,19 +1115,6 @@ public void goGoldNotif() {
 
         editor.apply();
     }
- private void setGoGoldNotifViewed(boolean hasViewed) {
-        SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("APP", MODE_PRIVATE);
-        SharedPreferences.Editor editor = appPreferences.edit();
-
-        editor.putBoolean("hasViewedGoGoldNotif", hasViewed);
-        editor.apply();
-    }
-    private boolean getGoGoldNotifViewed() {
-        SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("APP", MODE_PRIVATE);
-        return  appPreferences.getBoolean("hasViewedGoGoldNotif",false);
-    }
-
-
     private boolean getPopulateConstantDatabase() {
         SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("APP", MODE_PRIVATE);
        return  appPreferences.getBoolean("hasPopulatedConstantDatabase",false);
@@ -1333,13 +1197,6 @@ public void goGoldNotif() {
 
 
     private boolean updateUIExecute(boolean sendLogMessage) {
-
-        if(isRetroThemeSelected()){
-            if(!getPremiumPreference()){
-                displayUpgradeToPremium(1);
-                return false;
-            }
-        }
         mDecimal_fraction = "";
         byte decimalIndex = (byte) mResultToDisplay.indexOf(".");
         if(decimalIndex != -1){
@@ -1351,11 +1208,7 @@ public void goGoldNotif() {
             mAddStars.setAlpha(1);
             mAddStars.setRotation(0);
             mAddStars.setText(getResources().getString(R.string.star_outline));
-            if(isRetroThemeSelected()){
-                mAddStars.setTextColor(Color.BLACK);
-            }else {
-                mAddStars.setTextColor(Color.WHITE);
-            }
+            mAddStars.setTextColor(Color.WHITE);
             mAddStars.setScaleX(1);
             mAddStars.setScaleY(1);
             mAddStars.setTranslationY(0);
@@ -1469,19 +1322,6 @@ public void goGoldNotif() {
         mAddLabel.setVisibility(View.GONE);
         return;
     }
-    boolean isRetroThemeSelected(){
-        SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("THEME", MODE_PRIVATE);
-        return appPreferences.getBoolean("is_retro_theme_selected", false);
-    }
-
-    void setRetrothemeSelected(boolean _isSelected) {
-        SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("THEME", MODE_PRIVATE);
-        SharedPreferences.Editor editor = appPreferences.edit();
-        editor.putBoolean("is_retro_theme_selected", _isSelected);
-        editor.apply();
-
-    }
-
     public void displayTranslation(boolean animate) {
 
 
@@ -1722,22 +1562,14 @@ public void goGoldNotif() {
                 mSoundPoolLoaded = true;
             }
         });
-        if (isRetroThemeSelected()) {
-            numericButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.keypress_retro, 1);
-            executeButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.equal_retro, 1);
-            clearAllButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.clear_retro, 1);
-            operatorsButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.operator_retro, 1);
-            errorSoundID = mSoundPool.load(getApplicationContext(), R.raw.error_retro, 1);
-        }else{
-            numericButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.keypress, 1);
-            executeButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.equal, 1);
-            clearAllButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.clear, 1);
-            operatorsButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.keypress, 1);
-            errorSoundID = mSoundPool.load(getApplicationContext(), R.raw.error, 1);
-        }
+        numericButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.keypress, 1);
+        executeButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.equal, 1);
+        clearAllButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.clear, 1);
+        operatorsButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.keypress, 1);
+        errorSoundID = mSoundPool.load(getApplicationContext(), R.raw.error, 1);
         backSpaceButtonSoundID = mSoundPool.load(getApplicationContext(), R.raw.backspace, 1);
         mHasVolumeSoundID = mSoundPool.load(getApplicationContext(), R.raw.backspace, 1);
-        mAddStarSoundID = mSoundPool.load(getApplicationContext(), R.raw.fairy, 1);
+        mAddStarSoundID = mSoundPool.load(getApplicationContext(), R.raw.backspace, 1);
 
 
     }
@@ -2025,43 +1857,6 @@ public void goGoldNotif() {
     void paintIconColors(){
     }
 
-    public void switchTheme() {
-//        SharedPreferences appPreferences = getSharedPreferences("typography", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = appPreferences.edit();
-
-        //switching from modern theme to clasic theme
-        if (isRetroThemeSelected()) {
-
-            switch (getTranslationLanguage()) {
-                case LANGUAGE_PERSIAN:
-                case LANGUAGE_ARABIC:
-                    setFontForComponent("TRANSLATION_LITERAL_FONT", FONT_YEKAN);
-                    break;
-                default:
-                    setFontForComponent("TRANSLATION_LITERAL_FONT", FONT_DIGITAL_7);
-            }
-            setFontForComponent("TRANSLATION_NUMERIC_FONT", FONT_DIGITAL_7);
-            setFontForComponent("RESULT_FONT", FONT_DIGITAL_7);
-            setFontForComponent("DIALPAD_FONT", FONT_ROBOTO_LIGHT);
-        } else {
-            switch (getTranslationLanguage()) {
-                case LANGUAGE_PERSIAN:
-                    setFontForComponent("TRANSLATION_LITERAL_FONT", FONT_MITRA);
-                    break;
-                case LANGUAGE_ARABIC:
-                    setFontForComponent("TRANSLATION_LITERAL_FONT", FONT_MAJALLA);
-                    break;
-                default:
-                    setFontForComponent("TRANSLATION_LITERAL_FONT", FONT_ROBOTO_THIN);
-            }
-            setFontForComponent("TRANSLATION_NUMERIC_FONT", FONT_ROBOTO_LIGHT);
-            setFontForComponent("RESULT_FONT", FONT_ROBOTO_THIN);
-            setFontForComponent("DIALPAD_FONT", FONT_ROBOTO_THIN);
-        }
-//        setFontForComponent("SCIENTIFIC_FONT", FONT_ROBOTO_LIGHT);
-
-    }
-
     @Override
     public void onClick(@NonNull View v) {
         int id = v.getId();
@@ -2184,10 +1979,6 @@ public void goGoldNotif() {
 
 
 
-        } else if (id == R.id.currency_list) {
-                CurrencyUseFragment currencyDialog = new CurrencyUseFragment();
-                currencyDialog.show(getSupportFragmentManager() , "fragment_currency_use");
-
         } else if (id == R.id.buttonSettings) {
                 CustomDialogClass cdc = new CustomDialogClass(this , android.R.style.Theme_Holo_Light_Dialog_MinWidth);
                 cdc.show();
@@ -2206,19 +1997,12 @@ public void goGoldNotif() {
         } else if (id == R.id.buttonColors) {
 
                 Intent myIntent = new Intent(MainActivity.this, ColorPickerActivity.class);
-                myIntent.putExtra("isPremium",getPremiumPreference());
-                myIntent.putExtra("isRetroTheme",isRetroThemeSelected());
                 myIntent.putExtra("accentColor",getAccentColorCode());
                 myIntent.putExtra("keyPadColor",getKeypadBackgroundColorCode());
 
                 MainActivity.this.startActivityForResult(myIntent, 2);
         }
         return;
-    }
-
-    public boolean getPremiumPreference(){
-        SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("purchases", Context.MODE_PRIVATE);
-        return  appPreferences.getBoolean("isPremium",false);
     }
 
     public static void setClipView(View view, boolean clip) {
@@ -2261,15 +2045,5 @@ public void goGoldNotif() {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == resultCode ){
-            if(data.getBooleanExtra("switchTheme",true)){
-                switchTheme();
-                Log.d(TAG_recreate, "Acrivity Right before recreate");
-                recreate();
-            }
-        }
-    }
 }
+

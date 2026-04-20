@@ -40,7 +40,6 @@ public class DialpadFragment extends androidx.fragment.app.Fragment implements O
 
 
     private int[] idList;
-    boolean mIsRetroOn = false ;
     private Typeface scientificFont;
     static float scientific_toggle_textSize = 18f;
 
@@ -48,13 +47,7 @@ public class DialpadFragment extends androidx.fragment.app.Fragment implements O
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
 
         Log.d(TAG,"Fragment OnCreateView");
-        mIsRetroOn = ((MainActivity)getActivity()).isRetroThemeSelected();
-        if(mIsRetroOn) {
-            mView = inflater.inflate(R.layout.fragment_dialpad_retro, container, false);
-        }else {
-            mView = inflater.inflate(R.layout.fragment_dialpad_flat, container, false);
-
-        }
+        mView = inflater.inflate(R.layout.fragment_dialpad_flat, container, false);
 
         // Set the listener for all the gray_buttons
         idList = getAllButtonsID();
@@ -72,11 +65,7 @@ public class DialpadFragment extends androidx.fragment.app.Fragment implements O
             if (v != null) {
                 v.setOnClickListener(this);
                 if( v instanceof Button){
-                    if(mIsRetroOn){
-                        ((Button) v).setTypeface(scientificFont);
-                    }else{
-                        ((Button) v).setTypeface(defaultFont);
-                    }
+                    ((Button) v).setTypeface(defaultFont);
                 }
             }
         }
@@ -102,12 +91,7 @@ public class DialpadFragment extends androidx.fragment.app.Fragment implements O
         if(mView.findViewById(R.id.switch_deg_rad) != null) {
             ((ToggleButton) (mView.findViewById(R.id.switch_deg_rad))).setChecked(((MainActivity) getActivity()).getAngleMode());
             ((ToggleButton) (mView.findViewById(R.id.switch_deg_rad))).setOnCheckedChangeListener(this);
-            if(mIsRetroOn){
-                ((Button) (mView.findViewById(R.id.buttonConstant))).setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "yekan.ttf"));
-
-            }else {
-                ((Button) (mView.findViewById(R.id.buttonConstant))).setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "lotus.ttf"));
-            }
+            ((Button) (mView.findViewById(R.id.buttonConstant))).setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "lotus.ttf"));
             (mView.findViewById(R.id.switch_deg_rad)).setOnClickListener(this);
             (mView.findViewById(R.id.buttonConstant)).setOnClickListener(this);
             ((ToggleButton) (mView.findViewById(R.id.switch_deg_rad))).setTextSize(scientific_toggle_textSize);
@@ -299,10 +283,7 @@ public class DialpadFragment extends androidx.fragment.app.Fragment implements O
 //        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(mThemeChangedReciever, new IntentFilter("themeIntent"));
 
         ((MainActivity)getActivity()).checkCLRButtonSendIntent();
-        if(!mIsRetroOn){
-            redrawKeypadInFlatTheme();
-        }
-        //If no retro theme is selected then apply flat theme colors to keys
+        redrawKeypadInFlatTheme();
 
 
 
@@ -316,8 +297,7 @@ public class DialpadFragment extends androidx.fragment.app.Fragment implements O
         for (int id : idList) {
             View v = mView.findViewById(id);
             if (v != null && (v instanceof Button)) {
-                if(!mIsRetroOn)
-                    ((Button) v).setTypeface(defaultFont);
+                ((Button) v).setTypeface(defaultFont);
             }
         }
         refreshCButtonTypeface();
@@ -533,29 +513,13 @@ public class DialpadFragment extends androidx.fragment.app.Fragment implements O
 
         if( (mView.findViewById(R.id.buttonClear)).getTag().equals("C"))
         {
-            //Change Clear Button's Text to C
             ((Button) mView.findViewById(R.id.buttonClear)).setText("C");
-            if(mIsRetroOn){
-                ((Button) mView.findViewById(R.id.buttonClear)).setTypeface(scientificFont);
-
-            }else{
-                ((Button) mView.findViewById(R.id.buttonClear)).setTypeface(defaultFont);
-
-            }
+            ((Button) mView.findViewById(R.id.buttonClear)).setTypeface(defaultFont);
             ((Button) mView.findViewById(R.id.buttonClear)).setTextSize(getResources().getDimension(R.dimen.btn_clear_text_size) / getResources().getDisplayMetrics().density);
-
         }else {
-            //Change Clear Button's Text to Backspace
-
             ((Button) mView.findViewById(R.id.buttonClear)).setTextSize(getResources().getDimension(R.dimen.retro_backspace_text_size) / getResources().getDisplayMetrics().density);
             ((Button) mView.findViewById(R.id.buttonClear)).setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "flaticon.ttf"));
-            if(mIsRetroOn){
-                ((Button) mView.findViewById(R.id.buttonClear)).setText(getResources().getString(R.string.backSpace_retro));
-            }else{
-
-                ((Button) mView.findViewById(R.id.buttonClear)).setText(getResources().getString(R.string.backSpace));
-
-            }
+            ((Button) mView.findViewById(R.id.buttonClear)).setText(getResources().getString(R.string.backSpace));
         }
     }
 

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>42 Calculator — Design Directions</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #111;
+      font-family: 'Inter', sans-serif;
+      padding: 40px 24px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .page-title {
+      color: rgba(255,255,255,0.35);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .phones {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+      justify-content: center;
+    }
+
+    .phone-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .phone-name {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .phone {
+      width: 216px;
+      height: 428px;
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ────────────────────────────────────────
+       1. VOID
+    ──────────────────────────────────────── */
+    .void {
+      background: #080808;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 40px 80px rgba(0,0,0,0.8),
+        0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .void .notch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 52px;
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .void .display {
+      padding: 36px 16px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0;
+      min-height: 134px;
+      justify-content: flex-end;
+    }
+
+    .void .expr {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 0.02em;
+      margin-bottom: 2px;
+    }
+
+    .void .result {
+      font-family: 'DM Mono', monospace;
+      font-size: 54px;
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .void .words {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      font-style: italic;
+      color: rgba(255,255,255,0.18);
+      margin-top: 4px;
+    }
+
+    .void .keypad {
+      flex: 1;
+      padding: 4px 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .void .row {
+      flex: 1;
+      display: flex;
+      gap: 4px;
+    }
+
+    .void .key {
+      flex: 1;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.82);
+      cursor: pointer;
+      transition: transform 0.08s, opacity 0.08s;
+    }
+
+    .void .key:active { transform: scale(0.91); opacity: 0.7; }
+
+    .void .key.op {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .void .key.eq {
+      background: #1abc9c;
+      border-color: transparent;
+      color: #001a14;
+      font-weight: 500;
+      box-shadow: 0 0 24px rgba(26,188,156,0.4), 0 0 8px rgba(26,188,156,0.2);
+    }
+
+    .void .key.clr {
+      background: rgba(255,50,50,0.09);
+      border-color: rgba(255,80,80,0.24);
+      color: rgba(255,110,110,0.9);
+    }
+
+    /* ────────────────────────────────────────
+       2. GRID
+    ──────────────────────────────────────── */
+    .grid-phone {
+      background: #0d1117;
+      box-shadow:
+        0 0 0 1px #21262d,
+        0 40px 80px rgba(0,0,0,0.8),
+        0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .grid-phone::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+      background-size: 22px 22px;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: inherit;
+    }
+
+    .grid-phone .notch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 52px;
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.06);
+      z-index: 2;
+    }
+
+    .grid-phone .display {
+      padding: 36px 16px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0;
+      min-height: 134px;
+      justify-content: flex-end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .grid-phone .expr {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: #4d5566;
+      margin-bottom: 2px;
+    }
+
+    .grid-phone .result {
+      font-family: 'Inter', sans-serif;
+      font-size: 54px;
+      font-weight: 300;
+      color: #e6edf3;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .grid-phone .words {
+      font-family: 'DM Mono', monospace;
+      font-size: 8px;
+      font-style: italic;
+      color: #3d4451;
+      margin-top: 4px;
+    }
+
+    .grid-phone .keypad {
+      flex: 1;
+      padding: 4px 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .grid-phone .row {
+      flex: 1;
+      display: flex;
+      gap: 3px;
+    }
+
+    .grid-phone .key {
+      flex: 1;
+      border-radius: 5px;
+      background: #13181f;
+      border: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: #adbac7;
+      cursor: pointer;
+      transition: transform 0.08s;
+    }
+
+    .grid-phone .key:active { transform: scale(0.91); }
+
+    .grid-phone .key.op {
+      background: #0d1520;
+      border-color: rgba(26,188,156,0.22);
+      color: #7ecfc2;
+    }
+
+    .grid-phone .key.eq {
+      background: #1abc9c;
+      border-color: #1abc9c;
+      color: #0d1117;
+      font-weight: 600;
+    }
+
+    .grid-phone .key.clr {
+      background: #1a0d0d;
+      border-color: rgba(255,100,100,0.28);
+      color: #ff7070;
+    }
+
+    /* ────────────────────────────────────────
+       3. CHALK
+    ──────────────────────────────────────── */
+    .chalk {
+      background: #fafafa;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.07),
+        0 40px 80px rgba(0,0,0,0.35),
+        0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .chalk .notch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 52px;
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(0,0,0,0.06);
+    }
+
+    .chalk .display {
+      padding: 36px 18px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0;
+      min-height: 134px;
+      justify-content: flex-end;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding-bottom: 10px;
+    }
+
+    .chalk .expr {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: #bbb;
+      margin-bottom: 2px;
+    }
+
+    .chalk .result {
+      font-family: 'Inter', sans-serif;
+      font-size: 58px;
+      font-weight: 200;
+      color: #0a0a0a;
+      letter-spacing: -3px;
+      line-height: 1;
+    }
+
+    .chalk .words {
+      font-family: 'Inter', sans-serif;
+      font-size: 8px;
+      font-style: italic;
+      color: #ccc;
+      margin-top: 4px;
+    }
+
+    .chalk .keypad {
+      flex: 1;
+      padding: 6px 14px 18px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chalk .row {
+      flex: 1;
+      display: flex;
+    }
+
+    .chalk .key {
+      flex: 1;
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #111;
+      cursor: pointer;
+      transition: background 0.06s, color 0.06s, transform 0.08s;
+      border-radius: 6px;
+    }
+
+    .chalk .key:active {
+      background: #111;
+      color: #fff;
+      transform: scale(0.93);
+    }
+
+    .chalk .key.op {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .chalk .key.op:active {
+      background: #222;
+      color: #fff;
+    }
+
+    .chalk .key.eq {
+      background: #1abc9c;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 7px;
+    }
+
+    .chalk .key.eq:active {
+      background: #17a589;
+      transform: scale(0.93);
+    }
+
+    .chalk .key.clr {
+      color: #ff3b30;
+    }
+
+    .chalk .key.clr:active {
+      background: #ff3b30;
+      color: #fff;
+    }
+
+    /* ── Comparison labels ── */
+    .trait-row {
+      display: flex;
+      gap: 28px;
+      flex-wrap: nowrap;
+      justify-content: center;
+    }
+
+    .trait-col {
+      width: 216px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .trait {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .trait-key {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      width: 64px;
+      flex-shrink: 0;
+    }
+
+    .trait-val {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.4;
+    }
+
+    .void-accent  { color: #1abc9c; }
+    .grid-accent  { color: #7ecfc2; }
+    .chalk-accent { color: #1abc9c; }
+  </style>
+</head>
+<body>
+
+<p class="page-title">42 Calculator · Design Directions · April 2026</p>
+
+<div class="phones">
+
+  <!-- ── 1. VOID ── -->
+  <div class="phone-col">
+    <div class="phone void">
+      <div class="notch"></div>
+      <div class="display">
+        <div class="expr">566 + 369</div>
+        <div class="result">935</div>
+        <div class="words">nine hundred thirty-five</div>
+      </div>
+      <div class="keypad">
+        <div class="row">
+          <div class="key clr">C</div>
+          <div class="key op">(</div>
+          <div class="key op">)</div>
+          <div class="key op">÷</div>
+        </div>
+        <div class="row">
+          <div class="key">7</div>
+          <div class="key">8</div>
+          <div class="key">9</div>
+          <div class="key op">×</div>
+        </div>
+        <div class="row">
+          <div class="key">4</div>
+          <div class="key">5</div>
+          <div class="key">6</div>
+          <div class="key op">−</div>
+        </div>
+        <div class="row">
+          <div class="key">1</div>
+          <div class="key">2</div>
+          <div class="key">3</div>
+          <div class="key op">+</div>
+        </div>
+        <div class="row">
+          <div class="key op">.</div>
+          <div class="key">0</div>
+          <div class="key op">%</div>
+          <div class="key eq">=</div>
+        </div>
+      </div>
+    </div>
+    <p class="phone-name void-accent">1 — Void</p>
+  </div>
+
+  <!-- ── 2. GRID ── -->
+  <div class="phone-col">
+    <div class="phone grid-phone">
+      <div class="notch"></div>
+      <div class="display">
+        <div class="expr">566 + 369</div>
+        <div class="result">935</div>
+        <div class="words">nine hundred thirty-five</div>
+      </div>
+      <div class="keypad">
+        <div class="row">
+          <div class="key clr">C</div>
+          <div class="key op">(</div>
+          <div class="key op">)</div>
+          <div class="key op">÷</div>
+        </div>
+        <div class="row">
+          <div class="key">7</div>
+          <div class="key">8</div>
+          <div class="key">9</div>
+          <div class="key op">×</div>
+        </div>
+        <div class="row">
+          <div class="key">4</div>
+          <div class="key">5</div>
+          <div class="key">6</div>
+          <div class="key op">−</div>
+        </div>
+        <div class="row">
+          <div class="key">1</div>
+          <div class="key">2</div>
+          <div class="key">3</div>
+          <div class="key op">+</div>
+        </div>
+        <div class="row">
+          <div class="key op">.</div>
+          <div class="key">0</div>
+          <div class="key op">%</div>
+          <div class="key eq">=</div>
+        </div>
+      </div>
+    </div>
+    <p class="phone-name grid-accent">2 — Grid</p>
+  </div>
+
+  <!-- ── 3. CHALK ── -->
+  <div class="phone-col">
+    <div class="phone chalk">
+      <div class="notch"></div>
+      <div class="display">
+        <div class="expr">566 + 369</div>
+        <div class="result">935</div>
+        <div class="words">nine hundred thirty-five</div>
+      </div>
+      <div class="keypad">
+        <div class="row">
+          <div class="key clr">C</div>
+          <div class="key op">(</div>
+          <div class="key op">)</div>
+          <div class="key op">÷</div>
+        </div>
+        <div class="row">
+          <div class="key">7</div>
+          <div class="key">8</div>
+          <div class="key">9</div>
+          <div class="key op">×</div>
+        </div>
+        <div class="row">
+          <div class="key">4</div>
+          <div class="key">5</div>
+          <div class="key">6</div>
+          <div class="key op">−</div>
+        </div>
+        <div class="row">
+          <div class="key">1</div>
+          <div class="key">2</div>
+          <div class="key">3</div>
+          <div class="key op">+</div>
+        </div>
+        <div class="row">
+          <div class="key op">.</div>
+          <div class="key">0</div>
+          <div class="key op">%</div>
+          <div class="key eq">=</div>
+        </div>
+      </div>
+    </div>
+    <p class="phone-name chalk-accent">3 — Chalk</p>
+  </div>
+
+</div>
+
+<!-- Trait comparison -->
+<div class="trait-row">
+
+  <div class="trait-col">
+    <div class="trait"><span class="trait-key">Mood</span><span class="trait-val">Black glass. Precision tool.</span></div>
+    <div class="trait"><span class="trait-key">Keys</span><span class="trait-val">Ghost panels — faint fill + border</span></div>
+    <div class="trait"><span class="trait-key">Type</span><span class="trait-val">DM Mono throughout</span></div>
+    <div class="trait"><span class="trait-key">Radius</span><span class="trait-val">14 dp — generous but not pill</span></div>
+    <div class="trait"><span class="trait-key">= key</span><span class="trait-val void-accent">Glowing teal</span></div>
+  </div>
+
+  <div class="trait-col">
+    <div class="trait"><span class="trait-key">Mood</span><span class="trait-val">Terminal. Engineering draft.</span></div>
+    <div class="trait"><span class="trait-key">Keys</span><span class="trait-val">Dark tiles on a grid background</span></div>
+    <div class="trait"><span class="trait-key">Type</span><span class="trait-val">Inter (result) + DM Mono (expr)</span></div>
+    <div class="trait"><span class="trait-key">Radius</span><span class="trait-val">6 dp — nearly square</span></div>
+    <div class="trait"><span class="trait-key">= key</span><span class="trait-val grid-accent">Solid teal fill</span></div>
+  </div>
+
+  <div class="trait-col">
+    <div class="trait"><span class="trait-key">Mood</span><span class="trait-val">Editorial. Braun objectivity.</span></div>
+    <div class="trait"><span class="trait-key">Keys</span><span class="trait-val">Invisible — just typography</span></div>
+    <div class="trait"><span class="trait-key">Type</span><span class="trait-val">Inter (result weight 200) + DM Mono</span></div>
+    <div class="trait"><span class="trait-key">Radius</span><span class="trait-val">0 dp at rest — invert on press</span></div>
+    <div class="trait"><span class="trait-key">= key</span><span class="trait-val chalk-accent">Only filled key on screen</span></div>
+  </div>
+
+</div>
+
+</body>
+</html>

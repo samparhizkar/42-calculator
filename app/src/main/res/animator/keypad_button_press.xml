@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    VOID v2 key press animator.
+    Press:   scale 1.0 → 0.88 in 50ms (accelerate) — per DESIGN_SPEC §Animation §1
+    Release: scale 0.88 → 1.0 in 220ms with spring overshoot — cubic-bezier(0.22, 1, 0.36, 1)
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <set>
+            <objectAnimator
+                android:propertyName="scaleX"
+                android:valueTo="0.88"
+                android:duration="50"
+                android:interpolator="@android:interpolator/accelerate_quad" />
+            <objectAnimator
+                android:propertyName="scaleY"
+                android:valueTo="0.88"
+                android:duration="50"
+                android:interpolator="@android:interpolator/accelerate_quad" />
+        </set>
+    </item>
+
+    <item>
+        <set>
+            <objectAnimator
+                android:propertyName="scaleX"
+                android:valueTo="1.0"
+                android:duration="220"
+                android:interpolator="@interpolator/void_spring" />
+            <objectAnimator
+                android:propertyName="scaleY"
+                android:valueTo="1.0"
+                android:duration="220"
+                android:interpolator="@interpolator/void_spring" />
+        </set>
+    </item>
+
+</selector>

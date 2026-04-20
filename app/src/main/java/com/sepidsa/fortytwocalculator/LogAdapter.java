@@ -75,13 +75,7 @@ public class LogAdapter extends CursorAdapter {
         viewHolder.starredButton.setChecked(starred);
         viewHolder.starredButton.setOnClickListener(mStarOnClickListener);
 
-        if(((MainActivity) context).isRetroThemeSelected()) {
-            viewHolder.tagView.setBackgroundColor(Color.parseColor("#bdbdbd"));
-
-        }else {
-            viewHolder.tagView.setBackgroundColor(((MainActivity) mContext).getAccentColorCode());
-
-        }
+        viewHolder.tagView.setBackgroundColor(((MainActivity) mContext).getAccentColorCode());
         viewHolder.tagView.setTypeface(Typeface.createFromAsset(context.getAssets(), "notoregular.ttf"));
         viewHolder.tagView.setOnClickListener(mLabelButtonOnClickListener);
 
@@ -96,26 +90,19 @@ public class LogAdapter extends CursorAdapter {
         viewHolder.useButton.setOnClickListener(mUseButtonOnClickListener);
         viewHolder.useButton.setTypeface(Typeface.createFromAsset(context.getAssets(), "flaticon.ttf"));
 
-        if(!((MainActivity) context).isRetroThemeSelected()) {
+        viewHolder.resultView.setTextColor(((MainActivity) context).getAccentColorCode());
 
-            viewHolder.resultView.setTextColor(((MainActivity) context).getAccentColorCode());
-
-            viewHolder.operationView.setTextColor(iconColor);
-            if(((MainActivity) context).getKeypadBackgroundColorCode() == Color.WHITE){
-                viewHolder.arrow.setTextColor(Color.parseColor("#EEEEEE"));
-            }else{
-                viewHolder.arrow.setTextColor(iconColor);
-            }
-
-
-            viewHolder.shareButton.setTextColor(iconColor);
-            viewHolder.labelButton.setTextColor(iconColor);
-            viewHolder.deleteButton.setTextColor(iconColor);
-            viewHolder.useButton.setTextColor(iconColor);
-        }else {
-            viewHolder.arrow.setTextColor(Color.parseColor("#bdbdbd"));
-
+        viewHolder.operationView.setTextColor(iconColor);
+        if(((MainActivity) context).getKeypadBackgroundColorCode() == Color.WHITE){
+            viewHolder.arrow.setTextColor(Color.parseColor("#EEEEEE"));
+        }else{
+            viewHolder.arrow.setTextColor(iconColor);
         }
+
+        viewHolder.shareButton.setTextColor(iconColor);
+        viewHolder.labelButton.setTextColor(iconColor);
+        viewHolder.deleteButton.setTextColor(iconColor);
+        viewHolder.useButton.setTextColor(iconColor);
 
 
 

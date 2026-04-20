@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -92,9 +91,7 @@ public class ConstantSelectFragment  extends DialogFragment implements LoaderMan
             @Override
             public void onClick(View v) {
 
-                    if(((MainActivity)getActivity()).getPremiumPreference()) {
-
-
+                    {
                         LayoutInflater li = LayoutInflater.from(getActivity());
                         View promptsView = li.inflate(R.layout.constant_input_dialog, null);
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -168,12 +165,6 @@ public class ConstantSelectFragment  extends DialogFragment implements LoaderMan
                             }
                         };
                         number.setOnKeyListener(keyListener);
-                    }
-
-                else {
-                        Intent myIntent = new Intent(getActivity(), PremiumShowcasePagerActivity.class);
-                        myIntent.putExtra("page", 3);
-                        startActivity(myIntent);
                     }
 
             }

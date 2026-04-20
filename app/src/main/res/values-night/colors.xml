@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ── VOID v2 design tokens — dark mode (primary / the VOID palette) ── -->
+    <!-- M3 role tokens -->
+    <color name="void_primary">#80d5c6</color>
+    <color name="void_onPrimary">#00372f</color>
+    <color name="void_primaryContainer">#005048</color>
+    <color name="void_onPrimaryContainer">#9ef2e2</color>
+    <color name="void_secondary">#b1ccca</color>
+    <color name="void_onSecondary">#1c3533</color>
+    <color name="void_secondaryContainer">#334b48</color>
+    <color name="void_onSecondaryContainer">#cce8e2</color>
+    <color name="void_error">#ffb4ab</color>
+    <color name="void_onError">#690005</color>
+    <color name="void_errorContainer">#93000a</color>
+    <color name="void_onErrorContainer">#ffdad6</color>
+    <!-- surface is #0e1413, but the true VOID background is #080808 — enforced in layout -->
+    <color name="void_surface">#0e1413</color>
+    <color name="void_background">#080808</color>
+    <color name="void_onSurface">#dde4e2</color>
+    <color name="void_surfaceVariant">#3f4948</color>
+    <color name="void_onSurfaceVariant">#bec9c7</color>
+    <color name="void_surfaceContainer">#1b2120</color>
+    <color name="void_surfaceContainerHigh">#252b2a</color>
+    <color name="void_surfaceContainerHighest">#303635</color>
+    <color name="void_surfaceContainerLow">#171d1c</color>
+    <color name="void_outline">#899392</color>
+    <color name="void_outlineVariant">#3f4948</color>
+    <!-- Brand extras -->
+    <color name="void_brand">#1abc9c</color>
+    <color name="void_onBrand">#001f16</color>
+    <color name="void_brandMuted">#1F4A43</color>
+    <!-- Key-specific VOID colours — semi-transparent intent baked into dark opaque approximations -->
+    <!-- keyDigit bg: rgba(255,255,255,0.04) over #080808 → ~#0e0e0e -->
+    <color name="void_keyDigitBg">#0E0E0E</color>
+    <!-- keyOp bg: rgba(255,255,255,0.065) over #080808 → ~#131313 -->
+    <color name="void_keyOpBg">#131313</color>
+    <!-- keyEq bg: solid brand teal -->
+    <color name="void_keyEqBg">#1abc9c</color>
+    <!-- keyActiveOp bg: rgba(26,188,156,0.13) over #080808 → ~#0d1e1b -->
+    <color name="void_keyActiveOpBg">#0D1E1B</color>
+    <!-- keyError bg: rgba(255,45,45,0.08) over #080808 → ~#110909 -->
+    <color name="void_keyErrorBg">#110909</color>
+    <!-- Glow-border approximations for programmatic use -->
+    <color name="void_keyDigitBorder">#161616</color>
+    <color name="void_keyOpBorder">#222222</color>
+    <color name="void_keyActiveOpBorder">#2F5E56</color>
+    <color name="void_keyActiveOpText">#1ddbb8</color>
+    <color name="void_keyErrorBorder">#291010</color>
+    <color name="void_keyErrorText">#FF6464</color>
+</resources>

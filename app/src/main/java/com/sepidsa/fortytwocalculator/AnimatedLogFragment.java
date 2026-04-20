@@ -96,11 +96,8 @@ public class AnimatedLogFragment extends Fragment implements LoaderManager.Loade
 
         mClearButton.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "flaticon.ttf"));
         mExpandButton.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "flaticon.ttf"));
-        if(!((MainActivity)getActivity()).isRetroThemeSelected()) {
-            mExpandButton.setTextColor(((MainActivity) getActivity()).getDialpadFontColor());
-            mClearButton.setTextColor(((MainActivity)getActivity()).getDialpadFontColor());
-
-        }
+        mExpandButton.setTextColor(((MainActivity) getActivity()).getDialpadFontColor());
+        mClearButton.setTextColor(((MainActivity)getActivity()).getDialpadFontColor());
 
         View empty =  rootView.findViewById(R.id.empty_view);
         mListView.setEmptyView(empty);

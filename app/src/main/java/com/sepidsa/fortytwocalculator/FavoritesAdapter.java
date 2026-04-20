@@ -57,13 +57,7 @@ public class FavoritesAdapter extends CursorAdapter {
         viewHolder.resultView.setTextColor(((MainActivity) mContext).getAccentColorCode());
         viewHolder.operationView.setText(operation);
         viewHolder.tagView.setText(tag);
-        if(((MainActivity) context).isRetroThemeSelected()) {
-            viewHolder.tagView.setBackgroundColor(Color.parseColor("#bdbdbd"));
-
-        }else {
-            viewHolder.tagView.setBackgroundColor(((MainActivity) mContext).getAccentColorCode());
-
-        }
+        viewHolder.tagView.setBackgroundColor(((MainActivity) mContext).getAccentColorCode());
         viewHolder.tagView.setTypeface(Typeface.createFromAsset(context.getAssets(), "notoregular.ttf"));
 
         viewHolder.starredButton.setChecked(starred);

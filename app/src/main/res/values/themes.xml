@@ -28,6 +28,37 @@
         <item name="centered">true</item>
     </style>
 
-
+    <!-- ── VOID v2 — Material 3 theme ── -->
+    <style name="Theme.FortyTwo" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- M3 colour roles wired to VOID tokens -->
+        <item name="colorPrimary">@color/void_primary</item>
+        <item name="colorOnPrimary">@color/void_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/void_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/void_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/void_secondary</item>
+        <item name="colorOnSecondary">@color/void_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/void_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/void_onSecondaryContainer</item>
+        <item name="colorError">@color/void_error</item>
+        <item name="colorOnError">@color/void_onError</item>
+        <item name="colorErrorContainer">@color/void_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/void_onErrorContainer</item>
+        <item name="colorSurface">@color/void_surface</item>
+        <item name="colorOnSurface">@color/void_onSurface</item>
+        <item name="colorSurfaceVariant">@color/void_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/void_onSurfaceVariant</item>
+        <item name="colorSurfaceContainer">@color/void_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/void_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/void_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/void_surfaceContainerLow</item>
+        <item name="colorOutline">@color/void_outline</item>
+        <item name="colorOutlineVariant">@color/void_outlineVariant</item>
+        <!-- Window: true VOID black background -->
+        <item name="android:windowBackground">@color/void_background</item>
+        <item name="android:colorBackground">@color/void_background</item>
+        <!-- No action bar (gestural navigation) -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
 </resources>

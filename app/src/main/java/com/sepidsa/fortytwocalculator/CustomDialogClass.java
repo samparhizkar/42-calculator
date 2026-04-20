@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -16,7 +15,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class CustomDialogClass extends Dialog implements View.OnClickListener {
@@ -204,15 +202,6 @@ public class CustomDialogClass extends Dialog implements View.OnClickListener {
 
         } else if (id == R.id.btn_CHANGE_TRANSLATION_FONT) {
 
-                try{
-                    Intent myIntent = new Intent(mContext, PremiumShowcasePagerActivity.class);
-                    mContext.startActivity(myIntent);
-                }
-                catch (Exception e ){
-                    Toast.makeText(mContext,"مشکل در اتصال به بازار",Toast.LENGTH_LONG);
-
-                }
-
                 dismiss();
 
         }
@@ -285,34 +274,17 @@ public class CustomDialogClass extends Dialog implements View.OnClickListener {
 
             case MainActivity.LANGUAGE_PERSIAN:
                 fortyTwoSampleTranslation.setText(mContext.getString(R.string.persian_42));
-
-                if(((MainActivity) mContext).isRetroThemeSelected()){
-                    ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_YEKAN);
-                }else {
-                    ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_MITRA);
-                }
+                ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_MITRA);
                 break;
 
             case MainActivity.LANGUAGE_ENGLISH:
                 fortyTwoSampleTranslation.setText(mContext.getString(R.string.english_42));
-
-                if(((MainActivity) mContext).isRetroThemeSelected()){
-                    ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_DIGITAL_7);
-
-                }else {
-                    ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_ROBOTO_THIN);
-                }
+                ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_ROBOTO_THIN);
                 break;
 
             case MainActivity.LANGUAGE_FRENCH:
                 fortyTwoSampleTranslation.setText(mContext.getString(R.string.french_42));
-
-                if(((MainActivity) mContext).isRetroThemeSelected()){
-                    ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_DIGITAL_7);
-
-                }else {
-                    ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_ROBOTO_THIN);
-                }
+                ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_ROBOTO_THIN);
                 break;
             case MainActivity.LANGUAGE_ARABIC:
                 ((MainActivity) mContext).setFontForComponent("TRANSLATION_LITERAL_FONT", ((MainActivity) mContext).FONT_MAJALLA);

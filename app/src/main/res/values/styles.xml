@@ -313,4 +313,65 @@
         <item name="android:activityOpenEnterAnimation">@anim/appear</item>
     </style>
 
+    <!-- ═══════════════════════════════════════════════════════════════
+         VOID v2 — Keypad button styles (Phase 1)
+         All four roles share the same geometry, font, and animator.
+         Color overrides cascade from Keypad.Button via inheritance.
+         ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Base: digit keys — ghost panel, near-black fill, hairline border -->
+    <style name="Keypad.Button" parent="Widget.Material3.Button">
+        <!-- size / layout -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">2dp</item>
+        <!-- remove M3 default vertical insets so the button fills its weight cell -->
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <!-- shape — 14dp matches DESIGN_SPEC §Keypad §Button geometry -->
+        <item name="cornerRadius">14dp</item>
+        <!-- VOID ghost panel: approximated opaque colour (rgba baked in colors.xml) -->
+        <item name="backgroundTint">@color/void_keyDigitBg</item>
+        <item name="strokeColor">@color/void_keyDigitBorder</item>
+        <item name="strokeWidth">1dp</item>
+        <!-- typography — DM Mono 400, 20sp for single-char labels -->
+        <item name="android:fontFamily">@font/dm_mono</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <!-- interactions -->
+        <item name="android:soundEffectsEnabled">true</item>
+        <item name="android:hapticFeedbackEnabled">true</item>
+        <!-- VOID press animation: scale 0.88 in 50ms, spring release 220ms -->
+        <item name="android:stateListAnimator">@animator/keypad_button_press</item>
+        <!-- ripple: subtle white bloom (will be replaced by custom bloom drawable in Step 3) -->
+        <item name="rippleColor">#29ffffff</item>
+    </style>
+
+    <!-- Operator keys — slightly brighter ghost panel, same text colour -->
+    <style name="Keypad.Button.Operator">
+        <item name="backgroundTint">@color/void_keyOpBg</item>
+        <item name="strokeColor">@color/void_keyOpBorder</item>
+    </style>
+
+    <!-- Equals key — solid teal fill, corner-lamp identity, no stroke -->
+    <style name="Keypad.Button.Equals">
+        <item name="backgroundTint">@color/void_keyEqBg</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="android:textColor">@color/void_onBrand</item>
+        <!-- slight elevation creates a natural shadow under the = lamp -->
+        <item name="android:elevation">3dp</item>
+        <item name="rippleColor">#59ffffff</item>
+    </style>
+
+    <!-- Error key (C / ⌫) — red-tinted ghost panel -->
+    <style name="Keypad.Button.Error">
+        <item name="backgroundTint">@color/void_keyErrorBg</item>
+        <item name="strokeColor">@color/void_keyErrorBorder</item>
+        <item name="android:textColor">@color/void_keyErrorText</item>
+        <item name="rippleColor">#29ff6464</item>
+    </style>
+
 </resources>

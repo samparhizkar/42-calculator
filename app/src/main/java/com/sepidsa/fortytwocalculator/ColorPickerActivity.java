@@ -1,26 +1,19 @@
 package com.sepidsa.fortytwocalculator;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-public class ColorPickerActivity extends FragmentActivity implements ColorPickerSwatch.OnColorSelectedListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class ColorPickerActivity extends FragmentActivity implements ColorPickerSwatch.OnColorSelectedListener, View.OnClickListener {
     public static final int SIZE_LARGE = 1;
 
-
-    boolean mIsPremium;
-    boolean mIsRetroThemeSelected;
     int mAccentcolorCode;
     int mKeypadBackgroundColorCode;
     View mAccentLayout;
@@ -29,7 +22,6 @@ public class ColorPickerActivity extends FragmentActivity implements ColorPicker
     ColorPickerPalette mKeypadPallete;
     Typeface mYekanFont;
     ImageButton backButton;
-    Switch mClassicthemeSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,13 +34,8 @@ public class ColorPickerActivity extends FragmentActivity implements ColorPicker
         setTypefaces();
         backButton = (ImageButton)findViewById(R.id.button_back);
         backButton.setOnClickListener(this);
-        mIsPremium  = getIntent().getBooleanExtra("isPremium", false);
-        mIsRetroThemeSelected = getIntent().getBooleanExtra("isRetroTheme", false);
         mAccentcolorCode = getIntent().getIntExtra("accentColor", Color.parseColor("#1abc9c"));
-        mKeypadBackgroundColorCode =getIntent().getIntExtra("keyPadColor", Color.WHITE);
-        mClassicthemeSwitch = (Switch)findViewById(R.id.switch_classic_theme);
-        mClassicthemeSwitch.setOnCheckedChangeListener(this);
-        mClassicthemeSwitch.setChecked(isRetroThemeSelected());
+        mKeypadBackgroundColorCode = getIntent().getIntExtra("keyPadColor", Color.WHITE);
 
         mACcentPallete = (ColorPickerPalette)findViewById(R.id.color_picker_accent);
         mACcentPallete.init(18, 6, this);
@@ -141,32 +128,15 @@ public class ColorPickerActivity extends FragmentActivity implements ColorPicker
             mAccentLayout.setBackgroundColor(getAccentColorCode());
             mACcentPallete.drawPalette(Utils.ColorUtils.colorChoice(getApplicationContext()), color, null);
         }else{
-            if(getPremiumPreference()) {
-                saveKeypadBackgroundColorCode(color);
-                mKeypadLayout.setBackgroundColor(getKeypadBackgroundColorCode());
-                mKeypadPallete.drawPalette(Utils.ColorUtils.colorChoiceForKeypad(getApplicationContext()), color, null);
-                TextView fontChaange = (TextView) findViewById(R.id.textView_keypad);
-                fontChaange.setTextColor(getDialpadFontColor());
-            }else {
-                try{
-                    displayUpgradeToPremium(0);
-                }
-                catch (Exception e ){
-                    Toast.makeText(getApplicationContext(), "مشکل در اتصال به بازار", Toast.LENGTH_LONG).show();
-
-                }            }
-
+            saveKeypadBackgroundColorCode(color);
+            mKeypadLayout.setBackgroundColor(getKeypadBackgroundColorCode());
+            mKeypadPallete.drawPalette(Utils.ColorUtils.colorChoiceForKeypad(getApplicationContext()), color, null);
+            TextView fontChaange = (TextView) findViewById(R.id.textView_keypad);
+            fontChaange.setTextColor(getDialpadFontColor());
         }
     }
 
 
-
-    private void displayUpgradeToPremium(int i) {
-        Intent myIntent = new Intent(ColorPickerActivity.this, PremiumShowcasePagerActivity.class);
-        myIntent.putExtra("page", i);
-        ColorPickerActivity.this.startActivity(myIntent);
-
-    }
 
     // Saving the selected color theme to prefrence
     public void saveAccentColorCode(int colorCode){
@@ -199,39 +169,6 @@ public class ColorPickerActivity extends FragmentActivity implements ColorPicker
         SharedPreferences.Editor editor = appPreferences.edit();
         editor.putInt("KEYPAD_BACKGROUND_COLOR_CODE", themeNumber);
         editor.commit();
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(buttonView != null) {
-//        if(((MainActivity)getParent()).getPremiumPreference()){
-            if (isChecked) {
-                setRetrothemeSelected(true);
-            } else {
-                setRetrothemeSelected(false);
-            }
-            Intent resultIntent = new Intent(this, MainActivity.class);
-            resultIntent.putExtra("switchTheme", true);
-            setResult(2, resultIntent);
-//        getParent().recreate();
-        }
-    }
-    public boolean getPremiumPreference(){
-        SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("purchases", Context.MODE_PRIVATE);
-        return  appPreferences.getBoolean("isPremium",false);
-    }
-
-    boolean isRetroThemeSelected(){
-        SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("THEME", MODE_PRIVATE);
-        return appPreferences.getBoolean("is_retro_theme_selected", false);
-    }
-
-    void setRetrothemeSelected(boolean _isSelected) {
-        SharedPreferences appPreferences = getApplicationContext().getSharedPreferences("THEME", MODE_PRIVATE);
-        SharedPreferences.Editor editor = appPreferences.edit();
-        editor.putBoolean("is_retro_theme_selected", _isSelected);
-        editor.apply();
-
     }
 
     @Override
