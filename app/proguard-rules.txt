@@ -17,7 +17,7 @@
 #}
 
 
--keep class org.jsoup.** { *; }
+
 
 -dontwarn java.nio.file.Files
 -dontwarn java.nio.file.Path

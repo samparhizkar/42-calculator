@@ -10,12 +10,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.VolumeOff
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
@@ -69,77 +66,68 @@ fun MainScreen(
     var showScientific by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            AppDrawer()
-        },
-        gesturesEnabled = true
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(VoidDarkBackground)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(VoidDarkBackground)
-        ) {
-            // Display area: expression + result + words
-            CalculatorDisplay(
-                state = calculatorState,
-                onAddStarClick = onAddStarClick,
-                onAddLabelClick = onAddLabelClick,
-                onAngleModeChanged = onAngleModeToggle,
-                modifier = Modifier.weight(0.38f)
+        // Display area: expression + result + words
+        CalculatorDisplay(
+            state = calculatorState,
+            onAddStarClick = onAddStarClick,
+            onAddLabelClick = onAddLabelClick,
+            onAngleModeChanged = onAngleModeToggle,
+            modifier = Modifier.weight(0.38f)
+        )
+
+        // Pager: History | Calculator
+        Column(modifier = Modifier.weight(0.62f)) {
+            // SCI expand affordance — visible above the keypad at all times
+            SciExpandButton(
+                onClick = { showScientific = true },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             )
 
-            // Pager: History | Calculator
-            Column(modifier = Modifier.weight(0.62f)) {
-                // SCI expand affordance — visible above the keypad at all times
-                SciExpandButton(
-                    onClick = { showScientific = true },
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                )
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f)
+            ) { page ->
+                when (page) {
+                    0 -> HistoryScreen(
+                        state = historyState,
+                        onDelete = onDeleteHistoryItem,
+                        onStarToggle = onStarHistoryItem,
+                        onUpdateTag = onUpdateHistoryTag,
+                        onUseEntry = { result ->
+                            onUseHistoryEntry(result)
+                            scope.launch { pagerState.animateScrollToPage(1) }
+                        },
+                        onClearAll = onClearHistory,
+                        onShare = onShareHistoryItem,
+                        onFilterChange = onHistoryFilterChange,
+                    )
 
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.weight(1f)
-                ) { page ->
-                    when (page) {
-                        0 -> HistoryScreen(
-                            state = historyState,
-                            onDelete = onDeleteHistoryItem,
-                            onStarToggle = onStarHistoryItem,
-                            onUpdateTag = onUpdateHistoryTag,
-                            onUseEntry = { result ->
-                                onUseHistoryEntry(result)
-                                scope.launch { pagerState.animateScrollToPage(1) }
-                            },
-                            onClearAll = onClearHistory,
-                            onShare = onShareHistoryItem,
-                            onFilterChange = onHistoryFilterChange,
-                        )
-                        else -> CalculatorScreen(
-                            state = calculatorState,
-                            onKeyPress = onCalculatorKeyPress,
-                            onAngleModeChanged = onAngleModeToggle
-                        )
-                    }
+                    else -> CalculatorScreen(
+                        state = calculatorState,
+                        onKeyPress = onCalculatorKeyPress,
+                        onAngleModeChanged = onAngleModeToggle
+                    )
                 }
-
-                PageIndicator(
-                    pagerState = pagerState,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(vertical = 6.dp)
-                )
-
-                BottomActionBar(
-                    onSettingsClick = { showSettings = true },
-                    onColorsClick = onColorsClick,
-                    onMenuClick = { scope.launch { drawerState.open() } },
-                )
             }
+
+            PageIndicator(
+                pagerState = pagerState,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 6.dp)
+            )
+
+            BottomActionBar(
+                onSettingsClick = { showSettings = true },
+                onColorsClick = onColorsClick,
+            )
         }
     }
 
@@ -343,7 +331,6 @@ fun PageIndicator(pagerState: androidx.compose.foundation.pager.PagerState, modi
 fun BottomActionBar(
     onSettingsClick: () -> Unit,
     onColorsClick: () -> Unit,
-    onMenuClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -365,45 +352,6 @@ fun BottomActionBar(
                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
             )
         }
-        IconButton(onClick = onMenuClick) {
-            Icon(
-                Icons.Default.Menu,
-                contentDescription = "Menu",
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
-            )
-        }
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Navigation Drawer
-// ─────────────────────────────────────────────────────────────────────────────
-
-@Composable
-private fun AppDrawer() {
-    ModalDrawerSheet(
-        drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 28.dp, vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                text = "ماشین حساب ۴۲",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = "42 Calculator",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-
-        HorizontalDivider()
-
-        // No drawer items currently as all legacy options (About, Help, Contact, Rate Us) are removed.
-    }
-}
