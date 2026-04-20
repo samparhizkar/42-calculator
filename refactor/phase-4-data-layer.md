@@ -1,4 +1,4 @@
-# Phase 4 — Data Layer (Room + WorkManager)
+# Phase 4 — Data Layer (Room)
 
 ## Status: ⏳ Not started (requires Phase 3 complete)
 
@@ -6,8 +6,9 @@
 
 Replace legacy data infrastructure:
 - Raw SQLite + ContentProvider → Room database
-- SyncAdapter + AccountAuthenticator → WorkManager `CoroutineWorker`
-- jsoup HTML scraping for currency → proper JSON API call
+- Keep the data-layer scope limited to calculator history and constants only
+- Currency is already being removed from the product; do not migrate any currency UI,
+  database, sync, scraping, or worker code into the new architecture
 
 ## What to remove
 
@@ -15,31 +16,30 @@ Replace legacy data infrastructure:
 |---|---|---|
 | `data/LogDbHelper.java` | Raw SQLite | Room `AppDatabase` + `LogDao` |
 | `data/ConstantDbHelper.java` | Raw SQLite | Room `AppDatabase` + `ConstantDao` |
-| `data/CurrencyDbHelper.java` | Raw SQLite | Room `AppDatabase` + `CurrencyDao` |
 | `data/LogProvider.java` | ContentProvider overkill for internal use | `LogDao` via ViewModel |
 | `data/ConstantProvider.java` | ContentProvider overkill | `ConstantDao` via ViewModel |
-| `data/CurrencyProvider.java` | ContentProvider overkill | `CurrencyDao` via ViewModel |
-| `sync/CurrencySyncAdapter.java` | Deprecated SyncAdapter pattern | `CurrencyWorker : CoroutineWorker` |
-| `sync/CurrencyAuthenticator.java` | Dummy authenticator for SyncAdapter | Delete entirely |
-| `sync/CurrencyAuthenticatorService.java` | Required by SyncAdapter | Delete entirely |
-| `sync/CurrencySyncService.java` | Required by SyncAdapter | Delete entirely |
-| `xml/authenticator.xml` | SyncAdapter metadata | Delete |
-| `xml/syncadapter.xml` | SyncAdapter metadata | Delete |
-| jsoup dependency | HTML scraping is fragile | `HttpURLConnection` + `JSONObject` |
+| `data/CurrencyDbHelper.java` | Currency feature removed | Delete entirely; no Room replacement |
+| `data/CurrencyProvider.java` | Currency feature removed | Delete entirely; no Room replacement |
+| `sync/CurrencySyncAdapter.java` | Currency feature removed | Delete entirely |
+| `sync/CurrencyAuthenticator.java` | Currency feature removed | Delete entirely |
+| `sync/CurrencyAuthenticatorService.java` | Currency feature removed | Delete entirely |
+| `sync/CurrencySyncService.java` | Currency feature removed | Delete entirely |
+| `xml/authenticator.xml` | Currency sync metadata | Delete |
+| `xml/syncadapter.xml` | Currency sync metadata | Delete |
+| jsoup / HTML scraping helpers | Currency scraping is gone | Delete dependency and related code if still present |
 
 ## Room schema
 
 ### AppDatabase.kt
 ```kotlin
 @Database(
-    entities = [LogEntry::class, Constant::class, CurrencyRate::class],
+    entities = [LogEntry::class, Constant::class],
     version = 1,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun logDao(): LogDao
     abstract fun constantDao(): ConstantDao
-    abstract fun currencyDao(): CurrencyDao
 }
 ```
 
@@ -55,48 +55,30 @@ data class LogEntry(
     val timestamp: Long = System.currentTimeMillis()
 )
 ```
+**Constant** — maps to existing `constants` table
 
-**Constant** — maps to existing `constants` table  
-**CurrencyRate** — maps to existing `currency` table (check exact column names in
-`ConstantContract.kt` and `CurrencyContract.kt`)
-
-## WorkManager for currency sync
-
-```kotlin
-class CurrencyWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
-    override suspend fun doWork(): Result {
-        // fetch from JSON API (confirm endpoint with user)
-        // update Room CurrencyDao
-        return Result.success()
-    }
-}
-```
-
-Schedule periodic sync (e.g. every 6 hours) in `Application.onCreate()` using
-`PeriodicWorkRequest`.
+No currency entity, DAO, worker, or background sync should be introduced in this phase.
 
 ## AndroidManifest cleanup (after this phase)
 
 Remove:
-- `AUTHENTICATE_ACCOUNTS` permission
-- `READ_SYNC_SETTINGS` / `WRITE_SYNC_SETTINGS` permissions
+- Any currency-specific permissions, services, providers, and metadata
 - `CurrencyAuthenticatorService` declaration
 - `CurrencySyncService` declaration
-- `syncable="true"` attributes on ContentProviders
-- The ContentProvider declarations themselves (LogProvider, ConstantProvider, CurrencyProvider)
+- Any currency sync/account entries left in strings, manifest, or XML resources
+- Eventually the ContentProvider declarations themselves (LogProvider, ConstantProvider)
+  once their Room replacements are wired in
 
 ## Dependencies to add
 
 ```toml
 [versions]
 room = "2.6.1"
-workmanager = "2.9.1"
 
 [libraries]
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-workmanager-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workmanager" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version = "2.2.10-1.0.29" }

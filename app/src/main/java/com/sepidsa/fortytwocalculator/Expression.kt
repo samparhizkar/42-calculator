@@ -98,24 +98,26 @@ class Expression(s: String, _isRad_flag: Boolean, applicationContext: Context) {
         while (s.isNotEmpty()) {
             if (s.indexOf(mTest) == 0) {
                 s = s.substring(1)
-                ans = BigDecimalUtils.intPower(ans, 2, 6)
+                ans = if (ans != null) BigDecimalUtils.intPower(ans, 2, 6) else null
                 break
             } else if (s.indexOf(mContext.resources.getString(R.string.powerthreeTag)) == 0) {
                 s = s.substring(1)
-                ans = BigDecimalUtils.intPower(ans, 3, 6)
+                ans = if (ans != null) BigDecimalUtils.intPower(ans, 3, 6) else null
                 break
             }
             if (s[0] == '!') {
                 s = s.substring(1)
-                try {
-                    if (ans!!.scale() > 0 || ans.compareTo(BigDecimal.ZERO) == -1) {
-                        throw NumberFormatException()
-                    } else {
-                        val rounded = ans.round(MathContext(6))
-                        ans = compute_factorial(rounded, rounded)
+                if (ans != null) {
+                    try {
+                        if (ans.scale() > 0 || ans.compareTo(BigDecimal.ZERO) == -1) {
+                            throw NumberFormatException()
+                        } else {
+                            val rounded = ans.round(MathContext(6))
+                            ans = compute_factorial(rounded, rounded)
+                        }
+                    } finally {
+                        //
                     }
-                } finally {
-                    //
                 }
             } else if (s[0] == '%') {
                 PERCENT_FLAG = true
@@ -132,7 +134,7 @@ class Expression(s: String, _isRad_flag: Boolean, applicationContext: Context) {
      */
     private fun exp(): BigDecimal? {
         var neg = false
-        if (s[0] == '−' || s[0] == '-') {
+        if (s.isNotEmpty() && (s[0] == '−' || s[0] == '-')) {
             neg = true
             s = s.substring(1)
             return BigDecimal(-1)
@@ -143,35 +145,37 @@ class Expression(s: String, _isRad_flag: Boolean, applicationContext: Context) {
                 s = s.substring(1)
                 var expNeg = false
                 // Checking with both types of minus character
-                if (s[0] == '−' || s[0] == '-') {
+                if (s.isNotEmpty() && (s[0] == '−' || s[0] == '-')) {
                     expNeg = true
                     s = s.substring(1)
                 }
                 val e = factorial()
 
-                if (ans!!.toDouble() < 0) { // if it's negative
-                    var x = BigDecimal("1")
-                    if (ceil(e!!.toDouble()) == e.toDouble()) { // only raise to an integer
-                        var eVar = e
-                        if (expNeg) eVar = eVar.multiply(BigDecimal("-1"))
-                        if (eVar.toDouble() == 0.0) ans = BigDecimal("1")
-                        else if (eVar.toDouble() > 0) {
-                            for (i in 0 until eVar.toDouble().toInt()) x = x.multiply(ans)
+                if (ans != null && e != null) {
+                    if (ans.toDouble() < 0) { // if it's negative
+                        var x = BigDecimal("1")
+                        if (ceil(e.toDouble()) == e.toDouble()) { // only raise to an integer
+                            var eVar = e
+                            if (expNeg) eVar = eVar.multiply(BigDecimal("-1"))
+                            if (eVar.toDouble() == 0.0) ans = BigDecimal("1")
+                            else if (eVar.toDouble() > 0) {
+                                for (i in 0 until eVar.toDouble().toInt()) x = x.multiply(ans!!)
+                            } else {
+                                for (i in 0 until (-eVar.toDouble()).toInt()) x = x.divide(ans!!, MathContext(6))
+                            }
+                            ans = x
                         } else {
-                            for (i in 0 until (-eVar.toDouble()).toInt()) x = x.divide(ans, MathContext(6))
+                            ans = BigDecimal(Math.log(-1.0)) // otherwise make it NaN
                         }
-                        ans = x
                     } else {
-                        ans = BigDecimal(Math.log(-1.0)) // otherwise make it NaN
+                        val n1 = ans
+                        val n2 = e
+                        ans = bigdecimalPower(ans, n1, n2, expNeg)
                     }
-                } else {
-                    val n1 = ans
-                    val n2 = e
-                    ans = bigdecimalPower(ans, n1, n2, expNeg)
                 }
             } else break
         }
-        if (neg) ans = ans!!.negate()
+        if (neg) ans = ans?.negate()
         return ans
     }
 
@@ -441,7 +445,6 @@ class Expression(s: String, _isRad_flag: Boolean, applicationContext: Context) {
                     if (PERCENT_FLAG) {
                         ans = (ans.divide(BigDecimal("100"), MathContext(6)).multiply(tempAnswer))
                         PERCENT_FLAG = false
-                        tempAnswer = BigDecimal(0)
                         s = s.substring(1)
                     } else {
                         ans = ans.multiply(tempAnswer)
@@ -453,7 +456,6 @@ class Expression(s: String, _isRad_flag: Boolean, applicationContext: Context) {
                     if (PERCENT_FLAG) {
                         ans = (ans.multiply(BigDecimal("100"), MathContext(6)).divide(tempAnswer))
                         PERCENT_FLAG = false
-                        tempAnswer = BigDecimal(0)
                         s = s.substring(1)
                     } else {
                         ans = ans.divide(tempAnswer, MathContext(6))
@@ -508,7 +510,6 @@ class Expression(s: String, _isRad_flag: Boolean, applicationContext: Context) {
                     ans = ans.subtract((ans.multiply(tempAnswer)).divide(BigDecimal("100"), MathContext(6)))
                     PERCENT_FLAG = false
                     s = s.substring(1)
-                    tempAnswer = BigDecimal(0)
                 } else {
                     ans = ans.subtract(tempAnswer)
                 }

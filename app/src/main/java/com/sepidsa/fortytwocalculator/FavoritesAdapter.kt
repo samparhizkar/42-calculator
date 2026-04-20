@@ -12,6 +12,7 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.CursorAdapter
 import android.widget.TextView
+import com.sepidsa.fortytwocalculator.R
 import com.sepidsa.fortytwocalculator.data.LogContract
 
 /**
@@ -56,7 +57,7 @@ class FavoritesAdapter(context: Context, c: Cursor?, flags: Int) : CursorAdapter
         var position: Int = 0
     }
 
-    private val mStarOnClickListener = CompoundButton.OnClickListener { view, _ ->
+    private val mStarOnClickListener = View.OnClickListener { view ->
         val parent = findParentRecursively(view)
         if (parent != null) {
             val viewHolder = parent.tag as ViewHolder

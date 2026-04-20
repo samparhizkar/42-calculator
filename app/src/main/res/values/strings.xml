@@ -143,7 +143,6 @@
   <string name="star_icon"></string>
   <string name="star_outline"></string>
   <string name="list"></string>
-  <string name="dollar_icon_string"></string>
 
   <!--COLOR Codes -->
 
@@ -191,36 +190,8 @@
   <string name="title_section3">Section 3</string>
   <string name="skip">بی خیال</string>
   <string name="parallax_activity_name">parallax_activity</string>
-  <string name="premium_parallax_activity_name">premium_parallax</string>
 
   <string name="title_activity_color_picker">ColorPickerActivity</string>
-  <string name="content_authority_currency">com.sepidsa.fortytwocalculator.currency</string>
-  <string name="sync_account_type">fortytwocalculator.sepidsa.com</string>
-  <string name="farsi_dollar">دلار</string>
-  <string name="farsi_eur">یورو</string>
-  <string name="farsi_gbp">پوند</string>
-  <string name="farsi_try">لیر ترکیه</string>
-  <string name="farsi_aed">درهم امارات</string>
-  <string name="farsi_cad">دلار کانادا</string>
-  <string name="farsi_cny">یوان چین</string>
-  <string name="farsi_dkk">کرون دانمارک</string>
-  <string name="farsi_hkd">دلار هنگ کنگ</string>
-  <string name="farsi_myr">رینگیت مالری</string>
-  <string name="farsi_nok">کرون نروژ</string>
-  <string name="farsi_pkr">روپیه پاکستان</string>
-  <string name="farsi_rub">روبل روسیه</string>
-  <string name="farsi_sar">ریال عربستان</string>
-  <string name="loading_message">در حال بارگذاری اولیه...\n لطفا چند لحظه صبور باشید</string>
-  <string name="farsi_ons">انس طلا (به دلار)</string>
-  <string name="farsi_mesghal"> مثقال طلا</string>
-  <string name="farsi_geram18"> گرم طلای 18</string>
-  <string name="farsi_geram24"> گرم طلای 24</string>
-  <string name="farsi_silver">انس نقره (به دلار)</string>
-  <string name="farsi_sekeb">سکه بهار آزادی</string>
-  <string name="farsi_sekee">سکه امامی</string>
-  <string name="farsi_nim">سکه نیم بهار آزادی</string>
-  <string name="farsi_rob">سکه ربع بهار آزادی</string>
-  <string name="farsi_gerami">هر گرم سکه</string>
   <string name="arabic_42">اثنان وأربعون</string>
   <string name="english_42">forty two</string>
   <string name="french_42">quarante-deux</string>
@@ -239,11 +210,8 @@
   <string name="farsi_enter_constant">ثابت را وارد کنید</string>
   <string name="farsi_choose_email_app">با چی بفرستم؟</string>
   <string name="farsi_about_42_calc">راجع به ماشین حساب  ۴۲</string>
-  <string name="become_premium">طلایی شو</string>
     <string name="about_string">سپیدسا</string>
-    <string name="premium_agree">عالیه</string>
     <string name="app_tour_agree">عالیه</string>
-    <string name="premium_skip">بی خیال</string>
   <string name="tenpowerx_tag">E</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="sepidsa_webpage">www.sepidsa.com</string>

@@ -4,16 +4,20 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.math.BigDecimal
+
+data class CurrencyConversion(
+    val fromCurrency: String,
+    val toCurrency: String,
+    val amount: Double,
+    val result: Double
+)
 
 data class CurrencyUiState(
-    val exchangeRates: Map<String, BigDecimal> = emptyMap(),
-    val selectedFromCurrency: String = "USD",
-    val selectedToCurrency: String = "EUR",
-    val conversionResult: BigDecimal = BigDecimal(0),
-    val inputAmount: BigDecimal = BigDecimal(1),
-    val isLoading: Boolean = false,
-    val error: String? = null
+    val conversions: List<CurrencyConversion> = emptyList(),
+    val selectedFrom: String = "USD",
+    val selectedTo: String = "EUR",
+    val amount: Double = 1.0,
+    val isLoading: Boolean = false
 )
 
 class CurrencyViewModel : ViewModel() {
@@ -21,27 +25,23 @@ class CurrencyViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(CurrencyUiState())
     val uiState: StateFlow<CurrencyUiState> = _uiState.asStateFlow()
 
-    fun loadExchangeRates() {
-        // TODO: Load exchange rates from API or database
+    fun convertCurrency(fromCurrency: String, toCurrency: String, amount: Double) {
+        // TODO: Call currency conversion API or local data
+        // For now, this is a placeholder
     }
 
     fun setFromCurrency(currency: String) {
-        // TODO: Update from currency
+        val current = _uiState.value
+        _uiState.value = current.copy(selectedFrom = currency)
     }
 
     fun setToCurrency(currency: String) {
-        // TODO: Update to currency
+        val current = _uiState.value
+        _uiState.value = current.copy(selectedTo = currency)
     }
 
-    fun setInputAmount(amount: BigDecimal) {
-        // TODO: Update input amount and recalculate
-    }
-
-    fun swapCurrencies() {
-        // TODO: Swap from and to currencies
-    }
-
-    fun refreshRates() {
-        // TODO: Refresh exchange rates
+    fun setAmount(amount: Double) {
+        val current = _uiState.value
+        _uiState.value = current.copy(amount = amount)
     }
 }

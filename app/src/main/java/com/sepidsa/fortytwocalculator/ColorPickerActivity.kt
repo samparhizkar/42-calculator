@@ -93,7 +93,8 @@ class ColorPickerActivity : FragmentActivity(), ColorPickerSwatch.OnColorSelecte
         }
     }
 
-    private fun arrayContains(parent: IntArray, child: Int): Int {
+    private fun arrayContains(parent: IntArray?, child: Int): Int {
+        if (parent == null) return -1
         for (index in parent) {
             if (index == child) {
                 return index
@@ -102,7 +103,8 @@ class ColorPickerActivity : FragmentActivity(), ColorPickerSwatch.OnColorSelecte
         return -1
     }
 
-    private fun indexOf(parent: IntArray, child: Int): Int {
+    private fun indexOf(parent: IntArray?, child: Int): Int {
+        if (parent == null) return 0
         for (index in parent.indices) {
             if (parent[index] == child) {
                 return index

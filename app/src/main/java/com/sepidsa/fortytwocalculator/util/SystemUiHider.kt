@@ -8,7 +8,7 @@ import android.view.View
  * A utility class that helps with showing and hiding system UI such as the
  * status bar and navigation/system bar.
  */
-abstract class SystemUiHider protected constructor(
+abstract class SystemUiHider(
     protected val mActivity: Activity,
     protected val mAnchorView: View,
     protected val mFlags: Int,

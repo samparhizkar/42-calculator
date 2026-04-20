@@ -1,59 +1,80 @@
 package com.sepidsa.fortytwocalculator.ui.history
 
-import androidx.lifecycle.ViewModel
-import com.sepidsa.fortytwocalculator.data.LogContract
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.sepidsa.fortytwocalculator.data.AppDatabase
+import com.sepidsa.fortytwocalculator.data.LogEntity
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-
-data class LogEntry(
-    val id: Long,
-    val expression: String,
-    val result: String,
-    val timestamp: Long,
-    val starred: Boolean = false
-)
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 
 data class HistoryUiState(
-    val logEntries: List<LogEntry> = emptyList(),
-    val isLoading: Boolean = false
+    val logEntries: List<LogEntity> = emptyList()
 )
 
-class HistoryViewModel : ViewModel() {
+class HistoryViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _uiState = MutableStateFlow(HistoryUiState())
-    val uiState: StateFlow<HistoryUiState> = _uiState.asStateFlow()
+    private val logDao = AppDatabase.getInstance(application).logDao()
 
-    private val _newLogEntry = MutableSharedFlow<LogEntry>()
-    val newLogEntry: SharedFlow<LogEntry> = _newLogEntry.asSharedFlow()
+    val uiState: StateFlow<HistoryUiState> = logDao.getAllLogs()
+        .map { HistoryUiState(logEntries = it) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HistoryUiState()
+        )
 
-    fun loadHistory() {
-        // TODO: Load history from database
+    fun addLogEntry(expression: String, result: String): kotlinx.coroutines.Deferred<Long> {
+        return viewModelScope.async {
+            logDao.insert(
+                LogEntity(
+                    operation = expression,
+                    result = result,
+                    resultNoComma = result.replace(",", "")
+                )
+            )
+        }
     }
 
-    fun addLogEntry(expression: String, result: String) {
-        // TODO: Add log entry to database
-        val entry = LogEntry(
-            id = System.currentTimeMillis(), // placeholder
-            expression = expression,
-            result = result,
-            timestamp = System.currentTimeMillis()
-        )
-        _uiState.value = _uiState.value.copy(
-            logEntries = _uiState.value.logEntries + entry
-        )
-        // Emit to SharedFlow
-        // TODO: Use coroutine scope
-    }
-
-    fun starLogEntry(id: Long) {
-        // TODO: Star/unstar log entry
+    fun starLogEntry(id: Long, isStarred: Boolean) {
+        viewModelScope.launch {
+            logDao.updateStarred(id, if (isStarred) 1 else 0)
+        }
     }
 
     fun deleteLogEntry(id: Long) {
-        // TODO: Delete log entry
+        viewModelScope.launch {
+            logDao.deleteById(id)
+        }
+    }
+
+    fun updateTag(id: Long, tag: String) {
+        viewModelScope.launch {
+            logDao.updateTag(id, tag)
+        }
+    }
+
+    suspend fun getLogById(id: Long): LogEntity? {
+        return logDao.getLogById(id)
+    }
+
+    fun clearHistory(clearStarred: Boolean) {
+        viewModelScope.launch {
+            if (clearStarred) {
+                logDao.deleteAll()
+            } else {
+                logDao.deleteNonStarred()
+            }
+        }
+    }
+
+    fun clearAll() {
+        viewModelScope.launch {
+            logDao.deleteAll()
+        }
     }
 }

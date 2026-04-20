@@ -12,7 +12,7 @@ import android.view.WindowManager
  * show and hide the system UI.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-class SystemUiHiderHoneycomb protected constructor(
+class SystemUiHiderHoneycomb(
     activity: Activity,
     anchorView: View,
     flags: Int,

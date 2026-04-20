@@ -14,6 +14,9 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
+import com.sepidsa.fortytwocalculator.MainActivity
+import com.sepidsa.fortytwocalculator.R
+import com.sepidsa.fortytwocalculator.FavoritesAdapter
 import com.sepidsa.fortytwocalculator.data.LogContract
 
 /**

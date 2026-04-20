@@ -2,16 +2,9 @@ package com.sepidsa.fortytwocalculator.ui.constants
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.DialogInterface
-import android.database.Cursor
 import android.graphics.Typeface
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import androidx.appcompat.app.AlertDialog
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
-import androidx.loader.content.Loader
 import android.text.InputType
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -24,25 +17,42 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
-import com.sepidsa.fortytwocalculator.data.ConstantContract
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.sepidsa.fortytwocalculator.MainActivity
+import com.sepidsa.fortytwocalculator.R
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /**
  * Created by Farshid on 5/20/2015.
  */
-class ConstantSelectFragment : DialogFragment(), LoaderManager.LoaderCallbacks<Cursor> {
+class ConstantSelectFragment : DialogFragment() {
 
+    private val viewModel: ConstantViewModel by viewModels()
     private lateinit var mConstantSelectAdapter: ConstantSelectAdapter
     private lateinit var mListView: ListView
     private lateinit var mAddButton: Button
     private var mPosition: Int = ListView.INVALID_POSITION
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        loaderManager.initLoader(CONSTANT_LOADER, null, this)
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collectLatest { state ->
+                mConstantSelectAdapter.updateConstants(state.constants)
+                if (mPosition != ListView.INVALID_POSITION) {
+                    mListView.smoothScrollToPosition(mPosition)
+                    mPosition = ListView.INVALID_POSITION
+                }
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        mConstantSelectAdapter = ConstantSelectAdapter(requireActivity(), null, 0)
+        mConstantSelectAdapter = ConstantSelectAdapter(requireActivity(), viewModel)
         val rootView = inflater.inflate(R.layout.fragment_constant_select, container, false)
 
         mListView = rootView.findViewById(R.id.listview_constant)
@@ -83,15 +93,7 @@ class ConstantSelectFragment : DialogFragment(), LoaderManager.LoaderCallbacks<C
                 try {
                     val newName = name.text.toString()
                     val newNumber = number.text.toString().toDouble()
-                    val values = ContentValues()
-                    values.put(ConstantContract.ConstantEntry.COLUMN_NAME, newName)
-                    values.put(ConstantContract.ConstantEntry.COLUMN_NUMBER, newNumber)
-                    values.put(ConstantContract.ConstantEntry.COLUMN_SELECTED, 1)
-
-                    requireActivity().contentResolver.insert(
-                        ConstantContract.ConstantEntry.CONTENT_URI,
-                        values,
-                    )
+                    viewModel.addConstant(newName, newNumber)
                     inputMethodManager.hideSoftInputFromWindow(name.windowToken, 0)
                 } catch (nfe: NumberFormatException) {
                     dialog.cancel()
@@ -129,17 +131,6 @@ class ConstantSelectFragment : DialogFragment(), LoaderManager.LoaderCallbacks<C
         return dialog
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
-        mConstantSelectAdapter.swapCursor(data)
-        if (mPosition != ListView.INVALID_POSITION) {
-            mListView.smoothScrollToPosition(mPosition)
-        }
-    }
-
-    override fun onLoaderReset(loader: Loader<Cursor>) {
-        mConstantSelectAdapter.swapCursor(null)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         if (mPosition != ListView.INVALID_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition)
@@ -147,27 +138,8 @@ class ConstantSelectFragment : DialogFragment(), LoaderManager.LoaderCallbacks<C
         super.onSaveInstanceState(outState)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        return CursorLoader(
-            requireActivity(),
-            ConstantContract.ConstantEntry.CONTENT_URI,
-            CONSTANT_COLUMNS,
-            null,
-            null,
-            null,
-        )
-    }
-
     private companion object {
         private const val SELECTED_KEY = "selected_position"
-        private const val CONSTANT_LOADER = 0
-
-        private val CONSTANT_COLUMNS = arrayOf(
-            ConstantContract.ConstantEntry.TABLE_NAME + "." + ConstantContract.ConstantEntry._ID,
-            ConstantContract.ConstantEntry.COLUMN_NAME,
-            ConstantContract.ConstantEntry.COLUMN_NUMBER,
-            ConstantContract.ConstantEntry.COLUMN_SELECTED,
-        )
     }
 }
 

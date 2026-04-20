@@ -112,7 +112,7 @@ class AutoResizeTextView @JvmOverloads constructor(
         _initiallized = true
     }
 
-    override fun setTypeface(tf: Typeface) {
+    override fun setTypeface(tf: Typeface?) {
         if (paint == null) {
             paint = TextPaint(paint)
         }

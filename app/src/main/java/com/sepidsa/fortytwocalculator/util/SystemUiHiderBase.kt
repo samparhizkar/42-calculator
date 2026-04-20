@@ -8,7 +8,7 @@ import android.view.WindowManager
  * A base implementation of [SystemUiHider]. Uses APIs available in all
  * API levels to show and hide the status bar.
  */
-open class SystemUiHiderBase protected constructor(
+open class SystemUiHiderBase(
     activity: Activity,
     anchorView: View,
     flags: Int,

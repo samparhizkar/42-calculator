@@ -120,7 +120,7 @@ class LogAdapter(context: Context, c: Cursor?, flags: Int) : CursorAdapter(conte
         val useButton: Button = view.findViewById(R.id.useButton)
     }
 
-    private val mStarOnClickListener = CompoundButton.OnClickListener { view, _ ->
+    private val mStarOnClickListener = View.OnClickListener { view ->
         val parent = findParentRecursively(view)
         if (parent != null) {
             val viewHolder = parent.tag as ViewHolder

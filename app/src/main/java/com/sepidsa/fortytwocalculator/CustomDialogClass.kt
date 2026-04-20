@@ -2,6 +2,7 @@ package com.sepidsa.fortytwocalculator
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -72,18 +73,18 @@ class CustomDialogClass(context: Context, theme: Int) : Dialog(context, theme), 
 
     private fun setDialpadTextSizeButtonTypeface() {
         val appPreferences = mContext.getSharedPreferences("typography", Context.MODE_PRIVATE)
-        when (appPreferences.getInt("DIALPAD_FONT", DIALPAD_FONT_ROBOTO_THIN)) {
-            0 -> fortyTwoSample.typeface = mRobotoThin
-            1 -> fortyTwoSample.typeface = mRobotoLight
-            2 -> fortyTwoSample.typeface = mRobotoRegular
+        when (appPreferences.getInt("DIALPAD_FONT", MainActivity.FONT_ROBOTO_THIN)) {
+            MainActivity.FONT_ROBOTO_THIN -> fortyTwoSample.typeface = mRobotoThin
+            MainActivity.FONT_ROBOTO_LIGHT -> fortyTwoSample.typeface = mRobotoLight
+            MainActivity.FONT_ROBOTO_REGULAR -> fortyTwoSample.typeface = mRobotoRegular
         }
     }
 
     private fun setPersianTranslationButtonTypeface() {
         val appPreferences = mContext.getSharedPreferences("typography", Context.MODE_PRIVATE)
-        when (appPreferences.getInt("PERSIAN_FONT_PREFERENCE", PERSIAN_TRANSLATION_FONT_MITRA)) {
-            0 -> fortyTwoSampleTranslation.typeface = mMitra
-            1 -> fortyTwoSampleTranslation.typeface = mDastnevis
+        when (appPreferences.getInt("PERSIAN_FONT_PREFERENCE", MainActivity.FONT_MITRA)) {
+            MainActivity.FONT_MITRA -> fortyTwoSampleTranslation.typeface = mMitra
+            6 -> fortyTwoSampleTranslation.typeface = mDastnevis
             else -> fortyTwoSampleTranslation.typeface = mMitra
         }
     }
@@ -100,37 +101,44 @@ class CustomDialogClass(context: Context, theme: Int) : Dialog(context, theme), 
         val id = v.id
 
         if (id == R.id.fortyTwoSample || id == R.id.give_stars) {
-            val giveStarsIntent = Intent(
-                Intent.ACTION_EDIT,
-                Uri.parse("http://cafebazaar.ir/app/com.sepidsa.fortytwocalculator/?l=fa"),
+            val packageName = mContext.packageName
+            val marketIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+            val webIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=$packageName"),
             )
-            mContext.startActivity(giveStarsIntent)
+
+            try {
+                mContext.startActivity(marketIntent)
+            } catch (_: ActivityNotFoundException) {
+                mContext.startActivity(webIntent)
+            }
             dismiss()
         } else if (id == R.id.language_selection) {
             showSpinner()
         } else if (id == R.id.dialpad_text_size) {
             val fontSizePreference = mContext.getSharedPreferences("typography", Context.MODE_PRIVATE)
             val fontSizeEditor = fontSizePreference.edit()
-            when (fontSizePreference.getInt("DIALPAD_FONT", DIALPAD_FONT_ROBOTO_THIN)) {
-                2 -> {
-                    fontSizeEditor.putInt("DIALPAD_FONT", DIALPAD_FONT_ROBOTO_THIN)
+            when (fontSizePreference.getInt("DIALPAD_FONT", MainActivity.FONT_ROBOTO_THIN)) {
+                MainActivity.FONT_ROBOTO_REGULAR -> {
+                    fontSizeEditor.putInt("DIALPAD_FONT", MainActivity.FONT_ROBOTO_THIN)
                     fontSizeEditor.apply()
                     fortyTwoSample.typeface = mRobotoThin
-                    sendChangeDialpadTypefaceMessage(0)
+                    sendChangeDialpadTypefaceMessage(MainActivity.FONT_ROBOTO_THIN)
                 }
 
-                0 -> {
-                    fontSizeEditor.putInt("DIALPAD_FONT", DIALPAD_FONT_ROBOTO_LIGHT)
+                MainActivity.FONT_ROBOTO_THIN -> {
+                    fontSizeEditor.putInt("DIALPAD_FONT", MainActivity.FONT_ROBOTO_LIGHT)
                     fontSizeEditor.apply()
                     fortyTwoSample.typeface = mRobotoLight
-                    sendChangeDialpadTypefaceMessage(1)
+                    sendChangeDialpadTypefaceMessage(MainActivity.FONT_ROBOTO_LIGHT)
                 }
 
-                1 -> {
-                    fontSizeEditor.putInt("DIALPAD_FONT", DIALPAD_FONT_ROBOTO_REGULAR)
+                MainActivity.FONT_ROBOTO_LIGHT -> {
+                    fontSizeEditor.putInt("DIALPAD_FONT", MainActivity.FONT_ROBOTO_REGULAR)
                     fontSizeEditor.apply()
                     fortyTwoSample.typeface = mRobotoRegular
-                    sendChangeDialpadTypefaceMessage(2)
+                    sendChangeDialpadTypefaceMessage(MainActivity.FONT_ROBOTO_REGULAR)
                 }
             }
             setDialpadTextSizeButtonTypeface()
@@ -148,60 +156,42 @@ class CustomDialogClass(context: Context, theme: Int) : Dialog(context, theme), 
         b.setSingleChoiceItems(options, -1) { dialog: DialogInterface, which: Int ->
             val appPreferences = mContext.applicationContext.getSharedPreferences(
                 "LanguagePreference",
-                (mContext as MainActivity).MODE_PRIVATE,
+                Context.MODE_PRIVATE,
             )
             val editor = appPreferences.edit()
 
             dialog.dismiss()
-            when (which) {
-                0 -> {
-                    editor.putInt("LANGUAGE", MainActivity.LANGUAGE_PERSIAN)
-                    refreshSampleTypeface(MainActivity.LANGUAGE_PERSIAN)
-                }
-
-                1 -> {
-                    editor.putInt("LANGUAGE", MainActivity.LANGUAGE_ENGLISH)
-                    refreshSampleTypeface(MainActivity.LANGUAGE_ENGLISH)
-                }
-
-                2 -> {
-                    editor.putInt("LANGUAGE", MainActivity.LANGUAGE_FRENCH)
-                    refreshSampleTypeface(MainActivity.LANGUAGE_FRENCH)
-                }
-
-                3 -> {
-                    editor.putInt("LANGUAGE", MainActivity.LANGUAGE_ARABIC)
-                    refreshSampleTypeface(MainActivity.LANGUAGE_ARABIC)
-                }
+            val language = when (which) {
+                0 -> MainActivity.LANGUAGE_PERSIAN.toInt()
+                1 -> MainActivity.LANGUAGE_ENGLISH.toInt()
+                2 -> MainActivity.LANGUAGE_FRENCH.toInt()
+                3 -> MainActivity.LANGUAGE_ARABIC.toInt()
+                else -> MainActivity.LANGUAGE_PERSIAN.toInt()
             }
+            editor.putInt("LANGUAGE", language)
+            refreshSampleTypeface(language)
+            (mContext as MainActivity).calculatorViewModel.setLanguage(language)
             editor.commit()
 
             fortyTwoSampleTranslation.typeface = (mContext as MainActivity).getFontForComponent("TRANSLATION_LITERAL_FONT")
 
             (mContext as MainActivity).refreshFonts()
-            if ((mContext as MainActivity).mDecimal_fraction != null) {
-                if ((mContext as MainActivity).mJustPressedExecuteButton) {
-                    (mContext as MainActivity).displayTranslation(true)
-                } else {
-                    (mContext as MainActivity).mTranslationBox.startAnimation((mContext as MainActivity).mBlink)
-                }
-            }
         }
         b.show()
     }
 
     private fun refreshSampleTypeface(language: Int) {
-        when (language) {
+        when (language.toByte()) {
             MainActivity.LANGUAGE_PERSIAN -> {
                 fortyTwoSampleTranslation.text = mContext.getString(R.string.persian_42)
-                (mContext as MainActivity).setFontForComponent("TRANSLATION_LITERAL_FONT", (mContext as MainActivity).FONT_MITRA)
+                (mContext as MainActivity).setFontForComponent("TRANSLATION_LITERAL_FONT", MainActivity.FONT_MITRA)
             }
 
             MainActivity.LANGUAGE_ENGLISH -> {
                 fortyTwoSampleTranslation.text = mContext.getString(R.string.english_42)
                 (mContext as MainActivity).setFontForComponent(
                     "TRANSLATION_LITERAL_FONT",
-                    (mContext as MainActivity).FONT_ROBOTO_THIN,
+                    MainActivity.FONT_ROBOTO_THIN,
                 )
             }
 
@@ -209,24 +199,18 @@ class CustomDialogClass(context: Context, theme: Int) : Dialog(context, theme), 
                 fortyTwoSampleTranslation.text = mContext.getString(R.string.french_42)
                 (mContext as MainActivity).setFontForComponent(
                     "TRANSLATION_LITERAL_FONT",
-                    (mContext as MainActivity).FONT_ROBOTO_THIN,
+                    MainActivity.FONT_ROBOTO_THIN,
                 )
             }
 
             MainActivity.LANGUAGE_ARABIC -> {
-                (mContext as MainActivity).setFontForComponent("TRANSLATION_LITERAL_FONT", (mContext as MainActivity).FONT_MAJALLA)
+                (mContext as MainActivity).setFontForComponent("TRANSLATION_LITERAL_FONT", MainActivity.FONT_MAJALLA)
                 fortyTwoSampleTranslation.text = mContext.getString(R.string.arabic_42)
             }
         }
     }
 
     private companion object {
-        private const val DIALPAD_FONT_ROBOTO_THIN = 0
-        private const val DIALPAD_FONT_ROBOTO_LIGHT = 1
-        private const val DIALPAD_FONT_ROBOTO_REGULAR = 2
-
-        private const val PERSIAN_TRANSLATION_FONT_MITRA = 5
         private const val PERSIAN_TRANSLATION_FONT_DASTNEVIS = 6
     }
 }
-
