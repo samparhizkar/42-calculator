@@ -43,4 +43,53 @@
 
     <color name="tutorial_background_opaque">#FFFFFFFF</color>
     <color name="tutorial_button">#FFFFFFFF</color>
+
+    <!-- ── VOID v2 design tokens — light mode (seeded from #1abc9c) ── -->
+    <!-- M3 role tokens -->
+    <color name="void_primary">#006a5e</color>
+    <color name="void_onPrimary">#ffffff</color>
+    <color name="void_primaryContainer">#9ef2e2</color>
+    <color name="void_onPrimaryContainer">#00201b</color>
+    <color name="void_secondary">#4a6360</color>
+    <color name="void_onSecondary">#ffffff</color>
+    <color name="void_secondaryContainer">#cce8e2</color>
+    <color name="void_onSecondaryContainer">#052020</color>
+    <color name="void_error">#ba1a1a</color>
+    <color name="void_onError">#ffffff</color>
+    <color name="void_errorContainer">#ffdad6</color>
+    <color name="void_onErrorContainer">#410002</color>
+    <color name="void_surface">#f5faf9</color>
+    <color name="void_onSurface">#171d1c</color>
+    <color name="void_surfaceVariant">#dae5e3</color>
+    <color name="void_onSurfaceVariant">#3f4948</color>
+    <color name="void_surfaceContainer">#e9efed</color>
+    <color name="void_surfaceContainerHigh">#e3e9e7</color>
+    <color name="void_surfaceContainerHighest">#dde3e1</color>
+    <color name="void_surfaceContainerLow">#eff5f3</color>
+    <color name="void_outline">#6f7978</color>
+    <color name="void_outlineVariant">#bec9c7</color>
+    <!-- True VOID background (overrides M3 surface in window — same in light as in dark intent) -->
+    <color name="void_background">#080808</color>
+    <!-- Brand extras (not part of M3 baseline roles) -->
+    <color name="void_brand">#1abc9c</color>
+    <color name="void_onBrand">#ffffff</color>
+    <color name="void_brandMuted">#1faF8E</color>
+    <!-- Key-specific VOID colours (alpha baked into opaque approximations for light mode) -->
+    <color name="void_keyDigitBg">#F5F5F5</color>
+    <color name="void_keyOpBg">#EBEBEB</color>
+    <color name="void_keyEqBg">#1abc9c</color>
+    <color name="void_keyActiveOpBg">#C8EDE8</color>
+    <color name="void_keyErrorBg">#FFE0DE</color>
+    <!-- Key border + text colours — light mode approximations -->
+    <color name="void_keyDigitBorder">#E0E0E0</color>
+    <color name="void_keyOpBorder">#D0D0D0</color>
+    <color name="void_keyActiveOpBorder">#88D5C6</color>
+    <color name="void_keyActiveOpText">#006a5e</color>
+    <color name="void_keyErrorBorder">#FFBBBB</color>
+    <color name="void_keyErrorText">#D32F2F</color>
+
+    <!-- Ripple colours (previously in values-v21) -->
+    <color name="ripple_item_normal_state">#80666666</color>
+    <color name="ripple_group_item_normal_state">#80006600</color>
+    <color name="ripple_group_item_expanded_state">#80006600</color>
 </resources>

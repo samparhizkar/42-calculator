@@ -1,0 +1,41 @@
+# Build output
+build/
+.gradle/
+app/build/
+out/
+gen/
+bin/
+
+# Binary/compiled files
+*.apk
+*.ap_
+*.dex
+*.class
+*.jar
+*.aar
+*.jks
+*.keystore
+
+# IDE metadata
+.idea/
+*.iml
+
+# Images and media (non-text assets)
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.webp
+**/*.ico
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Local config
+local.properties
+
+# Gradle wrapper binary
+gradle/wrapper/gradle-wrapper.jar

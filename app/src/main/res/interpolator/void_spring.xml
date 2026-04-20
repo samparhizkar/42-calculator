@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- cubic-bezier(0.1, 1.3, 0.6, 1.0) — overshoots ~6% then settles, matching the 220ms spring spec -->
+<pathInterpolator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:controlX1="0.1"
+    android:controlY1="1.3"
+    android:controlX2="0.6"
+    android:controlY2="1.0" />

@@ -19,9 +19,7 @@
     <dimen name="lbl_Stack_text_size">72.0sp</dimen>
     <dimen name="viewpager_margin_sideways">60dp</dimen>
     <dimen name="translation_text_size">50sp</dimen>
-    <dimen name="width_about">500.0dp</dimen>
     <dimen name="padding_text">16.0dp</dimen>
-    <dimen name="btn_height_about">70.0dp</dimen>
     <dimen name="margin_scroller_stack">13.0dp</dimen>
     <dimen name="viewpagerindicator_height">7dp</dimen>
 

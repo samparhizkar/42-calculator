@@ -143,7 +143,6 @@
   <string name="star_icon"></string>
   <string name="star_outline"></string>
   <string name="list"></string>
-  <string name="dollar_icon_string"></string>
 
   <!--COLOR Codes -->
 
@@ -182,7 +181,6 @@
   <string name="demo_parallax_plus">+</string>
   <string name="accent_button">accent_button</string>
 
-  <string name="title_activity_help">HelpActivity</string>
   <string name="dummy_button">Dummy Button</string>
   <string name="dummy_content">DUMMY\nCONTENT</string>
 
@@ -191,36 +189,8 @@
   <string name="title_section3">Section 3</string>
   <string name="skip">بی خیال</string>
   <string name="parallax_activity_name">parallax_activity</string>
-  <string name="premium_parallax_activity_name">premium_parallax</string>
 
   <string name="title_activity_color_picker">ColorPickerActivity</string>
-  <string name="content_authority_currency">com.sepidsa.fortytwocalculator.currency</string>
-  <string name="sync_account_type">fortytwocalculator.sepidsa.com</string>
-  <string name="farsi_dollar">دلار</string>
-  <string name="farsi_eur">یورو</string>
-  <string name="farsi_gbp">پوند</string>
-  <string name="farsi_try">لیر ترکیه</string>
-  <string name="farsi_aed">درهم امارات</string>
-  <string name="farsi_cad">دلار کانادا</string>
-  <string name="farsi_cny">یوان چین</string>
-  <string name="farsi_dkk">کرون دانمارک</string>
-  <string name="farsi_hkd">دلار هنگ کنگ</string>
-  <string name="farsi_myr">رینگیت مالری</string>
-  <string name="farsi_nok">کرون نروژ</string>
-  <string name="farsi_pkr">روپیه پاکستان</string>
-  <string name="farsi_rub">روبل روسیه</string>
-  <string name="farsi_sar">ریال عربستان</string>
-  <string name="loading_message">در حال بارگذاری اولیه...\n لطفا چند لحظه صبور باشید</string>
-  <string name="farsi_ons">انس طلا (به دلار)</string>
-  <string name="farsi_mesghal"> مثقال طلا</string>
-  <string name="farsi_geram18"> گرم طلای 18</string>
-  <string name="farsi_geram24"> گرم طلای 24</string>
-  <string name="farsi_silver">انس نقره (به دلار)</string>
-  <string name="farsi_sekeb">سکه بهار آزادی</string>
-  <string name="farsi_sekee">سکه امامی</string>
-  <string name="farsi_nim">سکه نیم بهار آزادی</string>
-  <string name="farsi_rob">سکه ربع بهار آزادی</string>
-  <string name="farsi_gerami">هر گرم سکه</string>
   <string name="arabic_42">اثنان وأربعون</string>
   <string name="english_42">forty two</string>
   <string name="french_42">quarante-deux</string>
@@ -237,16 +207,69 @@
   <string name="farsi_list_is_empty">لیست خالیست</string>
   <string name="farsi_clear_starred">ستاره دارها هم پاک شه</string>
   <string name="farsi_enter_constant">ثابت را وارد کنید</string>
-  <string name="farsi_choose_email_app">با چی بفرستم؟</string>
-  <string name="farsi_about_42_calc">راجع به ماشین حساب  ۴۲</string>
-  <string name="become_premium">طلایی شو</string>
-    <string name="about_string">سپیدسا</string>
-    <string name="premium_agree">عالیه</string>
-    <string name="app_tour_agree">عالیه</string>
-    <string name="premium_skip">بی خیال</string>
-  <string name="tenpowerx_tag">E</string>
-    <string name="title_activity_about">AboutActivity</string>
-    <string name="sepidsa_webpage">www.sepidsa.com</string>
 
+    <string name="app_tour_agree">عالیه</string>
+  <string name="tenpowerx_tag">E</string>
+
+  <!-- Theme Editor -->
+  <string name="theme_editor_title">Appearance</string>
+  <string name="theme_color">Theme color</string>
+  <string name="appearance">Appearance</string>
+  <string name="appearance_light">Light</string>
+  <string name="appearance_dark">Dark</string>
+  <string name="appearance_system">System</string>
+  <string name="dynamic_color">Dynamic color</string>
+  <string name="dynamic_color_subtitle">Match your wallpaper</string>
+  <string name="key_color">Key color</string>
+  <string name="key_color_subtitle">Override operator and digit key colors</string>
+  <string name="paid_feature_label">Premium</string>
+  <string name="reset_to_defaults">Reset to defaults</string>
+  <string name="apply_changes">Apply</string>
+  <string name="default_label">Default</string>
+
+  <!-- Settings Screen -->
+  <string name="settings_title">Settings</string>
+  <string name="settings_general">GENERAL</string>
+  <string name="settings_language">Language</string>
+  <string name="settings_number_style">Number style</string>
+  <string name="settings_calculator">CALCULATOR</string>
+  <string name="settings_default_angle_mode">Default angle mode</string>
+  <string name="settings_key_haptics">Key haptics</string>
+  <string name="settings_appearance">APPEARANCE</string>
+  <string name="settings_theme">Theme</string>
+  <string name="settings_history">HISTORY</string>
+  <string name="settings_auto_clear">Auto-clear</string>
+  <string name="settings_constants">CONSTANTS</string>
+  <string name="settings_manage_constants">Manage constants</string>
+  <string name="settings_about">ABOUT</string>
+  <string name="settings_version">Version</string>
+  <string name="settings_oss_licenses">Open source licenses</string>
+
+  <!-- Language picker -->
+  <string name="lang_persian">فارسی</string>
+  <string name="lang_persian_native">Persian</string>
+  <string name="lang_english">English</string>
+  <string name="lang_english_native">English</string>
+  <string name="lang_french">Français</string>
+  <string name="lang_french_native">French</string>
+  <string name="lang_arabic">العربية</string>
+  <string name="lang_arabic_native">Arabic</string>
+
+  <!-- Number style -->
+  <string name="number_style_western">1 2 3</string>
+  <string name="number_style_arabic_indic">١ ٢ ٣</string>
+  <string name="number_style_preview">1,234.56</string>
+
+  <!-- Angle mode -->
+  <string name="angle_mode_deg">DEG</string>
+  <string name="angle_mode_deg_desc">Degrees — standard for everyday calculations</string>
+  <string name="angle_mode_rad">RAD</string>
+  <string name="angle_mode_rad_desc">Radians — used in advanced mathematics</string>
+
+  <!-- Auto-clear -->
+  <string name="auto_clear_never">Never</string>
+  <string name="auto_clear_30_days">After 30 days</string>
+  <string name="auto_clear_90_days">After 90 days</string>
+  <string name="auto_clear_1_year">After 1 year</string>
 
 </resources>
