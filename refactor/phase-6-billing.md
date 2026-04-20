@@ -88,7 +88,7 @@ I'm modernizing an Android calculator app (42-calculator). Completed so far:
   Phase 3 — Architecture (MVVM) ✅
   Phase 4 — Data layer (Room + WorkManager) ✅
   Phase 5 — Compose UI + Material 3 ✅
-  Phase 6 — Billing removal / free app ✅  (update when done)
+  Phase 6 — Billing removal / free app ✅ 
 
 Phase 7 is the final cleanup pass. See refactor/phase-7-cleanup.md for full instructions.
 ```

@@ -1,11 +1,9 @@
 package com.sepidsa.fortytwocalculator
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.RectF
 import android.graphics.Typeface
-import android.os.Build
 import android.text.Layout.Alignment
 import android.text.StaticLayout
 import android.text.TextPaint
@@ -67,7 +65,6 @@ class AutoResizeTextView @JvmOverloads constructor(
         _sizeTester = object : SizeTester {
             private val textRect = RectF()
 
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             override fun onTestSize(suggestedSize: Int, availableSpace: RectF): Int {
                 paint?.textSize = suggestedSize.toFloat()
                 val text = this@AutoResizeTextView.text.toString()

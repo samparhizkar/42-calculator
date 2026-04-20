@@ -57,8 +57,7 @@ class ColorPickerSwatch(
     }
 
     protected fun setColor(color: Int) {
-        @Suppress("DEPRECATION")
-        val colorDrawable = arrayOf<Drawable>(context.resources.getDrawable(R.drawable.color_picker_swatch))
+        val colorDrawable = arrayOf<Drawable>(context.resources.getDrawable(R.drawable.color_picker_swatch, null))
         mSwatchImage.setImageDrawable(ColorStateDrawable(colorDrawable, color))
     }
 

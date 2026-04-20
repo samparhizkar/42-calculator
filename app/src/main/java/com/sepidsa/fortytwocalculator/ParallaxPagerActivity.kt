@@ -53,8 +53,7 @@ class ParallaxPagerActivity : FragmentActivity() {
         pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
         pager.adapter = pagerAdapter
         pager.setPageTransformer(true, CrossfadePageTransformer())
-        @Suppress("DEPRECATION")
-        pager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 // See note above for why this is needed
                 if (position == NUM_PAGES - 2 && positionOffset > 0) {
@@ -64,8 +63,7 @@ class ParallaxPagerActivity : FragmentActivity() {
                     }
                 } else {
                     if (!isOpaque) {
-                        @Suppress("DEPRECATION")
-                        pager.setBackgroundColor(resources.getColor(R.color.tutorial_background_opaque))
+                        pager.setBackgroundColor(context.getColor(R.color.tutorial_background_opaque))
                         isOpaque = true
                     }
                 }

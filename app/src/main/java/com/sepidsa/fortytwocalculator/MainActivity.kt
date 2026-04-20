@@ -10,7 +10,6 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.SoundPool
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.InputType
@@ -406,17 +405,13 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun prepareSoundStuff() {
-        mSoundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val attributes = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()
-            SoundPool.Builder()
-                .setAudioAttributes(attributes)
-                .build()
-        } else {
-            SoundPool(10, AudioManager.STREAM_MUSIC, 0)
-        }
+        val attributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+        mSoundPool = SoundPool.Builder()
+            .setAudioAttributes(attributes)
+            .build()
         mSoundPool.setOnLoadCompleteListener { _, _, _ -> mSoundPoolLoaded = true }
         numericButtonSoundID = mSoundPool.load(applicationContext, R.raw.keypress, 1)
         executeButtonSoundID = mSoundPool.load(applicationContext, R.raw.equal, 1)

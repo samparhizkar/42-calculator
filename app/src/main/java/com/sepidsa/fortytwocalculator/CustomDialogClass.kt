@@ -7,11 +7,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.view.View
 import android.view.Window
 import android.widget.Button
@@ -92,9 +90,6 @@ class CustomDialogClass(context: Context, theme: Int) : Dialog(context, theme), 
     // Send an Intent with an action named "my-event".
     private fun sendChangeDialpadTypefaceMessage(font: Int) {
         (mContext as MainActivity).setFontForComponent("DIALPAD_FONT", font)
-        val intent = Intent("themeIntent")
-        intent.putExtra("message", "changeDialpadFont")
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent)
     }
 
     override fun onClick(v: View) {

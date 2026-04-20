@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.sepidsa.fortytwocalculator"
-        minSdk = 23
+        minSdk = 33
         targetSdk = 36
         versionCode = 23
         versionName = "2.11"
@@ -50,7 +50,6 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.loader)
-    implementation(libs.androidx.localbroadcastmanager)
     implementation(libs.androidx.viewpager)
     implementation(libs.androidx.drawerlayout)
     implementation(libs.material)

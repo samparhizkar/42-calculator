@@ -41,53 +41,6 @@
 
     </style>
 
-    <style name="CustomButton.RETRO" parent="CustomButton">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="CustomButton.RETRO.grey" parent="CustomButton.RETRO">
-        <item name="android:background">@drawable/selector_for_btn_grey</item>
-    </style>
-
-
- <style name="CustomButton.RETRO.clear" parent="CustomButton.RETRO">
-        <item name="android:background">@drawable/selector_for_btn_c</item>
-        <item name="android:textSize">@dimen/btn_clear_text_size</item>
-    </style>
-    <style name="CustomButton.RETRO.clear.land" parent="CustomButton.RETRO.clear">
-        <item name="android:background">@drawable/selector_for_btn_c</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-
- <style name="CustomButton.RETRO.black" parent="CustomButton.RETRO">
-        <item name="android:background">@drawable/selector_for_btn_black</item>
-    </style>
-
-
-
-    <style name="CustomButton.RETRO.grey.scientific" parent="CustomButton.RETRO.grey">
-        <item name="android:textSize">@dimen/btn_scientific_text_size</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
-
-    </style> <style name="CustomButton.RETRO.black.scientific" parent="CustomButton.RETRO.black">
-    <item name="android:textSize">@dimen/btn_scientific_text_size</item>
-    <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
- <style name="CustomButton.RETRO.equally" parent="CustomButton.RETRO">
-        <item name="android:background">@drawable/selector_for_btn_equally</item>
-    </style>
-
-
-    <style name="CustomButton.RETRO.equally.land" parent="CustomButton.RETRO.equally">
-        <item name="android:background">@drawable/selector_for_btn_equally</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
 
     <style name="CustomButton.SCIENTIFIC" parent="CustomButton">
 
@@ -269,6 +222,7 @@
     </style>
 
     <style name="commonListItemStyle">
+        <item name="android:translationZ">@dimen/list_item_translation_z</item>
     </style>
 
     <style name="sectionHeaderItemStyle">
@@ -295,23 +249,6 @@
 
     <!-- Backward-compatible version of ?android:attr/buttonBarButtonStyle -->
     <style name="ButtonBarButton" />
-
-    <style name="Theme.Transparent" parent="android:Theme">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowAnimationStyle">@style/Animations.SplashScreen</item>
-    </style>
-
-    <style name="Animations" />
-    <style name="Animations.SplashScreen" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/appear</item>
-        <item name="android:windowExitAnimation">@anim/disappear</item>
-        <item name="android:activityOpenEnterAnimation">@anim/appear</item>
-    </style>
 
     <!-- ═══════════════════════════════════════════════════════════════
          VOID v2 — Keypad button styles (Phase 1)
