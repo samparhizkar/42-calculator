@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.sepidsa.fortytwocalculator.Expression
+import com.sepidsa.fortytwocalculator.ExpressionEvaluator
 import com.sepidsa.fortytwocalculator.NumberConverterArabic
 import com.sepidsa.fortytwocalculator.NumberConverterFrench
 import com.sepidsa.fortytwocalculator.NumberConverterFrenchPartII
@@ -24,15 +24,16 @@ import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
 import java.util.Stack
+import kotlin.math.abs
 
 data class CalculatorUiState(
     val expression: String = "",
     val result: String = "0",
-    val rawResult: BigDecimal = BigDecimal.ZERO,
+    val rawResult: Double = 0.0,
     val decimalFraction: String = "",
     val translatedResult: String = "",
     val isError: Boolean = false,
-    val memory: BigDecimal = BigDecimal.ZERO,
+    val memory: Double = 0.0,
     val angleMode: Boolean = true,
     val clearMode: ClearButtonMode = ClearButtonMode.Clear,
     val inverseMode: Boolean = false,
@@ -128,7 +129,7 @@ class CalculatorViewModel(
         _uiState.value = _uiState.value.copy(
             expression = "",
             result = "0",
-            rawResult = BigDecimal.ZERO,
+            rawResult = 0.0,
             decimalFraction = "",
             translatedResult = "",
             isError = false,
@@ -142,22 +143,22 @@ class CalculatorViewModel(
     }
 
     private fun performMc() {
-        _uiState.value = _uiState.value.copy(memory = BigDecimal.ZERO)
+        _uiState.value = _uiState.value.copy(memory = 0.0)
         viewModelScope.launch {
             _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Clear))
         }
     }
 
     private fun performMr() {
-        addNumberToCalculation(_uiState.value.memory.toPlainString())
+        addNumberToCalculation(_uiState.value.memory.toString())
         viewModelScope.launch {
             _uiEvents.emit(CalculatorUiEvent.PlaySound(SoundType.Clear))
         }
     }
 
     private fun performMPlus() {
-        val currentResult = currentResultDecimal()
-        val newMemory = _uiState.value.memory.add(currentResult)
+        val currentResult = currentResultDouble()
+        val newMemory = _uiState.value.memory + currentResult
         buttonsStack.clear()
         buttonsStack.push(_uiState.value.result.replace(",", ""))
         justPressedExecuteButton = true
@@ -173,8 +174,8 @@ class CalculatorViewModel(
     }
 
     private fun performMMinus() {
-        val currentResult = currentResultDecimal()
-        val newMemory = _uiState.value.memory.subtract(currentResult)
+        val currentResult = currentResultDouble()
+        val newMemory = _uiState.value.memory - currentResult
         buttonsStack.clear()
         buttonsStack.push(_uiState.value.result.replace(",", ""))
         justPressedExecuteButton = true
@@ -204,7 +205,7 @@ class CalculatorViewModel(
             _uiState.value = _uiState.value.copy(
                 expression = "",
                 result = "0",
-                rawResult = BigDecimal.ZERO,
+                rawResult = 0.0,
                 decimalFraction = "",
                 translatedResult = "",
                 isError = false,
@@ -341,10 +342,11 @@ class CalculatorViewModel(
 
     fun addNumberToCalculation(inputString: String) {
         val currentExpression = expressionBuffer.toString()
+        val evaluator = ExpressionEvaluator(_uiState.value.angleMode)
         if (currentExpression.isNotEmpty() && isOperator(currentExpression.last().toString())) {
             expressionBuffer.append(inputString)
-            val raw = Expression(expressionBuffer.toString(), _uiState.value.angleMode, appContext).evaluate() ?: BigDecimal.ZERO
-            val result = formatNumber(raw)
+            val raw = evaluator.evaluateRaw(expressionBuffer.toString())
+            val result = evaluator.formatResult(raw)
             buttonsStack.addAll(inputString.map(Char::toString))
             _uiState.value = _uiState.value.copy(
                 expression = formatExpression(expressionBuffer.toString()),
@@ -355,8 +357,8 @@ class CalculatorViewModel(
                 clearMode = resolveClearMode(),
             )
         } else {
-            val raw = BigDecimal(inputString.replace(",", ""))
-            val formattedResult = formatNumber(raw)
+            val raw = inputString.replace(",", "").toDoubleOrNull() ?: 0.0
+            val formattedResult = evaluator.formatResult(raw)
             buttonsStack.clear()
             buttonsStack.addAll(formattedResult.replace(",", "").map(Char::toString))
             justPressedExecuteButton = true
@@ -394,8 +396,16 @@ class CalculatorViewModel(
         }
 
         return try {
-            val raw = Expression(candidate.replace(",", ""), _uiState.value.angleMode, appContext).evaluate() ?: BigDecimal.ZERO
-            val result = formatNumber(raw)
+            val evaluator = ExpressionEvaluator(_uiState.value.angleMode)
+            val raw = evaluator.evaluateRaw(candidate.replace(",", ""))
+            if (raw.isNaN() || raw.isInfinite()) {
+                if (input != null && !input.first().isDigit() && input != ".") {
+                     // Could be mid-expression operator, let it be fatal to append
+                     throw Exception("Incomplete expression")
+                }
+            }
+
+            val result = evaluator.formatResult(raw)
             expressionBuffer.clear()
             expressionBuffer.append(candidate)
             if (input != null) {
@@ -430,7 +440,7 @@ class CalculatorViewModel(
         _uiState.value = _uiState.value.copy(
             expression = formatExpression(expressionBuffer.toString()),
             result = result,
-            rawResult = BigDecimal.ZERO,
+            rawResult = 0.0,
             decimalFraction = "",
             isError = true,
             clearMode = resolveClearMode(),
@@ -451,23 +461,8 @@ class CalculatorViewModel(
         )
     }
 
-    private fun currentResultDecimal(): BigDecimal {
-        return _uiState.value.result.replace(",", "").toBigDecimalOrNull() ?: BigDecimal.ZERO
-    }
-
-    private fun evaluateResult(expression: Expression): String {
-        val result = expression.evaluate() ?: return "0"
-        return formatNumber(result)
-    }
-
-    private fun formatNumber(value: BigDecimal): String {
-        val decimalFormat = DecimalFormat().apply {
-            isGroupingUsed = true
-            groupingSize = 3
-            maximumFractionDigits = 6
-            decimalFormatSymbols = DecimalFormatSymbols(Locale.US)
-        }
-        return decimalFormat.format(value).replace("^-(?=0(.0*)?$)".toRegex(), "")
+    private fun currentResultDouble(): Double {
+        return _uiState.value.result.replace(",", "").toDoubleOrNull() ?: 0.0
     }
 
     private fun formatExpression(value: String): String {
@@ -501,8 +496,8 @@ class CalculatorViewModel(
     private fun updateTranslation() {
         val state = _uiState.value
         if (state.isCalculationPerformed) {
-            val integerFraction = state.rawResult.setScale(0, BigDecimal.ROUND_DOWN).abs().toPlainString()
-            val resultIsNegative = state.rawResult.compareTo(BigDecimal("-0.0000009")) < 0
+            val integerFraction = abs(state.rawResult).toLong().toString()
+            val resultIsNegative = state.rawResult < -0.0000009
             val decimalFraction = state.decimalFraction
 
             val translation = when (state.language) {
@@ -521,14 +516,14 @@ class CalculatorViewModel(
                     text
                 }
                 LANGUAGE_ARABIC -> {
-                    val arabic = NumberConverterArabic(state.rawResult.abs())
+                    val arabic = NumberConverterArabic(BigDecimal.valueOf(abs(state.rawResult)))
                     (if (resultIsNegative) "ناقص " else "") + arabic.convertToArabic()
                 }
                 LANGUAGE_PERSIAN -> {
                     var text = NumberConveterPersianPartI().convert(integerFraction)
                     if (decimalFraction.isNotEmpty()) {
                         val partII = NumberConverterPersianPartII.convert(decimalFraction)
-                        text += if (state.rawResult.abs().compareTo(BigDecimal.ONE) >= 0) " ممیز $partII" else partII
+                        text += if (abs(state.rawResult) >= 1.0) " ممیز $partII" else partII
                     }
                     (if (resultIsNegative) "منفی " else "") + text
                 }

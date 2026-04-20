@@ -12,6 +12,7 @@ material = "1.12.0"
 lifecycle = "2.8.7"
 room = "2.8.4"
 workmanager = "2.9.1"
+mxparser = "6.0.0"
 ksp = "2.2.10-2.0.2"
 composeBom = "2025.11.01"
 activityCompose = "1.13.0"
@@ -42,6 +43,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-compose-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-compose-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+mxparser = { group = "org.mariuszgromada.math", name = "mxparser", version.ref = "mxparser" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
