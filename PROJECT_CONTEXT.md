@@ -99,13 +99,9 @@ Replace `FavoritesFragment` + `AnimatedLogFragment` with one unified `HistoryFra
 3. History cap (N rows) or unbounded?
 4. Room migration now or defer?
 
-### Phase 3 — Scientific Panel (`PHASE_3_SCIENTIFIC_PANEL.md`)
-Replace hidden swipe-to-scientific with explicit `BottomSheetBehavior` triggered by swipe-up on keypad + visible chevron. `MaterialButtonToggleGroup` for INV/ARC/DEG/RAD. Label swapping when INV/ARC active. Visual grouping (divider between logs and trig). CONST chip navigates to constants screen.
+### Phase 3 — Scientific Panel (`PHASE_3_SCIENTIFIC_PANEL.md`) ✅ COMPLETE
 
-**Open questions:**
-1. Keep ViewPager swipe as second path, or remove?
-2. INV/ARC computations already correct in code?
-3. Factorial button — restore from commented-out code?
+`ModalBottomSheet` via "SCI ▲" pill (pager reduced to 2 pages). VOID ghost-key styling. Segmented `INV | ARC | DEG⇄RAD` row. Fixed INV semantics (powers/logs only). mXparser-compatible token emission. Dividers between groups. CONST chip stub. Deleted 7 dead-code files. Pre-existing build errors fixed. Branch: `claude/eloquent-pascal-38bbdc`, commit `6b420f0`.
 
 ### Phase 4 — Theme Editor (`PHASE_4_THEME_EDITOR.md`)
 Replace 2-colour raw picker with seed-based theming. Mini calc live-preview card. 6 seed presets + custom. Light/Dark/System segmented. Dynamic color switch. Paid "Key colour" advanced section. Migrate legacy SharedPrefs colours to nearest preset.

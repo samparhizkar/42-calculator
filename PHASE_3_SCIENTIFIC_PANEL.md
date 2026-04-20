@@ -1,6 +1,46 @@
-# Phase 3 — Scientific Panel Rework
+# Phase 3 — Scientific Panel Rework ✅ COMPLETE
 
 > **Design: VOID v2 (locked April 2026).** Android implementation. Full spec in **`DESIGN_SPEC.md`**. Values for this screen: panel background `#0e0e0e`, top corner radius 20dp, `BottomSheetBehavior` at 72% height; fn keys use `operator` ghost panel style; INV/ARC/DEG/RAD as `MaterialButtonToggleGroup`; divider between logs and trig rows; CONST chip with teal border + DM Mono label. See `DESIGN_SPEC.md §Scientific panel`.
+
+---
+
+## Delivered (branch `claude/eloquent-pascal-38bbdc`, commit `6b420f0`)
+
+### What was built
+
+| Item | Status | Notes |
+|------|--------|-------|
+| `ModalBottomSheet` scientific panel | ✅ | Triggered by "SCI ▲" pill above keypad; auto-dismisses on key press |
+| VOID ghost-key styling on fn keys | ✅ | `VoidKeyOpBg`/`VoidKeyOpBorder`, DM Mono, press-scale animation (0.88f spring, same as Phase 1) |
+| Segmented mode row `INV \| ARC \| DEG⇄RAD` | ✅ | Border+clip approach, vertical dividers, `VoidKeyActiveOpBg` fill when active |
+| Fixed INV semantics | ✅ | INV swaps √↔x² and ln↔eˣ only — does NOT affect trig labels (was computing cosecant before) |
+| ARC mode label swap | ✅ | Prepends "a" prefix to all trig and hyperbolic functions |
+| mXparser-compatible token emission | ✅ | `sqrt(`, `^2`, `^3`, `exp(`, `log10(`, `asin(`, `asinh(` etc. |
+| Dividers between groups | ✅ | 1dp `Color.White 7%` between powers/logs and trig/hyperbolics |
+| CONST chip | ✅ | Teal `VoidBrand` border, pill shape, DM Mono label — callback is a stub pending Phase 5 constants UI |
+| Pager reduced 3→2 pages | ✅ | History \| Calculator only; `PageIndicator` auto-updates |
+| "SCI ▲" pill button | ✅ | Above keypad, `Color.White 5%/10%` bg/border, opens ModalBottomSheet |
+| mXparser artifact fix in `libs.versions.toml` | ✅ | Artifact ID corrected to `MathParser.org-mXparser` |
+
+### Key decisions made
+
+- **Discoverability → Option A (ModalBottomSheet).** Sheet opens via "SCI ▲" pill; scientific screen removed from pager entirely.
+- **ViewPager swipe to scientific → removed.** Pager is now 2 pages (History | Calculator). Single source of truth.
+- **INV scope → powers/logs only.** INV does NOT change trig labels. `log` stays as `log10(` in both modes (`10^x` requires binary syntax, deferred).
+- **Factorial → already present.** Phase 3 doc was written against old XML where `!` was commented out; the Compose rewrite already had it.
+- **Constants picker → CONST chip is a stub.** The old `ConstantUseFragment`/`ConstantSelectFragment` relied on XML layouts that were already deleted. These fragments are deleted as dead code. Constants feature will be reimplemented in a later phase when the Compose constants dialog is built.
+
+### Pre-existing build errors fixed (not Phase 3 scope, but unblocked the build)
+
+- `NumberToWordsConverter.kt` — `android.icu.text.RuleBasedNumberFormat` unresolvable at compile time with AGP 9.1.1 + Kotlin 2.2.10; replaced with reflection-based access (same runtime behaviour on API 33+, compiles cleanly).
+- `ParallaxPagerActivity.kt:66` — spurious `context.` prefix on `getColor()` inside a `FragmentActivity`.
+- `CalculatorFragment.kt` — removed call to `MainActivity.setAngleMode()` which no longer exists.
+
+### Deleted dead code
+
+`CustomDialogClass.kt`, `ExpandAnimation.kt`, `ScientificFragment.kt`, `ConstantUseFragment.kt`, `ConstantUseAdapter.kt`, `ConstantSelectFragment.kt`, `ConstantSelectAdapter.kt` — all referenced removed APIs or missing XML layouts.
+
+---
 
 Scope: modernize the scientific keypad ([fragment_scientific_flat.xml](app/src/main/res/layout/fragment_scientific_flat.xml)) and fix the discoverability problem — today it's reachable only via an undiscoverable swipe + 3dp page dots. Also rationalize the INV/ARC toggle visual feedback and the "Constant" feature entry point.
 
