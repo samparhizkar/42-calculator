@@ -137,40 +137,6 @@
 
     </ScrollView>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="15"
-        android:background="@android:color/white"
-        android:focusable="false"
-        android:orientation="horizontal"
-        >
-
-
-        <TextView
-            android:id="@+id/textview_use_classic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="تم کلاسیک"
-            android:textSize="25sp"
-            android:textColor="@android:color/darker_gray"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            />
-
-        <Switch
-            android:id="@+id/switch_classic_theme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="30dp"
-/>
-    </RelativeLayout>
-
-
 </LinearLayout>
 
 

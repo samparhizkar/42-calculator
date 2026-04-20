@@ -28,9 +28,7 @@ class SettingsRepository(private val context: Context) {
         get() = themePrefs.getInt("KEYPAD_BACKGROUND_COLOR_CODE", android.graphics.Color.WHITE)
         set(value) = themePrefs.edit().putInt("KEYPAD_BACKGROUND_COLOR_CODE", value).apply()
 
-    var isClassicTheme: Boolean
-        get() = themePrefs.getBoolean("CLASSIC_THEME", false)
-        set(value) = themePrefs.edit().putBoolean("CLASSIC_THEME", value).apply()
+
 
     var hasPopulatedConstantDatabase: Boolean
         get() = appPrefs.getBoolean("hasPopulatedConstantDatabase", false)

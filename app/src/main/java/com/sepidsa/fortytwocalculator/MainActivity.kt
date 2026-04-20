@@ -139,11 +139,9 @@ class MainActivity : FragmentActivity() {
                         ColorPickerDialog(
                             initialAccentColor = settingsRepository.accentColor,
                             initialKeypadColor = settingsRepository.keypadBackgroundColor,
-                            isClassicTheme = settingsRepository.isClassicTheme,
-                            onAcceptColors = { accentColor, keypadColor, useClassicTheme ->
+                            onAcceptColors = { accentColor, keypadColor ->
                                 settingsRepository.accentColor = accentColor
                                 settingsRepository.keypadBackgroundColor = keypadColor
-                                settingsRepository.isClassicTheme = useClassicTheme
                                 // Recreate activity to apply new theme colors
                                 recreate()
                             },

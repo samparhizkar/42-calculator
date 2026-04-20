@@ -29,13 +29,11 @@ import androidx.compose.ui.window.DialogProperties
 fun ColorPickerDialog(
     initialAccentColor: Int,
     initialKeypadColor: Int,
-    isClassicTheme: Boolean,
-    onAcceptColors: (accentColor: Int, keypadColor: Int, useClassicTheme: Boolean) -> Unit,
+    onAcceptColors: (accentColor: Int, keypadColor: Int) -> Unit,
     onDismiss: () -> Unit
 ) {
     var selectedAccentColor by remember { mutableStateOf(initialAccentColor) }
     var selectedKeypadColor by remember { mutableStateOf(initialKeypadColor) }
-    var useClassicTheme by remember { mutableStateOf(isClassicTheme) }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -64,16 +62,29 @@ fun ColorPickerDialog(
                     modifier = Modifier.weight(1f)
                 )
 
-                // Bottom bar with Classic Theme toggle
-                ClassicThemeBar(
-                    useClassicTheme = useClassicTheme,
-                    onClassicThemeToggle = { useClassicTheme = it },
-                    onApply = {
-                        onAcceptColors(selectedAccentColor, selectedKeypadColor, useClassicTheme)
-                        onDismiss()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                // Bottom bar
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 4.dp
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        // Apply button
+                        Button(
+                            onClick = {
+                                onAcceptColors(selectedAccentColor, selectedKeypadColor)
+                                onDismiss()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("اعمال تغییرات") // Apply Changes (Persian)
+                        }
+                    }
+                }
             }
         }
     }
@@ -228,53 +239,7 @@ private fun ColorSwatch(
     }
 }
 
-@Composable
-private fun ClassicThemeBar(
-    useClassicTheme: Boolean,
-    onClassicThemeToggle: (Boolean) -> Unit,
-    onApply: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 4.dp
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            // Classic theme toggle row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "تم کلاسیک", // Classic Theme (Persian)
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Switch(
-                    checked = useClassicTheme,
-                    onCheckedChange = onClassicThemeToggle
-                )
-            }
 
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Apply button
-            Button(
-                onClick = onApply,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("اعمال تغییرات") // Apply Changes (Persian)
-            }
-        }
-    }
-}
 
 /**
  * Get the appropriate font color for the keypad based on background color
