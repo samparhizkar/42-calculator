@@ -127,7 +127,6 @@ class MainActivity : FragmentActivity() {
                         onSettingsLanguageChanged = { langCode ->
                             calculatorViewModel.setLanguage(langCode)
                         },
-                        onMuteClick = { reverseVolume() },
                         onColorsClick = { showColorPicker = true },
                         onAddStarClick = {
                             lifecycleScope.launch {
@@ -136,8 +135,7 @@ class MainActivity : FragmentActivity() {
                         },
                         onAddLabelClick = {
                             showAddLabelDialog()
-                        },
-                        isMuted = !settingsRepository.hasVolume
+                        }
                     )
 
                     if (showColorPicker) {
@@ -262,12 +260,6 @@ class MainActivity : FragmentActivity() {
         const val TAG: String = "mainactivity"
     }
 
-    private fun reverseVolume(): Boolean {
-        val newVolumeState = !settingsRepository.hasVolume
-        settingsRepository.hasVolume = newVolumeState
-        return newVolumeState
-    }
-
     private fun populateConstantDatabaseFirstRun() {
         if (!settingsRepository.hasPopulatedConstantDatabase) {
             val names = resources.getStringArray(R.array.constant_default_names)
@@ -290,8 +282,14 @@ class MainActivity : FragmentActivity() {
 
     fun playSound(id: Int) {
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val ringerMode = audioManager.ringerMode
+        
+        if (ringerMode != AudioManager.RINGER_MODE_NORMAL) {
+            return
+        }
+
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
-        val volume = if (settingsRepository.hasVolume) maxVolume else 0f
+        val volume = maxVolume // Full volume if not muted by system
 
         if (mSoundPoolLoaded) {
             mSoundPool.play(id, volume, volume, 1, 0, 0.99f)

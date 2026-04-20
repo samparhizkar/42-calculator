@@ -32,10 +32,6 @@ class SettingsRepository(private val context: Context) {
         get() = themePrefs.getBoolean("CLASSIC_THEME", false)
         set(value) = themePrefs.edit().putBoolean("CLASSIC_THEME", value).apply()
 
-    var hasVolume: Boolean
-        get() = volumePrefs.getBoolean("hasVolume", true)
-        set(value) = volumePrefs.edit().putBoolean("hasVolume", value).apply()
-
     var dialpadFont: Int
         get() = typographyPrefs.getInt("DIALPAD_FONT", 0)
         set(value) = typographyPrefs.edit().putInt("DIALPAD_FONT", value).apply()

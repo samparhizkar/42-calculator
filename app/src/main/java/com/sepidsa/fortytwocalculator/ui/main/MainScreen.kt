@@ -61,11 +61,9 @@ fun MainScreen(
     onSettingsClick: () -> Unit,
     onSettingsFontChanged: (Int) -> Unit,
     onSettingsLanguageChanged: (Int) -> Unit,
-    onMuteClick: () -> Unit,
     onColorsClick: () -> Unit,
     onAddStarClick: () -> Unit,
     onAddLabelClick: () -> Unit,
-    isMuted: Boolean
 ) {
     val pagerState = rememberPagerState(initialPage = 1, pageCount = { 2 })
     var showSettings by remember { mutableStateOf(false) }
@@ -139,10 +137,8 @@ fun MainScreen(
 
                 BottomActionBar(
                     onSettingsClick = { showSettings = true },
-                    onMuteClick = onMuteClick,
                     onColorsClick = onColorsClick,
                     onMenuClick = { scope.launch { drawerState.open() } },
-                    isMuted = isMuted
                 )
             }
         }
@@ -348,10 +344,8 @@ fun PageIndicator(pagerState: androidx.compose.foundation.pager.PagerState, modi
 @Composable
 fun BottomActionBar(
     onSettingsClick: () -> Unit,
-    onMuteClick: () -> Unit,
     onColorsClick: () -> Unit,
     onMenuClick: () -> Unit,
-    isMuted: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -363,13 +357,6 @@ fun BottomActionBar(
             Icon(
                 Icons.Default.Settings,
                 contentDescription = "Settings",
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
-            )
-        }
-        IconButton(onClick = onMuteClick) {
-            Icon(
-                if (isMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
-                contentDescription = "Mute",
                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
             )
         }
