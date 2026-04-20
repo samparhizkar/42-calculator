@@ -140,18 +140,12 @@ private fun KeypadColorSection(
             .background(Color(selectedColor))
             .padding(16.dp)
     ) {
-        // Header with gold star for premium feature
+        // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Top
         ) {
-            Text(
-                text = "*",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFFFFC107), // Gold color
-                modifier = Modifier.padding(end = 4.dp)
-            )
             Text(
                 text = "صفحه کلید", // Keypad (Persian)
                 style = MaterialTheme.typography.headlineSmall,
@@ -257,32 +251,17 @@ private fun ClassicThemeBar(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "*",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color(0xFFFFC107), // Gold color
-                        modifier = Modifier.padding(end = 4.dp)
-                    )
-                    Text(
-                        text = "تم کلاسیک", // Classic Theme (Persian)
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                Text(
+                    text = "تم کلاسیک", // Classic Theme (Persian)
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 Switch(
                     checked = useClassicTheme,
                     onCheckedChange = onClassicThemeToggle
                 )
             }
 
-            // Gold version tip
-            Text(
-                text = "موارد ستاره دار فقط در نسخه طلایی", // Starred items are gold version only (Persian)
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 4.dp)
-            )
 
             Spacer(modifier = Modifier.height(16.dp))
 

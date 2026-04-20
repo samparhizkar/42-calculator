@@ -112,20 +112,6 @@
                     android:layout_marginBottom="20dp"
                     android:textStyle="bold"
                     />
-                <TextView
-                    android:id="@+id/gold_version_star_keypad"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:text="*"
-                    android:textSize="20sp"
-                    android:textColor="#FFC107"
-                    android:textStyle="bold"
-                    android:gravity="top"
-                    android:layout_marginRight="5dp"
-                    android:layout_alignTop="@+id/textView_keypad"
-                    android:layout_toLeftOf="@+id/textView_keypad"
-                    android:layout_toStartOf="@+id/textView_keypad" />
 
                 <com.sepidsa.fortytwocalculator.ColorPickerPalette
                     android:id="@+id/color_picker_keypad"
@@ -174,39 +160,11 @@
             android:layout_marginRight="20dp"
             />
 
-        <TextView
-            android:id="@+id/textview_go_gold_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textview_use_classic"
-            android:background="@android:color/transparent"
-            android:text="موارد ستاره دار فقط در نسخه طلایی"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            />
-
-        <TextView
-            android:id="@+id/gold_version_star_classic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/textview_use_classic"
-            android:background="@android:color/transparent"
-            android:text="*"
-            android:textSize="20sp"
-            android:textColor="#FFC107"
-            android:textStyle="bold"
-            android:layout_alignTop="@+id/textview_use_classic"
-            android:layout_marginRight="6dp"
-            android:gravity="top"
-            />
         <Switch
             android:id="@+id/switch_classic_theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/textview_go_gold_tip"
+            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="30dp"
 />

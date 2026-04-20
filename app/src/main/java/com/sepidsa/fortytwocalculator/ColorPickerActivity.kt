@@ -68,8 +68,6 @@ class ColorPickerActivity : FragmentActivity(), ColorPickerSwatch.OnColorSelecte
         fontChaange.typeface = mYekanFont
         fontChaange = findViewById(R.id.textview_use_classic)
         fontChaange.typeface = mYekanFont
-        fontChaange = findViewById(R.id.textview_go_gold_tip)
-        fontChaange.typeface = mYekanFont
         fontChaange = findViewById(R.id.textView_keypad)
         fontChaange.typeface = mYekanFont
         fontChaange.setTextColor(dialpadFontColor)
