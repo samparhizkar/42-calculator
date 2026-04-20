@@ -2,6 +2,28 @@
 
 > **Design: VOID v2 (locked April 2026).** Android implementation. Full spec in **`DESIGN_SPEC.md`**. Values for this screen: background `#080808`; result text Inter 300 34px `primary` colour; expression DM Mono 13px `onSurfaceVariant`; filter chips `brandMuted` bg + `brand` text when active; section headers Inter 700 11px uppercase `rgba(255,255,255,0.25)`; label chip `brandMuted` bg + `brand` text. See `DESIGN_SPEC.md §History screen`.
 
+## ✅ Status: Complete — commit `fe4e13a` (branch `claude/eloquent-pascal-38bbdc`, April 2026)
+
+### What was delivered
+- **`HistoryScreen.kt`** fully rewritten in VOID style — filter chips (All/★ Starred/🏷 Labeled), `SwipeToDismissBox` swipe-to-delete with undo `Snackbar`, `LazyColumn` with date section headers (Today / Yesterday / Apr 19…), label chip always visible per row regardless of star state, per-row expanded action row (Delete / Label / Share / Use), empty states per filter.
+- **`HistoryViewModel.kt`** — `HistoryFilter` enum, reactive filtered+grouped state via `Flow.combine`, `deleteWithUndo` + `restoreLogEntry` for undo path.
+- **`LogEntity.kt`** — `createdAt: Long` and `words: String` columns added.
+- **`AppDatabase.kt`** — version 1→2, `MIGRATION_1_2` adds both columns to existing rows without data loss.
+- **`LogDao.kt`** — `getStarredLogs`, `getLabeledLogs`, `searchLogs` queries; all queries sorted by `created_at DESC`.
+- **`CalculatorViewModel.kt`** — `newLogEntry` now emits `Triple<expression, result, words>`.
+- **`MainActivity.kt`** — wires `onUseHistoryEntry`, `onHistoryFilterChange`, share intent; passes `words` to `addLogEntry`.
+- **`MainScreen.kt`** — `onUseEntry` auto-scrolls pager to calculator page after reuse; dead Favorites/Currency imports removed.
+- **5 legacy files deleted:** `FavoritesFragment.kt`, `FavoritesScreen.kt`, `FavoritesAdapter.kt`, `LogAdapter.kt` (root), `LogAdapter.kt` (ui/history). Net: −340 LOC.
+
+### Decisions made
+- Dead-label bug fixed: label chip renders on every labeled row regardless of star state, not just in the starred view.
+- Tap-to-reuse sends `log.result` (numeric) via `addNumberToCalculation` — consistent with Google Calculator behavior.
+- `words` column in DB is ready; spoken form will populate once CalculatorViewModel's `translatedResult` is confirmed stable (already wired in `newLogEntry` Triple).
+- History is embedded in the `HorizontalPager` at page 0 (no separate Activity). `HistoryFragment.kt` kept as thin wrapper but not used by `MainScreen`.
+- `FavoritesViewModel.kt` left in place (orphaned, no callers) — Phase 5 cleanup.
+
+---
+
 Scope: rethink the bookmark-centric "journal" as a unified **history tape** with starring and labeling as row-level actions. Fix the "label is dead until bookmarked" problem and make past calculations first-class.
 
 Depends on: Phase 1 (M3 theme + styles) — this phase reuses those role tokens for list surfaces.
