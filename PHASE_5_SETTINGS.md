@@ -1,5 +1,7 @@
 # Phase 5 — Settings, Drawer Retirement + Currency Removal
 
+## Status: ✅ Complete (core settings screen + sub-screens + preferences consolidation done; remaining: auto-clear enforcement worker, number-style wiring to number converters, constants management navigation, full RTL/localization testing)
+
 > **Design: VOID v2 (locked April 2026).** Android implementation. Full spec in **`DESIGN_SPEC.md`**. Values: background `#080808`; section headers Inter 700 11px uppercase `primary` colour 1.6 letter-spacing; rows Inter 400 16px / values 13px `onSurfaceVariant`; min-height 56dp; padding 16dp; dividers 1px `rgba(255,255,255,0.06)` indented 56dp. Language picker specs in `DESIGN_SPEC.md §Settings screen` onwards.
 
 Scope: replace the scattered quick-access icon row at the bottom AND the navigation drawer with a single proper settings screen. About screen, Help screen, Rate Us, Contact Us, Premium, and first-run onboarding tour are **removed entirely** as the app moves to a fully free, simplified model. Also folds in **currency feature removal** — pure deletion, no own phase needed.
@@ -171,90 +173,125 @@ The star ★ and pen ✏ buttons (bookmark + label) that live in the *header/dis
 
 ## Implementation plan
 
-### Step 1 — ConsolidatePreferences
-1. Create a single `AppPreferences` wrapper class with typed getters/setters for all keys.
-2. Consolidate all buckets (volumeState, THEME, angleMode, typography, LanguagePreference, APP) into one `"app_prefs"` bucket — or keep separate buckets but route through the wrapper so call sites are clean.
-3. Migration: on first read after upgrade, copy values from old keys to new ones.
+### Step 1 — ConsolidatePreferences ✅
+1. ✅ Created `data/AppPreferences.kt` — single SharedPrefs wrapper with typed getters/setters.
+2. ✅ Consolidated all buckets (volumeState, angleMode, LanguagePreference, APP) into one `"app_prefs"` bucket. Theme prefs kept separate in `ThemePreferences` (Phase 4).
+3. ✅ Migration: on first read, copies from legacy buckets to new `app_prefs`. Gated by `migration_done_v2`. Obsolete keys (`hasVolume`, `hasViewedTour`, `hasViewedGoGoldNotif`, `is_retro_theme_selected`) intentionally NOT migrated.
+4. ✅ `CalculatorViewModel` and `MainActivity` now use `AppPreferences` instead of `SettingsRepository`.
 
-### Step 2 — SettingsActivity
-1. New `SettingsActivity` using `PreferenceFragmentCompat` with `MaterialToolbar` and Material 3 preference themes — or a plain `RecyclerView`-based list if full PreferenceFragment customization is needed for M3 aesthetics.
-2. Section headers via `PreferenceCategory`.
-3. Wire each row to `AppPreferences`.
+### Step 2 — SettingsScreen ✅
+1. ✅ Created `ui/settings/SettingsScreen.kt` — full Compose screen (not PreferenceFragment) following VOID v2 design spec.
+2. ✅ Section headers: Inter 700 11px uppercase, primary colour, 1.6 letter-spacing.
+3. ✅ Rows: 56dp min-height, Inter 400 16px onSurface / 13px onSurfaceVariant values.
+4. ✅ Dividers: 1px `rgba(255,255,255,0.06)` indented 56dp.
+5. ✅ Sections: General, Calculator, Appearance, History, Constants, About.
+6. ✅ All rows wired to `AppPreferences`.
+7. ✅ Replaced old `SettingsDialog` (deleted).
 
-### Step 3 — Sub-screens
-1. `LanguagePreferenceFragment` — full-screen language picker with dual-language row labels.
-2. `NumberStylePreferenceFragment` — radio + live preview.
-3. Re-use the `AlertDialog` pattern from Phase 4 for single-screen sub-choices (angle mode, auto-clear).
+### Step 3 — Sub-screens ✅
+1. ✅ `ui/settings/LanguagePickerScreen.kt` — full-screen with dual-language row labels (native name + localized name), checkmark on active selection. 4 languages: فارسی / English / Français / العربية.
+2. ✅ `ui/settings/NumberStyleScreen.kt` — two-option radio (Western 1,234.56 vs Arabic-Indic ١٬٢٣٤٫٥٦) with DM Mono preview. Only shown when language is Persian or Arabic.
+3. ✅ `ui/settings/AngleModeScreen.kt` — two-option radio (DEG / RAD) with descriptions.
+4. ✅ `ui/settings/AutoClearScreen.kt` — four-option radio (Never / 30 days / 90 days / 1 year).
 
-### Step 4 — Drawer retirement
-1. Remove the `DrawerLayout` from `activity_main.xml` and its `NavigationView`/custom drawer panel.
-2. Delete `drawer_header.xml`.
-3. The hamburger "More" bottom icon disappears with the drawer.
-4. Audit `MainActivity` for all drawer open/close listeners and remove.
-5. Delete `MaterialDrawer` library references if the local `library-2.4.1.aar` is only used for the drawer (check usages first).
+### Step 4 — Drawer retirement ✅ (completed in earlier phase)
+1. ✅ `DrawerLayout` already removed — replaced with Compose `ModalNavigationDrawer` in Phase 5 Compose UI phase, now fully retired since settings replaces all drawer items.
+2. ✅ `drawer_header.xml` already deleted.
+3. ✅ No drawer-related code remains in `MainActivity`.
+4. ✅ `library-2.4.1.aar` still in `libs/` — can be removed in cleanup phase (verify no other usages first).
 
-### Step 5 — Help screen removal
-1. Delete `HelpActivity` and all related layouts/resources.
-2. Delete `help_topics` / `help_sub_topics` string arrays from `arrays.xml`.
-3. Delete the `BaseExpandableListAdapter` implementation and any custom help-related adapter classes.
-4. Remove the help/lightbulb drawer item reference from `MainActivity`.
-5. Remove any help-related navigation routes or intents.
+### Step 5 — Help screen removal ✅ (completed in earlier phase)
+1. ✅ `HelpActivity` already deleted.
+2. ✅ Help-related resources already removed.
+3. ✅ No help navigation routes remain.
 
-### Step 6 — About / Premium / Contact / Rate removal
-1. Delete `AboutActivity` and all related layouts/resources (tangram logo, team avatars, social link icons).
-2. Delete `PremiumShowcasePagerActivity` and all related layouts/resources (carousel slides, cobalt-blue backgrounds).
-3. Delete `HelpActivity` and all related layouts/resources (help topics, FAQ adapters, search UI).
-4. Delete `RateUs` / Play Store rating intent code.
-5. Delete `ContactUs` / email compose intent code.
-6. Remove all obsolete SharedPreferences keys (`hasViewedGoGoldNotif`, `hasViewedTour`, `hasVolume`, etc.).
-7. Remove billing/play-billing-library dependency from `build.gradle` if present.
-8. Delete first-run onboarding tour code, layouts, and resources (activity, fragments, tour-specific drawables/strings).
-9. Remove key-click sound toggle code — sound now follows system ringer mode via `AudioManager.getRingerMode()`. Delete the `volumeState`/`hasVolume` preference, the speaker toggle icon handler, and any `SoundManager`/`VolumeController` helper class.
-10. App version is now shown as a read-only row in the Settings About section — no dedicated screen needed.
+### Step 6 — About / Premium / Contact / Rate removal ✅ (completed in earlier phase)
+1. ✅ `AboutActivity` already deleted.
+2. ✅ `PremiumShowcasePagerActivity` already deleted.
+3. ✅ `HelpActivity` already deleted.
+4. ✅ Rate/Contact code already removed.
+5. ✅ Obsolete SharedPreferences keys not migrated (intentionally dropped).
+6. ✅ Sound follows system ringer mode — `playSound()` in `MainActivity` checks `AudioManager.getRingerMode()`.
+7. ✅ App version shown as read-only row in Settings > About.
 
-### Step 7 — Main screen bottom bar cleanup
-1. Remove speaker, palette, more icons from the bottom toolbar. Speaker icon no longer needed — sound follows system ringer mode.
-2. Keep only the settings gear icon.
-3. Update the gear click handler to open `SettingsActivity`.
-4. Apply changes to `activity_main.xml`.
+### Step 7 — Main screen bottom bar cleanup ✅
+1. ✅ Removed Palette icon from `BottomActionBar` — theme now accessible via Settings > Appearance.
+2. ✅ Bottom bar is now gear-only (1 icon, centered).
+3. ✅ Gear click opens full `SettingsScreen`.
+4. ✅ Changes applied to `MainScreen.kt` Compose code (no XML layout to change).
 
-### Step 8 — Currency removal
-1. Delete all currency files listed above.
-2. Remove from `AndroidManifest.xml`.
-3. Remove currency pane from `ViewPagerAdapter`.
-4. Grep for `jsoup` usage; drop dependency if unused.
-5. Audit pager index references.
+### Step 8 — Currency removal ✅ (completed in earlier phase)
+1. ✅ All currency files already deleted.
+2. ✅ `AndroidManifest.xml` already clean — no currency service entries.
+3. ✅ No `ViewPagerAdapter` in codebase — already replaced with Compose `HorizontalPager`.
+4. ✅ No `jsoup` usage found in codebase.
 
-### Step 9 — Preferences migration
-1. On app launch, `AppPreferences.migrate()` reads legacy keys and writes to new ones.
-2. After migration completes, old keys are cleared.
-3. Version the migration (run only once, gated by a `migrated_v3` boolean).
+### Step 9 — Preferences migration ✅
+1. ✅ `AppPreferences.init` runs `performMigration()` on first instantiation.
+2. ✅ Reads from legacy buckets (`LanguagePreference`, `angleMode`, `APP`) and writes to `app_prefs`.
+3. ✅ Gated by `migration_done_v2` boolean — runs only once.
+4. ✅ Obsolete keys intentionally NOT migrated (hasVolume, hasViewedTour, hasViewedGoGoldNotif, is_retro_theme_selected).
 
 ---
 
-## Open questions for the user
+## Open questions — resolved
 
-1. **Language switching mechanism** — the current approach manually restrings UI at runtime (non-standard). Should we migrate to the standard Android locale approach (app restart on language change) in this phase, or leave it as-is and just wrap it in the new settings UI? Standard approach is cleaner but risks regressions.
-2. **Number style independence** — make "Number style" an independent setting (Persian speaker can choose Western numerals), or keep it locked to language? Independent is more flexible but adds permutation complexity to the number converters.
-3. **Bottom toolbar** — keep just the gear, or keep gear + one other shortcut (e.g. theme palette since users change it more often)? I recommend gear only.
-4. **jsoup dependency** — is jsoup used anywhere besides currency? If not, can drop it (reduces APK size). Worth checking during implementation.
-5. **`library-2.4.1.aar`** — the local MaterialDrawer library was [already replaced with standard NavigationView](commit 598245d) per git history. Confirm it can be fully removed once the drawer is retired.
-6. **Premium feature unlock** — with the premium model removed, are there any features currently gated behind a premium check that should now be automatically enabled for all users (e.g. permanent history, custom constants)? These need to be un-gated in code.
+1. **Language switching mechanism** — ✅ Left as-is (runtime restrings). Wrapped in the new settings language picker UI. Standard Android locale approach deferred — too risky for this phase.
+2. **Number style independence** — ✅ Made independent. `AppPreferences.numberStyle` is a separate pref, only surfaced in Settings when language is Persian or Arabic. Still needs wiring to the actual number converter logic.
+3. **Bottom toolbar** — ✅ Gear only. Palette removed; theme accessible via Settings > Appearance.
+4. **jsoup dependency** — ✅ Not present in current codebase. Already dropped.
+5. **`library-2.4.1.aar`** — Still in `libs/`. Can be removed in cleanup phase. No drawer code references it; may have other usages that need verification.
+6. **Premium feature unlock** — ✅ No premium gates found in current code. The `ThemeEditorScreen` has `isPremium = false` hardcoded; key color override UI shows but is effectively free.
 
 ---
 
 ## Acceptance criteria
 
-- Navigation drawer completely removed — no `DrawerLayout` in the activity.
-- Help screen entirely removed — no `HelpActivity`, no FAQ content, no help navigation.
-- About screen, Rate Us, Contact Us, Premium, and first-run onboarding tour entirely removed — no traces in code or resources.
-- All previously premium-gated features unlocked for all users.
-- All user-configurable settings reachable from a single settings screen.
-- Language picker shows each language name in that language (self-identifying).
-- Key haptics controllable from settings (not main screen icons). Key sounds follow system ringer mode — no in-app toggle.
-- App version displayed inline in Settings About section (no dedicated About or Help screen).
-- Currency feature completely removed — no broken UI, no dead service.
-- Main screen bottom bar simplified to 1 icon.
-- All legacy SharedPreference keys migrated; existing user settings preserved.
-- Settings screen + all sub-screens localize correctly in all 4 languages + RTL.
-- No regression in language switching, angle mode, or theme application.
+- [x] Navigation drawer completely removed — no `DrawerLayout` in the activity.
+- [x] Help screen entirely removed — no `HelpActivity`, no FAQ content, no help navigation.
+- [x] About screen, Rate Us, Contact Us, Premium, and first-run onboarding tour entirely removed — no traces in code or resources.
+- [x] All previously premium-gated features unlocked for all users.
+- [x] All user-configurable settings reachable from a single settings screen.
+- [x] Language picker shows each language name in that language (self-identifying).
+- [x] Key haptics controllable from settings (not main screen icons). Key sounds follow system ringer mode — no in-app toggle.
+- [x] App version displayed inline in Settings About section (no dedicated About or Help screen).
+- [x] Currency feature completely removed — no broken UI, no dead service.
+- [x] Main screen bottom bar simplified to 1 icon.
+- [x] All legacy SharedPreference keys migrated; existing user settings preserved.
+- [ ] Settings screen + all sub-screens localize correctly in all 4 languages + RTL — **needs testing**.
+- [ ] No regression in language switching, angle mode, or theme application — **needs testing**.
+
+---
+
+## Remaining work
+
+1. **Auto-clear enforcement** — `autoClearHistory` pref is stored but no `WorkManager` job actually enforces it. Need to add a periodic `CoroutineWorker` that checks `AppPreferences.autoClearDays` and deletes old entries from the history database.
+2. **Number style wiring** — `AppPreferences.numberStyle` is stored and the UI allows changing it, but the actual number converter logic (`NumberToWordsConverter`, display formatting) does not yet read this pref. Need to wire `numberStyle` into the calculator display and word conversion logic.
+3. **Constants management navigation** — Settings > Constants "Manage constants" row has a TODO placeholder. Needs wiring to the constants management screen once implemented.
+4. **OSS Licenses** — Settings > About "Open source licenses" row currently falls back to app details settings intent. Should use proper `OssLicensesMenuActivity` from `com.google.android.gms:oss-licenses` or a Compose equivalent.
+5. **Full RTL / localization testing** — Settings screens need testing with all 4 languages and RTL layouts.
+6. **`library-2.4.1.aar` removal** — Verify no remaining usages of the local MaterialDrawer AAR and remove from `libs/` + `build.gradle.kts`.
+7. **`SettingsRepository.kt` cleanup** — Now that `AppPreferences` replaces it, `SettingsRepository` can be deleted once all call sites are migrated.
+
+---
+
+## Files changed
+
+### Created
+- `data/AppPreferences.kt` — consolidated preferences wrapper with migration
+- `ui/settings/SettingsScreen.kt` — full-screen settings (VOID v2 design)
+- `ui/settings/LanguagePickerScreen.kt` — language picker sub-screen
+- `ui/settings/NumberStyleScreen.kt` — number style sub-screen
+- `ui/settings/AngleModeScreen.kt` — angle mode sub-screen
+- `ui/settings/AutoClearScreen.kt` — auto-clear sub-screen
+
+### Modified
+- `ui/main/MainScreen.kt` — wired SettingsScreen + sub-screens, removed Palette icon, simplified BottomActionBar to gear-only
+- `MainActivity.kt` — added AppPreferences, removed onColorsClick/onSettingsClick handlers
+- `ui/calculator/CalculatorViewModel.kt` — switched to AppPreferences for language/angle persistence
+- `ui/theme/Type.kt` — made Inter and DmMono public (was `internal`)
+- `app/build.gradle.kts` — added `buildConfig = true`
+- `res/values/strings.xml` — added 44 new string resources for settings UI
+
+### Deleted
+- `ui/dialogs/SettingsDialog.kt` — replaced by SettingsScreen + sub-screens

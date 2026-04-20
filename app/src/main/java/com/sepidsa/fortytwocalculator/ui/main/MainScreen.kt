@@ -10,16 +10,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,8 +27,14 @@ import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorUiState
 import com.sepidsa.fortytwocalculator.ui.history.HistoryScreen
 import com.sepidsa.fortytwocalculator.ui.history.HistoryUiState
 import com.sepidsa.fortytwocalculator.ui.scientific.ScientificScreen
-import com.sepidsa.fortytwocalculator.ui.dialogs.SettingsDialog
+import com.sepidsa.fortytwocalculator.ui.settings.SettingsScreen
+import com.sepidsa.fortytwocalculator.ui.settings.LanguagePickerScreen
+import com.sepidsa.fortytwocalculator.ui.settings.NumberStyleScreen
+import com.sepidsa.fortytwocalculator.ui.settings.AngleModeScreen
+import com.sepidsa.fortytwocalculator.ui.settings.AutoClearScreen
+import com.sepidsa.fortytwocalculator.data.AppPreferences
 import com.sepidsa.fortytwocalculator.ui.theme.DmMono
+import com.sepidsa.fortytwocalculator.ui.theme.Inter
 import com.sepidsa.fortytwocalculator.ui.theme.VoidDarkBackground
 import com.sepidsa.fortytwocalculator.data.LogEntity
 import kotlinx.coroutines.launch
@@ -41,6 +44,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     calculatorState: CalculatorUiState,
     historyState: HistoryUiState,
+    appPreferences: AppPreferences,
     onCalculatorKeyPress: (String) -> Unit,
     onAngleModeToggle: (Boolean) -> Unit,
     onDeleteHistoryItem: (Long) -> Unit,
@@ -54,17 +58,22 @@ fun MainScreen(
     onInverseToggle: (Boolean) -> Unit,
     onArcToggle: (Boolean) -> Unit,
     onConstantClick: () -> Unit,
-    onSettingsClick: () -> Unit,
     onSettingsLanguageChanged: (Int) -> Unit,
-    onColorsClick: () -> Unit,
     onAddStarClick: () -> Unit,
     onAddLabelClick: () -> Unit,
+    onNavigateToTheme: () -> Unit,
 ) {
     val pagerState = rememberPagerState(initialPage = 1, pageCount = { 2 })
     var showSettings by remember { mutableStateOf(false) }
     var showScientific by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    // Sub-screen navigation state
+    var showLanguagePicker by remember { mutableStateOf(false) }
+    var showNumberStyle by remember { mutableStateOf(false) }
+    var showAngleMode by remember { mutableStateOf(false) }
+    var showAutoClear by remember { mutableStateOf(false) }
+
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
     Column(
@@ -125,17 +134,87 @@ fun MainScreen(
 
             BottomActionBar(
                 onSettingsClick = { showSettings = true },
-                onColorsClick = onColorsClick,
             )
         }
     }
 
+    // Settings screen (full-screen overlay)
     if (showSettings) {
-        SettingsDialog(
-            onDismiss = { showSettings = false },
-            onLanguageChanged = onSettingsLanguageChanged
+        SettingsScreen(
+            appPreferences = appPreferences,
+            onBack = { showSettings = false },
+            onNavigateToLanguage = {
+                showSettings = false
+                showLanguagePicker = true
+            },
+            onNavigateToNumberStyle = {
+                showSettings = false
+                showNumberStyle = true
+            },
+            onNavigateToAngleMode = {
+                showSettings = false
+                showAngleMode = true
+            },
+            onNavigateToAutoClear = {
+                showSettings = false
+                showAutoClear = true
+            },
+            onNavigateToTheme = {
+                showSettings = false
+                onNavigateToTheme()
+            },
+            onNavigateToConstants = {
+                // TODO: Navigate to constants management screen
+            },
         )
     }
+
+    // Language picker sub-screen
+    if (showLanguagePicker) {
+        LanguagePickerScreen(
+            appPreferences = appPreferences,
+            onBack = {
+                showLanguagePicker = false
+                showSettings = true
+            },
+            onLanguageChanged = onSettingsLanguageChanged,
+        )
+    }
+
+    // Number style sub-screen
+    if (showNumberStyle) {
+        NumberStyleScreen(
+            appPreferences = appPreferences,
+            onBack = {
+                showNumberStyle = false
+                showSettings = true
+            },
+        )
+    }
+
+    // Angle mode sub-screen
+    if (showAngleMode) {
+        AngleModeScreen(
+            appPreferences = appPreferences,
+            onBack = {
+                showAngleMode = false
+                showSettings = true
+            },
+            onAngleModeChanged = onAngleModeToggle,
+        )
+    }
+
+    // Auto-clear sub-screen
+    if (showAutoClear) {
+        AutoClearScreen(
+            appPreferences = appPreferences,
+            onBack = {
+                showAutoClear = false
+                showSettings = true
+            },
+        )
+    }
+
     if (showScientific) {
         ModalBottomSheet(
             onDismissRequest = { showScientific = false },
@@ -329,25 +408,17 @@ fun PageIndicator(pagerState: androidx.compose.foundation.pager.PagerState, modi
 @Composable
 fun BottomActionBar(
     onSettingsClick: () -> Unit,
-    onColorsClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.Center
     ) {
         IconButton(onClick = onSettingsClick) {
             Icon(
                 Icons.Default.Settings,
                 contentDescription = "Settings",
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
-            )
-        }
-        IconButton(onClick = onColorsClick) {
-            Icon(
-                Icons.Default.Palette,
-                contentDescription = "Theme",
                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
             )
         }

@@ -227,5 +227,49 @@
   <string name="apply_changes">Apply</string>
   <string name="default_label">Default</string>
 
+  <!-- Settings Screen -->
+  <string name="settings_title">Settings</string>
+  <string name="settings_general">GENERAL</string>
+  <string name="settings_language">Language</string>
+  <string name="settings_number_style">Number style</string>
+  <string name="settings_calculator">CALCULATOR</string>
+  <string name="settings_default_angle_mode">Default angle mode</string>
+  <string name="settings_key_haptics">Key haptics</string>
+  <string name="settings_appearance">APPEARANCE</string>
+  <string name="settings_theme">Theme</string>
+  <string name="settings_history">HISTORY</string>
+  <string name="settings_auto_clear">Auto-clear</string>
+  <string name="settings_constants">CONSTANTS</string>
+  <string name="settings_manage_constants">Manage constants</string>
+  <string name="settings_about">ABOUT</string>
+  <string name="settings_version">Version</string>
+  <string name="settings_oss_licenses">Open source licenses</string>
+
+  <!-- Language picker -->
+  <string name="lang_persian">فارسی</string>
+  <string name="lang_persian_native">Persian</string>
+  <string name="lang_english">English</string>
+  <string name="lang_english_native">English</string>
+  <string name="lang_french">Français</string>
+  <string name="lang_french_native">French</string>
+  <string name="lang_arabic">العربية</string>
+  <string name="lang_arabic_native">Arabic</string>
+
+  <!-- Number style -->
+  <string name="number_style_western">1 2 3</string>
+  <string name="number_style_arabic_indic">١ ٢ ٣</string>
+  <string name="number_style_preview">1,234.56</string>
+
+  <!-- Angle mode -->
+  <string name="angle_mode_deg">DEG</string>
+  <string name="angle_mode_deg_desc">Degrees — standard for everyday calculations</string>
+  <string name="angle_mode_rad">RAD</string>
+  <string name="angle_mode_rad_desc">Radians — used in advanced mathematics</string>
+
+  <!-- Auto-clear -->
+  <string name="auto_clear_never">Never</string>
+  <string name="auto_clear_30_days">After 30 days</string>
+  <string name="auto_clear_90_days">After 90 days</string>
+  <string name="auto_clear_1_year">After 1 year</string>
 
 </resources>

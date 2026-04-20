@@ -33,6 +33,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.sepidsa.fortytwocalculator.data.AppPreferences
 import com.sepidsa.fortytwocalculator.data.ConstantEntity
 import com.sepidsa.fortytwocalculator.data.SettingsRepository
 import com.sepidsa.fortytwocalculator.ui.calculator.CalculatorUiEvent
@@ -75,12 +76,14 @@ class MainActivity : FragmentActivity() {
     val constantViewModel: ConstantViewModel by viewModels()
     val calculatorViewModel: CalculatorViewModel by viewModels()
     private lateinit var settingsRepository: SettingsRepository
+    private lateinit var appPreferences: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         settingsRepository = SettingsRepository(this)
+        appPreferences = AppPreferences(this)
 
         setContentView(ComposeView(this).apply {
             setContent {
@@ -93,6 +96,7 @@ class MainActivity : FragmentActivity() {
                     MainScreen(
                         calculatorState = calculatorState,
                         historyState = historyState,
+                        appPreferences = appPreferences,
                         onCalculatorKeyPress = calculatorViewModel::onButtonPressed,
                         onAngleModeToggle = calculatorViewModel::setAngleMode,
                         onDeleteHistoryItem = historyViewModel::deleteLogEntry,
@@ -119,13 +123,9 @@ class MainActivity : FragmentActivity() {
                         onInverseToggle = { calculatorViewModel.setInverseMode(!calculatorState.inverseMode) },
                         onArcToggle = { calculatorViewModel.setArcMode(!calculatorState.arcMode) },
                         onConstantClick = { /* Show constants dialog */ },
-                        onSettingsClick = {
-                            // Settings dialog is now handled within MainScreen
-                        },
                         onSettingsLanguageChanged = { langCode ->
                             calculatorViewModel.setLanguage(langCode)
                         },
-                        onColorsClick = { showThemeEditor = true },
                         onAddStarClick = {
                             lifecycleScope.launch {
                                 historyViewModel.starLogEntry(mLatestInsertedId, true)
@@ -133,7 +133,8 @@ class MainActivity : FragmentActivity() {
                         },
                         onAddLabelClick = {
                             showAddLabelDialog()
-                        }
+                        },
+                        onNavigateToTheme = { showThemeEditor = true },
                     )
 
                     if (showThemeEditor) {
@@ -256,7 +257,7 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun populateConstantDatabaseFirstRun() {
-        if (!settingsRepository.hasPopulatedConstantDatabase) {
+        if (!appPreferences.hasPopulatedConstantDatabase) {
             val names = resources.getStringArray(R.array.constant_default_names)
             val numbers = resources.getStringArray(R.array.constant_default_numbers)
             val selections = resources.getStringArray(R.array.constant_default_selections)
@@ -271,7 +272,7 @@ class MainActivity : FragmentActivity() {
                 )
             }
 
-            settingsRepository.hasPopulatedConstantDatabase = true
+            appPreferences.hasPopulatedConstantDatabase = true
         }
     }
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.sepidsa.fortytwocalculator.ExpressionEvaluator
 import com.sepidsa.fortytwocalculator.NumberToWordsConverter
+import com.sepidsa.fortytwocalculator.data.AppPreferences
 import com.sepidsa.fortytwocalculator.data.SettingsRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,11 +61,12 @@ class CalculatorViewModel(
 ) : AndroidViewModel(application) {
 
     private val settingsRepository = SettingsRepository(application.applicationContext)
+    private val appPreferences = AppPreferences(application.applicationContext)
 
     private val _uiState = MutableStateFlow(
         CalculatorUiState(
-            angleMode = settingsRepository.isDegree,
-            language = settingsRepository.language,
+            angleMode = appPreferences.isDegree,
+            language = appPreferences.language,
         ),
     )
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
@@ -93,13 +95,13 @@ class CalculatorViewModel(
     }
 
     fun setAngleMode(isDegree: Boolean) {
-        settingsRepository.isDegree = isDegree
+        appPreferences.isDegree = isDegree
         _uiState.update { it.copy(angleMode = isDegree) }
         updateTranslation()
     }
 
     fun setLanguage(language: Int) {
-        settingsRepository.language = language
+        appPreferences.language = language
         _uiState.update { it.copy(language = language) }
         updateTranslation()
     }
